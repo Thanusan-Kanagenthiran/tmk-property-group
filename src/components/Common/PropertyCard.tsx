@@ -8,27 +8,19 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import KingBedIcon from "@mui/icons-material/KingBed";
 import BathtubIcon from "@mui/icons-material/Bathtub";
-
-interface Property {
-  title: string;
-  description: string;
-  price: string;
-  link: string;
-  bedrooms: number;
-  bathrooms: number;
-  image: string;
-}
+import { Property } from "@/interfaces/property";
 
 interface PropertyCardProps {
-  property: Property;
+  property: Omit<Property, "packageType" | "createdAt" | "updatedAt" | "expiresAt">;
 }
 
 const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
-  const { title, description, price, link, bedrooms, bathrooms, image } = property;
+  const { id, title, description, price,  bedrooms, bathrooms, images } = property;
+
 
   return (
     <Card sx={{ maxWidth: 345, p: 4, m: "auto" }}>
-      <CardMedia sx={{ height: 140 }} className="rounded" image={image} title={title} />
+     {images && <CardMedia sx={{ height: 140 }} className="rounded" image={images[0]} title={title} />}
       <CardContent>
         <Typography gutterBottom variant="h6" component="div">
           {title}
@@ -68,7 +60,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
           </Typography>
           <Typography variant="subtitle1">{price}</Typography>
         </div>
-        <Button sx={{ fontSize: "11px" }} href={link} variant="contained">
+        <Button sx={{ fontSize: "11px" }} href={`http://localhost:3000/home/property/${id}`} variant="contained">
           View Details
         </Button>
       </CardActions>

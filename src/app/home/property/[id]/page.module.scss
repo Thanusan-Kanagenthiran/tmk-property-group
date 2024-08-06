@@ -1,0 +1,19 @@
+.imageGalleryWrapper {
+  margin-top: 5rem;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Custom border-radius for main images */
+.image-gallery-slide .image-gallery-image {
+  border-radius: 20rem; /* Adjust the radius as needed */
+  overflow: hidden; /* Ensure the border-radius is applied correctly */
+}
+
+/* Custom border-radius for thumbnails */
+.image-gallery-thumbnail-image {
+  border-radius: 20rem; /* Adjust the radius as needed */
+  overflow: hidden; /* Ensure the border-radius is applied correctly */
+}
