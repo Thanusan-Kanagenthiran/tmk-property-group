@@ -12,14 +12,13 @@ export const authOptions: NextAuthOptions = {
       id: "credentials",
       credentials: {
         email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" },
-        role: { label: "Role", type: "text" },
+        password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
         await connectDB();
         const user = await User.findOne({
           email: credentials?.email,
-        }).select("+password").select("+role");
+        }).select("+password")
 
         if (!user) throw new Error("Wrong Email");
 
@@ -35,6 +34,8 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: "jwt",
+    maxAge: 432000,
+
   },
   callbacks: {
     jwt({ token, user }) {
@@ -43,15 +44,16 @@ export const authOptions: NextAuthOptions = {
         token.image = (user as any).image;
         token.phone = (user as any).phone;
         token.sub = (user as any)._id;
-
       }
       return token;
     },
-    session({ session, token }) {
-      session.user.role = token.role as string;
-      session.user.image = token.image as string;
-      session.user.phone = token.phone as string;
-      session.user.id = token.sub as string;
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.role = token.role as string;
+        session.user.image = token.image as string;
+        session.user.phone = token.phone as string;
+        session.user.id = token.sub as string;
+      }
       return session;
     },
   },
