@@ -1,21 +1,8 @@
 "use server"
+import type { RegisterValues,RegisterResponse } from "@/interfaces/UserActions";
 import { connectDB } from "@/lib/connection";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
-
-interface RegisterValues {
-	email: string;
-	password: string;
-	name: string;
-	phone?: string;
-	image?: string;
-	role?: string;
-}
-
-interface RegisterResponse {
-	user?: typeof User.prototype;
-	error?: string;
-}
 
 export const register = async (values: RegisterValues): Promise<RegisterResponse> => {
 	const { email, password, name, phone, image, role } = values;
@@ -24,10 +11,17 @@ export const register = async (values: RegisterValues): Promise<RegisterResponse
 			await connectDB();
 			const userFound = await User.findOne({ email });
 			if (userFound) {
+				if (userFound.isDeleted) {
 					return {
-							error: 'Email already exists!'
+						error: 'User account has been deleted.'
 					};
+				} else {
+					return {
+						error: 'User already exists.'
+					};
+				}
 			}
+
 			const hashedPassword = await bcrypt.hash(password, 10);
 			const user = new User({
 					name,

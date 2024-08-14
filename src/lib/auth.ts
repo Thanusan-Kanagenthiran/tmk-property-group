@@ -18,9 +18,11 @@ export const authOptions: NextAuthOptions = {
         await connectDB();
         const user = await User.findOne({
           email: credentials?.email,
-        }).select("+password")
+        }).select("+password").select("+isDeleted");
 
         if (!user) throw new Error("Wrong Email");
+
+        if (user.isDeleted) throw new Error("User Deleted");
 
         const passwordMatch = await bcrypt.compare(
           credentials!.password,
@@ -34,11 +36,13 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: "jwt",
-    maxAge: 432000,
-
+    maxAge: 15*60,
   },
   callbacks: {
-    jwt({ token, user }) {
+    jwt({ token, user, account }) {
+      if (account) {
+       token.accessToken = account.access_token  as string;
+      }
       if (user) {
         token.role = (user as any).role;
         token.image = (user as any).image;
@@ -53,9 +57,12 @@ export const authOptions: NextAuthOptions = {
         session.user.image = token.image as string;
         session.user.phone = token.phone as string;
         session.user.id = token.sub as string;
+        session.accessToken = token.access_token as string;
       }
       return session;
     },
+    
   },
+  secret: process.env.AUTH_SECRET,
 
 };
