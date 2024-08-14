@@ -1,10 +1,10 @@
 "use server"
-import type { RegisterValues,RegisterResponse } from "@/interfaces/UserActions";
+import type { RegisterValues } from "@/interfaces/UserActions";
 import { connectDB } from "@/lib/connection";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 
-export const register = async (values: RegisterValues): Promise<RegisterResponse> => {
+export const register = async (values: RegisterValues) => {
 	const { email, password, name, phone, image, role } = values;
 
 	try {
