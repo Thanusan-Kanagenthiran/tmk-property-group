@@ -18,3 +18,9 @@ export enum PropertyType {
   STUDIO = "studio",
 }
 
+export enum PaymentStatus {
+  PENDING = "pending",
+  COMPLETED = "completed",
+  FAILED = "failed",
+}
+
