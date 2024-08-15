@@ -1,5 +1,5 @@
 import mongoose, { Schema, model } from "mongoose";
-import { PropertyType, PropertyPackageTypes, PropertyStatus } from "@/app/constants/Property";
+import { PropertyType, PropertyPackageTypes, PropertyStatus } from "@/constants/Property";
 
 export interface PropertyDocument {
   title: string;

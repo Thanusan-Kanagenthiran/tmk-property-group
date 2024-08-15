@@ -1,4 +1,4 @@
-import { UserRole } from "@/app/constants/Users";
+import { UserRole } from "@/constants/Users";
 import mongoose, { Schema, model } from "mongoose";
 
 export interface UserDocument {
