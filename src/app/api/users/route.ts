@@ -11,7 +11,7 @@ export const POST = async (request: NextRequest) => {
     if (result.error) {
       return NextResponse.json({ error: result.error }, { status: 400 });
     }
-    return NextResponse.json(result.user, { status: 201 });
+    return NextResponse.json(result.message, { status: 201 });
   } catch (error) {
     console.error("POST Handler Error:", error);
     return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });

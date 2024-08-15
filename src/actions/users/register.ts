@@ -32,8 +32,8 @@ export const register = async (values: RegisterValues) => {
 					role
 			});
 
-			const savedUser = await user.save();
-			return { user: savedUser };
+			await user.save();
+			return { message : 'Registration successful with email: ' + email + 'as a ' + role  };
 	} catch (e) {
 			console.error('Registration Error:', e);
 			return {

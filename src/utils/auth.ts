@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-import { UserRole } from "@/app/constants/Users";
+import { UserRole } from "@/constants/Users";
 
 const secret = process.env.AUTH_SECRET;
 
