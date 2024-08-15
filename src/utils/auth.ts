@@ -17,6 +17,16 @@ export const getAuthToken = async (req: NextRequest) => {
 };
 
 
+export const getUserId = async (req: NextRequest) => {
+  const token = await getAuthToken(req);
+  return token.sub;
+}
+
+export const isAuthenticated = async (req: NextRequest) => {
+  const token = await getAuthToken(req);
+  return !!token;
+}
+
 export const isAdmin = async (req: NextRequest) => {
 	const token = await getAuthToken(req);
 	return token.role === UserRole.ADMIN;
@@ -31,4 +41,9 @@ export const isPropertyOwner = async (req: NextRequest) => {
 export const isUser = async (req: NextRequest) => {
 	const token = await getAuthToken(req);
 	return token.role === UserRole.USER;
+}
+
+export const getUserRole = async (req: NextRequest) => {
+  const token = await getAuthToken(req);
+  return token.role;
 }
