@@ -1,36 +1,38 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "@/styles/theme";
-import { Provider } from "./provider";
+import { Provider as SessionProvider } from "./provider";
+import AppHeader from "@/components/Common/Header/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "TMK Property Group",
-  description: "TMK Property Group is a property management system",
+  description: "TMK Property Group is a property management system"
 };
 
 export default function RootLayout({
-  children,
+  children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <html lang="en">
-      <Provider>
+      <SessionProvider>
         <body className={inter.className}>
           <AppRouterCacheProvider>
             <ThemeProvider theme={theme}>
               <CssBaseline />
+              <AppHeader />
               {children}
             </ThemeProvider>
           </AppRouterCacheProvider>
         </body>
-      </Provider>
+      </SessionProvider>
     </html>
   );
 }
