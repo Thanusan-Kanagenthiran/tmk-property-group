@@ -1,5 +1,5 @@
-import { NextRequest } from 'next/server';
-import { getToken } from 'next-auth/jwt';
+import { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 import { UserRole } from "@/constants/Users";
 
 const secret = process.env.AUTH_SECRET;
@@ -16,34 +16,17 @@ export const getAuthToken = async (req: NextRequest) => {
   }
 };
 
-
-export const getUserId = async (req: NextRequest) => {
-  const token = await getAuthToken(req);
-  return token.sub;
-}
-
-export const isAuthenticated = async (req: NextRequest) => {
-  const token = await getAuthToken(req);
-  return !!token;
-}
-
 export const isAdmin = async (req: NextRequest) => {
-	const token = await getAuthToken(req);
-	return token.role === UserRole.ADMIN;
-}
+  const token = await getAuthToken(req);
+  return token.role === UserRole.ADMIN;
+};
 
 export const isPropertyOwner = async (req: NextRequest) => {
-	const token = await getAuthToken(req);
-	return token.role === UserRole.PROPERTY_OWNER;
-}
-
+  const token = await getAuthToken(req);
+  return token.role === UserRole.PROPERTY_OWNER;
+};
 
 export const isUser = async (req: NextRequest) => {
-	const token = await getAuthToken(req);
-	return token.role === UserRole.USER;
-}
-
-export const getUserRole = async (req: NextRequest) => {
   const token = await getAuthToken(req);
-  return token.role;
-}
+  return token.role === UserRole.USER;
+};
