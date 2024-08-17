@@ -1,4 +1,3 @@
-
 import type { NextAuthOptions } from "next-auth";
 import credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
@@ -17,31 +16,30 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         await connectDB();
         const user = await User.findOne({
-          email: credentials?.email,
-        }).select("+password").select("+isDeleted");
+          email: credentials?.email
+        })
+          .select("+password +isDeleted")
+          .exec();
 
         if (!user) throw new Error("Wrong Email");
 
         if (user.isDeleted) throw new Error("User Deleted");
 
-        const passwordMatch = await bcrypt.compare(
-          credentials!.password,
-          user.password
-        );
+        const passwordMatch = await bcrypt.compare(credentials!.password, user.password);
 
         if (!passwordMatch) throw new Error("Wrong Password");
-        return { ...user.toObject(), role: user.role }
-      },
-    }),
+        return { ...user.toObject(), role: user.role };
+      }
+    })
   ],
   session: {
     strategy: "jwt",
-    maxAge: 15*60,
+    maxAge: 15 * 60
   },
   callbacks: {
     jwt({ token, user, account }) {
       if (account) {
-       token.accessToken = account.access_token  as string;
+        token.accessToken = account.access_token as string;
       }
       if (user) {
         token.role = (user as any).role;
@@ -59,10 +57,8 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.sub as string;
         session.accessToken = token.access_token as string;
       }
-      return session;
-    },
-    
+      return { ...session, user: session.user, accessToken: session.accessToken };
+    }
   },
-  secret: process.env.AUTH_SECRET,
-
+  secret: process.env.AUTH_SECRET
 };
