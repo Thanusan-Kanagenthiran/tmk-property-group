@@ -1,5 +1,5 @@
 export interface Property {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   price: string;
@@ -13,6 +13,7 @@ export interface Property {
   expiresAt?: Date;
   area?: string;
   keyFeaturesAndAmenities?: string[];
+  image: string;
   images?: string[];
 }
 
