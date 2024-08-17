@@ -30,3 +30,8 @@ export const isUser = async (req: NextRequest) => {
   const token = await getAuthToken(req);
   return token.role === UserRole.USER;
 };
+
+export const getUserId = async (req: NextRequest) => {
+  const token = await getAuthToken(req);
+  return token.sub;
+};
