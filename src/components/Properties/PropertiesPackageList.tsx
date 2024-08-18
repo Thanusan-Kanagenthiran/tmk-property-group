@@ -7,6 +7,7 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
 import { Typography } from "@mui/material";
 import AddFormContainer from "../Common/Layout/AddFormContainer";
+import { PropertyPackageTypes } from "@/constants/Property";
 const commonIconStyles = { height: "35%", width: "35%" };
 
 const Icons: Record<string, ReactNode> = {
@@ -19,39 +20,39 @@ const propertyPackagesData = {
   packages: [
     {
       id: 1,
-      title: "Standard",
+      title: PropertyPackageTypes.STANDARD,
       description: "The standard Lorem Ipsum passage, used since the 1500s",
       icon: "standard"
     },
     {
       id: 2,
-      title: "Deluxe",
+      title: PropertyPackageTypes.DELUXE,
       description: "The deluxe Lorem Ipsum passage, with more features",
       icon: "deluxe"
     },
     {
       id: 3,
-      title: "Premium",
+      title: PropertyPackageTypes.PREMIUM,
       description: "The premium Lorem Ipsum passage, with the best features",
       icon: "premium"
     }
   ]
 };
 interface PropertiesPackageListProps {
-  onPackageSelect: (packageId: number) => void;
+  onPackageSelect: (packageType: string) => void;
 }
 
 const PropertiesPackageList: React.FC<PropertiesPackageListProps> = ({ onPackageSelect }) => {
-  const [selectedPackageId, setSelectedPackageId] = useState<number | null>(null);
+  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
 
-  const handleSelectPackage = (id: number) => {
-    setSelectedPackageId(id);
-    onPackageSelect(id); // Notify the parent component
-    console.log(`Package ${id} selected`);
+  const handleSelectPackage = (packageType: string) => {
+    setSelectedPackage(packageType);
+    onPackageSelect(packageType); // Notify the parent component
+    console.log(`Package ${packageType} selected`);
   };
 
-  const handleLearnMore = (id: number) => {
-    console.log(`Learn more about package ${id}`);
+  const handleLearnMore = (packageType: string) => {
+    console.log(`Learn more about package ${packageType}`);
   };
 
   return (
@@ -68,11 +69,11 @@ const PropertiesPackageList: React.FC<PropertiesPackageListProps> = ({ onPackage
               <PropertiesPackageCard
                 title={packageType.title}
                 description={packageType.description}
-                action={() => handleSelectPackage(packageType.id)}
-                actionLabel={selectedPackageId === packageType.id ? "Selected" : "Select Package"}
-                secondaryAction={() => handleLearnMore(packageType.id)}
+                action={() => handleSelectPackage(packageType.title)}
+                actionLabel={selectedPackage === packageType.title ? "Selected" : "Select Package"}
+                secondaryAction={() => handleLearnMore(packageType.title)}
                 secondaryActionLabel="Learn More"
-                actionButtonColor={selectedPackageId === packageType.id ? "primary" : "secondary"}
+                actionButtonColor={selectedPackage === packageType.title ? "primary" : "secondary"}
                 icon={icon}
               />
             </Grid>

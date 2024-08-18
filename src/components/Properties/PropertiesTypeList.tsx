@@ -8,6 +8,7 @@ import NightShelterIcon from "@mui/icons-material/NightShelter";
 import { useEffect, useState, type ReactNode } from "react";
 import { Typography } from "@mui/material";
 import AddFormContainer from "../Common/Layout/AddFormContainer";
+import { PropertyType } from "@/constants/Property";
 
 const commonIconStyles = { height: "35%", width: "35%" };
 
@@ -22,25 +23,25 @@ const propertyData = {
   propertyType: [
     {
       id: 1,
-      title: "Apartment",
+      title: PropertyType.APARTMENT,
       description: "Furnished and self-catering accommodations where guests rent the entire place.",
       icon: "LocationCityIcon"
     },
     {
       id: 2,
-      title: "Homes",
+      title: PropertyType.HOUSE,
       description: "Properties like apartments, vacation homes, villas, etc. List your property.",
       icon: "VillaIcon"
     },
     {
       id: 3,
-      title: "Hotel",
+      title: PropertyType.VILLA,
       description: "Properties like hotels, B&Bs, guest houses, hostels, condo hotels, etc. List your property.",
       icon: "StorefrontIcon"
     },
     {
       id: 4,
-      title: "B&Bs & More",
+      title: PropertyType.Hotel,
       description: "Alternative Places Properties like boats, campgrounds, luxury tents, etc. add for.",
       icon: "NightShelterIcon"
     }
@@ -48,16 +49,16 @@ const propertyData = {
 };
 
 interface PropertiesTypeListProps {
-  onTypeSelect: (typeId: number) => void;
+  onTypeSelect: (typeId: string) => void;
 }
 
 const PropertiesTypeList: React.FC<PropertiesTypeListProps> = ({ onTypeSelect }) => {
-  const [selectedPropertyType, setSelectedPropertyType] = useState<number | null>(null);
+  const [selectedPropertyType, setSelectedPropertyType] = useState<string | null>(null);
 
-  const handleSelectType = (id: number) => {
-    setSelectedPropertyType(id);
-    onTypeSelect(id); // Notify the parent component
-    console.log(`Type ${id} selected`);
+  const handleSelectType = (selectedPropertyType: string) => {
+    setSelectedPropertyType(selectedPropertyType);
+    onTypeSelect(selectedPropertyType); // Notify the parent component
+    console.log(`Type ${selectedPropertyType} selected`);
   };
 
   return (
@@ -72,10 +73,10 @@ const PropertiesTypeList: React.FC<PropertiesTypeListProps> = ({ onTypeSelect })
             <Grid item xs={6} md={3} key={index}>
               <PropertiesTypeCard
                 title={property.title}
-                action={() => handleSelectType(property.id)}
+                action={() => handleSelectType(property.title)}
                 description={property.description}
-                actionButtonColor={selectedPropertyType === property.id ? "primary" : "secondary"}
-                actionLabel={selectedPropertyType === property.id ? "Selected" : "Select"}
+                actionButtonColor={selectedPropertyType === property.title ? "primary" : "secondary"}
+                actionLabel={selectedPropertyType === property.title ? "Selected" : "Select"}
                 icon={icon}
               />
             </Grid>

@@ -8,6 +8,8 @@ import PropertiesPackageList from "./PropertiesPackageList";
 import PropertyInfoForm from "./PropertyInfoForm";
 import RoomsAndMeasurementsForm from "./RoomsAndMeasurementsForm";
 import KeyFeaturesAmenitiesForm from "./KeyFeaturesAmenitiesForm";
+import { propertiesService } from "@/services/properties.service";
+import { ApiEndPoints } from "@/constants/api";
 
 interface InfoFormValues {
   title: string;
@@ -24,12 +26,12 @@ interface RoomAndMeasurementsFormValues {
 }
 
 export default function PropertiesForm() {
-  const [selectedPackageId, setSelectedPackageId] = useState<number | null>(null);
-  const [selectedPropertyTypeId, setSelectedPropertyTypeId] = useState<number | null>(null);
+  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
+  const [selectedPropertyType, setSelectedPropertyType] = useState<string | null>(null);
   const [isPropertyInfoFormResponse, setIsPropertyInfoFormResponse] = useState<boolean>(false);
   const [isRoomAndMeasurementsFormResponse, setIsRoomAndMeasurementsFormResponse] = useState<boolean>(false);
-  const [isKeyFeaturesAmenitiesFormResponse,setIsKeyFeaturesAmenitiesFormResponse]=useState<boolean>(false);
-  
+  const [isKeyFeaturesAmenitiesFormResponse, setIsKeyFeaturesAmenitiesFormResponse] = useState<boolean>(false);
+
   const [infoFormValues, setInfoFormValues] = useState<InfoFormValues>({
     title: "",
     description: "",
@@ -44,14 +46,14 @@ export default function PropertiesForm() {
   });
   const [keyFeaturesAmenitiesFormValues, setKeyFeaturesAmenitiesFormValues] = useState<string[]>([]);
 
-  const handlePackageSelect = (packageId: number) => {
-    console.log(`Selected package ID in parent: ${packageId}`);
-    setSelectedPackageId(packageId);
+  const handlePackageSelect = (selectedPackage: string) => {
+    console.log(selectedPackage);
+    setSelectedPackage(selectedPackage);
   };
 
-  const handleTypeSelect = (typeId: number) => {
-    console.log(`Selected type ID in parent: ${typeId}`);
-    setSelectedPropertyTypeId(typeId);
+  const handleTypeSelect = (selectedProperty: string) => {
+    console.log(selectedProperty);
+    setSelectedPropertyType(selectedProperty);
   };
 
   const handleInfoFormSubmit = (values: InfoFormValues) => {
@@ -66,18 +68,42 @@ export default function PropertiesForm() {
     setIsRoomAndMeasurementsFormResponse(true);
   };
 
+  const endpoint = ApiEndPoints.PROPERTIES;
+  const propertyData = {
+    packageType: selectedPackage as string,
+    propertyType: selectedPropertyType as string,
+    title: infoFormValues.title,
+    description: infoFormValues.description,
+    location: infoFormValues.region,
+    address: infoFormValues.address,
+    noOfRooms: roomAndMeasurementsFormValues.noOfRooms,
+    noOfBeds: roomAndMeasurementsFormValues.noOfBeds,
+    noOfBaths: roomAndMeasurementsFormValues.noOfBaths,
+    area: roomAndMeasurementsFormValues.area,
+    amenities: keyFeaturesAmenitiesFormValues
+  };
+
   const handleKeyFeaturesAmenitiesFormSubmit = (values: string[]) => {
     console.log(values);
     setKeyFeaturesAmenitiesFormValues(values);
     setIsKeyFeaturesAmenitiesFormResponse(true);
+    console.log(propertyData);
+    propertiesService
+      .AddProperty(propertyData, endpoint)
+      .then((data) => {
+        console.log("Property posted successfully:", data);
+      })
+      .catch((error) => {
+        console.error("Failed to post property:", error);
+      });
   };
 
   return (
     <Container sx={{ flexGrow: 1 }}>
       <Box sx={{ mb: 2 }}>
-        {!selectedPackageId ? (
+        {!selectedPackage ? (
           <PropertiesPackageList onPackageSelect={handlePackageSelect} />
-        ) : !selectedPropertyTypeId ? (
+        ) : !selectedPropertyType ? (
           <PropertiesTypeList onTypeSelect={handleTypeSelect} />
         ) : !isPropertyInfoFormResponse ? (
           <PropertyInfoForm onSubmit={handleInfoFormSubmit} />
