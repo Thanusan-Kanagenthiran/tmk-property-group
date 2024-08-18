@@ -2,11 +2,11 @@ export interface Property {
   _id: string;
   title: string;
   description: string;
-  price: string;
+  price: number;
   link: string;
   bedrooms: number;
   bathrooms: number;
-  packageType: PackageType;
+  packageType: string;
   location: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -15,10 +15,14 @@ export interface Property {
   keyFeaturesAndAmenities?: string[];
   image: string;
   images?: string[];
+  status?: string;
+  propertyType?: string;
+  owner?: string | null;
+  isDeleted?: boolean;
 }
 
 export enum PackageType {
   Premium = "premium",
   Standard = "standard",
-  Basic = "basic",
+  Basic = "basic"
 }
