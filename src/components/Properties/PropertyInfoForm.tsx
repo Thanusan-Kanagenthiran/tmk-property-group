@@ -1,3 +1,4 @@
+import React from "react";
 import { Typography, Grid, FormControl, TextField, Box, Button, InputLabel, MenuItem, Select } from "@mui/material";
 import AddFormContainer from "../Common/Layout/AddFormContainer";
 
@@ -25,26 +26,31 @@ const cities = [
   { name: "Kalutara", province: "Western" }
 ];
 
-const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  const formData = new FormData(e.currentTarget);
+interface PropertyInfoFormProps {
+  onSubmit: (values: { title: string; description: string; region: string; address: string }) => void;
+}
 
-  const response = {
-    title: formData.get("title") as string,
-    description: formData.get("description") as string,
-    region: formData.get("region") as string,
-    address: formData.get("address") as string
+const PropertyInfoForm: React.FC<PropertyInfoFormProps> = ({ onSubmit }) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+
+    const response = {
+      title: formData.get("title") as string,
+      description: formData.get("description") as string,
+      region: formData.get("region") as string,
+      address: formData.get("address") as string
+    };
+
+    if (!response.title || !response.description || !response.region || !response.address) {
+      console.log("All fields are required.");
+      return;
+    } else {
+      onSubmit(response);
+      console.log(response);
+    }
   };
 
-  if (!response.title || !response.description || !response.region || !response.address) {
-    console.log("All fields are required.");
-    return;
-  } else {
-    console.log(response);
-  }
-};
-
-const PropertyInfoForm = () => {
   return (
     <AddFormContainer>
       <form onSubmit={handleSubmit}>
@@ -58,14 +64,7 @@ const PropertyInfoForm = () => {
                 <Typography variant="body2" color="secondary" textAlign="left" sx={{ mb: -1.5 }}>
                   Title
                 </Typography>
-                <TextField
-                  onClick={() => ({})}
-                  size="small"
-                  variant="outlined"
-                  margin="normal"
-                  name="title"
-                  type="text"
-                />
+                <TextField size="small" variant="outlined" margin="normal" name="title" type="text" />
               </FormControl>
             </Grid>
             <Grid item xs={12}>
@@ -74,7 +73,6 @@ const PropertyInfoForm = () => {
                   Description
                 </Typography>
                 <TextField
-                  onClick={() => ({})}
                   size="small"
                   variant="outlined"
                   margin="normal"
@@ -92,12 +90,7 @@ const PropertyInfoForm = () => {
                 <Typography variant="body2" color="secondary" textAlign="left" sx={{ mb: 0.5 }}>
                   Country Region
                 </Typography>
-                <Select
-                  size="small"
-                  name="region"
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  onChange={() => ({})}>
+                <Select size="small" name="region" labelId="demo-simple-select-label" id="demo-simple-select">
                   {cities.map((city, index) => (
                     <MenuItem key={index} value={city.name}>
                       {city.name}, {city.province}
@@ -112,7 +105,6 @@ const PropertyInfoForm = () => {
                   Address
                 </Typography>
                 <TextField
-                  onClick={() => ({})}
                   size="small"
                   variant="outlined"
                   margin="normal"

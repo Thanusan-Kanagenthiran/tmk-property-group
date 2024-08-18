@@ -20,9 +20,3 @@ export interface Property {
   owner?: string | null;
   isDeleted?: boolean;
 }
-
-export enum PackageType {
-  Premium = "premium",
-  Standard = "standard",
-  Basic = "basic"
-}

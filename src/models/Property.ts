@@ -1,56 +1,57 @@
 import mongoose, { Schema, model } from "mongoose";
-import { PropertyType, PropertyPackageTypes, PropertyStatus } from "@/constants/Property";
+import { PropertyType, PropertyPackageTypes } from "@/constants/Property";
 
 export interface PropertyDocument {
+  packageType: string;
+  propertyType: string;
+
   title: string;
   description: string;
-  price: number;
-  link: string;
-  bedrooms: number;
-  bathrooms: number;
-  image: string;
-  packageType: PropertyPackageTypes;
-  amenities: string[];
-  propertyType: PropertyType;
   location: string;
-  status: PropertyStatus;
+  address: string;
+
+  noOfRooms: string;
+  noOfBeds: string;
+  noOfBaths: string;
+  area: string;
+
+  amenities: string[];
+
   owner: Schema.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;
 }
+
+export interface PropertyPostData extends Omit<PropertyDocument, "owner" | "createdAt" | "updatedAt"> {}
+
 const PropertySchema = new Schema<PropertyDocument>(
   {
-    title: { type: String, required: true },
-    description: { type: String, required: true },
-    price: { type: Number, required: true },
-    link: { type: String, required: true },
-    bedrooms: { type: Number, required: true },
-    bathrooms: { type: Number, required: true },
-    image: { type: String, required: true },
     packageType: {
       type: String,
-      enum: Object.values(PropertyPackageTypes),
-      required: true,
-    },
-    location: { type: String, required: true },
-    status: {
-      type: String,
-      enum: Object.values(PropertyStatus),
-      required: true,
+      required: true
     },
     propertyType: {
       type: String,
-      enum: Object.values(PropertyType),
-      required: true,
+      required: true
     },
+
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    location: { type: String, required: true },
+    address: { type: String, required: true },
+
+    noOfRooms: { type: String, required: true },
+    noOfBeds: { type: String, required: true },
+    noOfBaths: { type: String, required: true },
+    area: { type: String, required: true },
     amenities: { type: [String], required: true },
     owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    isDeleted: { type: Boolean, default: false },
+    isDeleted: { type: Boolean, default: false }
   },
   {
     timestamps: true,
-    versionKey: false,
+    versionKey: false
   }
 );
 
