@@ -13,9 +13,17 @@ interface PropertiesTypeCardProps {
   action: () => void;
   actionLabel: string;
   icon: ReactNode;
+  actionButtonColor?: "primary" | "secondary" | "error" | "warning" | "info" | "success";
 }
 
-const PropertiesTypeCard: React.FC<PropertiesTypeCardProps> = ({ title, description, action, actionLabel, icon }) => {
+const PropertiesTypeCard: React.FC<PropertiesTypeCardProps> = ({
+  title,
+  description,
+  action,
+  actionLabel,
+  icon,
+  actionButtonColor = "secondary"
+}) => {
   return (
     <Card sx={{ maxWidth: 345, textAlign: "center", display: "flex", flexDirection: "column", height: "100%" }}>
       <CardActionArea sx={{ flex: 1 }}>
@@ -32,7 +40,7 @@ const PropertiesTypeCard: React.FC<PropertiesTypeCardProps> = ({ title, descript
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" variant="contained" color="secondary" onClick={action} fullWidth>
+        <Button size="small" variant="contained" color={actionButtonColor} onClick={action} fullWidth>
           {actionLabel}
         </Button>
       </CardActions>

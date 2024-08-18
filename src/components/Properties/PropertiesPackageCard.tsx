@@ -15,6 +15,7 @@ interface PropertiesPackageCardProps {
   secondaryAction?: () => void;
   secondaryActionLabel?: string;
   icon: ReactNode;
+  actionButtonColor?: "primary" | "secondary" | "error" | "warning" | "info" | "success";
 }
 
 const PropertiesPackageCard: React.FC<PropertiesPackageCardProps> = ({
@@ -24,6 +25,7 @@ const PropertiesPackageCard: React.FC<PropertiesPackageCardProps> = ({
   actionLabel,
   secondaryAction,
   secondaryActionLabel,
+  actionButtonColor = "secondary",
   icon
 }) => {
   const isFullWidth = !secondaryAction || !secondaryActionLabel;
@@ -49,7 +51,7 @@ const PropertiesPackageCard: React.FC<PropertiesPackageCardProps> = ({
             {secondaryActionLabel}
           </Button>
         )}
-        <Button variant="contained" size="small" color="secondary" onClick={action} fullWidth={isFullWidth}>
+        <Button variant="contained" size="small" color={actionButtonColor} onClick={action} fullWidth={isFullWidth}>
           {actionLabel}
         </Button>
       </CardActions>
