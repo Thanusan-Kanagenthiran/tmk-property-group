@@ -5,6 +5,8 @@ import Grid from "@mui/material/Grid";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
+import { Typography } from "@mui/material";
+import AddFormContainer from "../Common/Layout/AddFormContainer";
 const commonIconStyles = { height: "35%", width: "35%" };
 
 const Icons: Record<string, ReactNode> = {
@@ -35,12 +37,16 @@ const propertyPackagesData = {
     }
   ]
 };
+interface PropertiesPackageListProps {
+  onPackageSelect: (packageId: number) => void;
+}
 
-const PropertiesPackageList = () => {
+const PropertiesPackageList: React.FC<PropertiesPackageListProps> = ({ onPackageSelect }) => {
   const [selectedPackageId, setSelectedPackageId] = useState<number | null>(null);
 
   const handleSelectPackage = (id: number) => {
     setSelectedPackageId(id);
+    onPackageSelect(id); // Notify the parent component
     console.log(`Package ${id} selected`);
   };
 
@@ -49,25 +55,31 @@ const PropertiesPackageList = () => {
   };
 
   return (
-    <Grid container spacing={2} py={2}>
-      {propertyPackagesData.packages.map((packageType) => {
-        const icon = Icons[packageType.icon as keyof typeof Icons];
-        return (
-          <Grid item xs={12} sm={6} md={4} key={packageType.id}>
-            <PropertiesPackageCard
-              title={packageType.title}
-              description={packageType.description}
-              action={() => handleSelectPackage(packageType.id)}
-              actionLabel={selectedPackageId === packageType.id ? "Selected" : "Select Package"}
-              secondaryAction={() => handleLearnMore(packageType.id)}
-              secondaryActionLabel="Learn More"
-              actionButtonColor={selectedPackageId === packageType.id ? "primary" : "secondary"}
-              icon={icon}
-            />
-          </Grid>
-        );
-      })}
-    </Grid>
+    <AddFormContainer>
+      <Typography variant="body1" color="text.primary" textAlign="left" sx={{ mb: -1.5 }}>
+        Select Convenient Package for you
+      </Typography>
+
+      <Grid container spacing={2} py={2}>
+        {propertyPackagesData.packages.map((packageType) => {
+          const icon = Icons[packageType.icon as keyof typeof Icons];
+          return (
+            <Grid item xs={12} sm={6} md={4} key={packageType.id}>
+              <PropertiesPackageCard
+                title={packageType.title}
+                description={packageType.description}
+                action={() => handleSelectPackage(packageType.id)}
+                actionLabel={selectedPackageId === packageType.id ? "Selected" : "Select Package"}
+                secondaryAction={() => handleLearnMore(packageType.id)}
+                secondaryActionLabel="Learn More"
+                actionButtonColor={selectedPackageId === packageType.id ? "primary" : "secondary"}
+                icon={icon}
+              />
+            </Grid>
+          );
+        })}
+      </Grid>
+    </AddFormContainer>
   );
 };
 

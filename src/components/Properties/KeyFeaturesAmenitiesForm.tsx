@@ -17,10 +17,18 @@ const labels: Label[] = [
   { label: "Clothes rack", key: "clothes_rack" },
   { label: "Upper floors accessible by elevator", key: "upper_floors_accessible_by_elevator" },
   { label: "Dining area", key: "dining_area" },
-  { label: "Kitchenware", key: "kitchenware" }
+  { label: "Kitchenware", key: "kitchenware" },
+  { label: "Laundry area", key: "laundry_area" },
+  { label: "Washing machine", key: "washing_machine" },
+  { label: "Dryer", key: "dryer" },
+  { label: "Parking area", key: "parking_area" }
 ];
 
-const KeyFeaturesAmenitiesForm: React.FC = () => {
+interface KeyFeaturesAmenitiesFormProps {
+  onSubmit: (values: string[]) => void;
+}
+
+const KeyFeaturesAmenitiesForm: React.FC<KeyFeaturesAmenitiesFormProps> = ({ onSubmit }) => {
   const [formState, setFormState] = useState<FormState>({});
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,6 +55,7 @@ const KeyFeaturesAmenitiesForm: React.FC = () => {
       console.log("At least one feature should be selected.");
       return;
     } else {
+      onSubmit(amenities);
       console.log(response);
     }
   };

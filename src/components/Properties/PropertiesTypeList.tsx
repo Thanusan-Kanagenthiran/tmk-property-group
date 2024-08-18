@@ -6,6 +6,8 @@ import VillaIcon from "@mui/icons-material/Villa";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import NightShelterIcon from "@mui/icons-material/NightShelter";
 import { useEffect, useState, type ReactNode } from "react";
+import { Typography } from "@mui/material";
+import AddFormContainer from "../Common/Layout/AddFormContainer";
 
 const commonIconStyles = { height: "35%", width: "35%" };
 
@@ -45,33 +47,42 @@ const propertyData = {
   ]
 };
 
-const PropertiesTypeList = () => {
+interface PropertiesTypeListProps {
+  onTypeSelect: (typeId: number) => void;
+}
+
+const PropertiesTypeList: React.FC<PropertiesTypeListProps> = ({ onTypeSelect }) => {
   const [selectedPropertyType, setSelectedPropertyType] = useState<number | null>(null);
 
-  useEffect(() => {
-    if (selectedPropertyType !== null) {
-      console.log(selectedPropertyType);
-    }
-  }, [selectedPropertyType]);
+  const handleSelectType = (id: number) => {
+    setSelectedPropertyType(id);
+    onTypeSelect(id); // Notify the parent component
+    console.log(`Type ${id} selected`);
+  };
 
   return (
-    <Grid container spacing={2} py={2}>
-      {propertyData.propertyType.map((property, index) => {
-        const icon = Icons[property.icon as keyof typeof Icons];
-        return (
-          <Grid item xs={6} md={3} key={index}>
-            <PropertiesTypeCard
-              title={property.title}
-              action={() => setSelectedPropertyType(property.id)}
-              description={property.description}
-              actionButtonColor={selectedPropertyType === property.id ? "primary" : "secondary"}
-              actionLabel={selectedPropertyType === property.id ? "Selected" : "Select"}
-              icon={icon}
-            />
-          </Grid>
-        );
-      })}
-    </Grid>
+    <AddFormContainer>
+      <Typography variant="body1" color="text.primary" textAlign="left" sx={{ mb: -1.5 }}>
+        Select Property Type
+      </Typography>
+      <Grid container spacing={2} py={2}>
+        {propertyData.propertyType.map((property, index) => {
+          const icon = Icons[property.icon as keyof typeof Icons];
+          return (
+            <Grid item xs={6} md={3} key={index}>
+              <PropertiesTypeCard
+                title={property.title}
+                action={() => handleSelectType(property.id)}
+                description={property.description}
+                actionButtonColor={selectedPropertyType === property.id ? "primary" : "secondary"}
+                actionLabel={selectedPropertyType === property.id ? "Selected" : "Select"}
+                icon={icon}
+              />
+            </Grid>
+          );
+        })}
+      </Grid>{" "}
+    </AddFormContainer>
   );
 };
 

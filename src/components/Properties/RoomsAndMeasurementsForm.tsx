@@ -1,26 +1,32 @@
 import { Typography, Grid, TextField, Box, Button } from "@mui/material";
 import AddFormContainer from "../Common/Layout/AddFormContainer";
 
-const handleRoomsAndAmentiesS = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  const formData = new FormData(e.currentTarget);
+interface PropertyInfoFormProps {
+  onSubmit: (values: { noOfRooms: string; noOfBeds: string; noOfBaths: string; area: string }) => void;
+}
 
-  const response = {
-    noOfRooms: formData.get("noOfRooms") as string,
-    noOfBeds: formData.get("noOfBeds") as string,
-    noOfBaths: formData.get("noOfBaths") as string,
-    area: formData.get("area") as string
+const RoomsAndMeasurementsForm: React.FC<PropertyInfoFormProps>=({ onSubmit }) => {
+  
+  const handleRoomsAndAmentiesS = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+
+    const response = {
+      noOfRooms: formData.get("noOfRooms") as string,
+      noOfBeds: formData.get("noOfBeds") as string,
+      noOfBaths: formData.get("noOfBaths") as string,
+      area: formData.get("area") as string
+    };
+
+    if (!response.noOfRooms || !response.noOfBeds || !response.noOfBaths || !response.area) {
+      console.log("All fields are required.");
+      return;
+    } else {
+      console.log(response);
+      onSubmit(response);
+    }
   };
 
-  if (!response.noOfRooms || !response.noOfBeds || !response.noOfBaths || !response.area) {
-    console.log("All fields are required.");
-    return;
-  } else {
-    console.log(response);
-  }
-};
-
-const RoomsAndMeasurementsForm = () => {
   return (
     <AddFormContainer>
       <form onSubmit={handleRoomsAndAmentiesS}>
