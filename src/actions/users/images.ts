@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
+import { revalidatePath } from "next/cache";
 
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -13,7 +14,6 @@ export async function deleteImageFromCloudinary(public_id: string) {
     if (result.result !== "ok") {
       throw new Error("Failed to delete image");
     }
-
     return { message: "Image deleted successfully" };
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -52,8 +52,25 @@ export async function uploadImage(formData: FormData) {
         )
         .end(buffer);
     });
+
     console.log(result);
+    window.location.reload();
   } catch (error) {
     console.error("Error uploading image:", error);
   }
 }
+
+export async function fetchPropertiesAllByImages(id: string): Promise<any[]> {
+  try {
+    const { resources } = await cloudinary.api.resources_by_tag(id, {
+      context: true
+    });
+
+    return resources;
+  } catch (error) {
+    console.error("Error fetching resources from Source:", error);
+    throw new Error("Failed to fetch resources from Source");
+  }
+}
+
+

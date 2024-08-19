@@ -2,18 +2,10 @@
 import CldImage from "@/components/CldImage";
 import Button from "@/components/Button";
 import { Box } from "@mui/material";
-
-interface CloudinaryResource {
-  context?: {
-    alt?: string;
-    caption?: string;
-  };
-  public_id: string;
-  secure_url: string;
-}
+import type { CloudinaryResource } from "@/interfaces/Image";
 
 interface ImageListProps {
-  sneakers: CloudinaryResource[];
+  images: CloudinaryResource[];
 }
 
 async function deleteImage(public_id: string) {
@@ -29,29 +21,19 @@ async function deleteImage(public_id: string) {
     if (!response.ok) {
       throw new Error("Failed to delete image");
     }
-
-    // Refresh the page or refetch images
     window.location.reload();
   } catch (error) {
     console.error("Error deleting image:", error);
-    // Handle error (e.g., show message to user)
   }
 }
 
-function ImageList({ sneakers }: ImageListProps) {
+function ImageList({ images }: ImageListProps) {
   return (
     <ul className="grid gap-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-12">
-      {sneakers.map((sneaker: CloudinaryResource) => (
+      {images.map((sneaker: CloudinaryResource) => (
         <li key={sneaker.public_id} className="rounded overflow-hidden bg-white dark:bg-slate-700">
           <Box className="relative" width={200} height={200}>
-            <CldImage
-              src={sneaker.public_id}
-              alt={sneaker.context?.alt || ""}
-              width="100"
-              height="200"
-              crop="fill"
-              gravity="center"
-            />
+            <CldImage src={sneaker.public_id} alt="" width="100" height="200" crop="fill" gravity="center" />
             <Button
               onClick={() => {
                 deleteImage(sneaker.public_id);
@@ -59,13 +41,6 @@ function ImageList({ sneakers }: ImageListProps) {
               Delete
             </Button>
           </Box>
-          {sneaker.context?.caption && (
-            <div className="py-4 px-5">
-              <p className="mb-1 text-md font-bold leading-tight text-neutral-800 dark:text-neutral-50">
-                {sneaker.context?.caption || ""}
-              </p>
-            </div>
-          )}
         </li>
       ))}
     </ul>

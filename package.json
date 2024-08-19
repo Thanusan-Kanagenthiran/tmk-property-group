@@ -23,6 +23,7 @@
     "next-auth": "^4.24.7",
     "next-cloudinary": "^6.10.0",
     "react": "^18",
+    "react-cropper": "^2.3.3",
     "react-dom": "^18"
   },
   "devDependencies": {

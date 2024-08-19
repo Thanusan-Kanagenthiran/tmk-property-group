@@ -1,5 +1,6 @@
 "use server";
 
+import { fetchPropertiesAllByImages } from "@/actions/users/images";
 import { connectDB } from "@/lib/connection";
 import Property from "@/models/Property";
 import { getUserId } from "@/utils/auth";
@@ -8,14 +9,45 @@ import { NextResponse, type NextRequest } from "next/server";
 export const GET = async (request: NextRequest, { params }: { params: { id: string } }) => {
   try {
     await connectDB();
-    const properties = await Property.findOne({ _id: params.id })
+    const property = await Property.findOne({ _id: params.id })
       .populate({
         path: "owner",
-        select: "name email phone",
+        select: "name email phone"
       })
       .exec();
 
-    return NextResponse.json(properties);
+    if (!property) {
+      throw new Error("Property not found");
+    }
+
+    const images = await fetchPropertiesAllByImages(property._id);
+    const imageUrls = images.map((image) => image.url);
+
+    const propertyWithImages = {
+      id: property._id.toString(),
+      featureImage: imageUrls[0] || null,
+      images: imageUrls,
+      packageType: property.packageType,
+      propertyType: property.propertyType,
+      title: property.title,
+      description: property.description,
+      location: property.location,
+      numberOfBeds: property.noOfBeds,
+      numberOfBaths: property.noOfBaths,
+      area: property.area,
+      owner: {
+        name: property.owner.name,
+        email: property.owner.email,
+        phone: property.owner.phone,
+        image: property.owner.image,
+        id: property.owner._id
+      },
+      amenities: property.amenities,
+      createdAt: property.createdAt,
+      isDeleted: property.isDeleted
+    };
+
+    return NextResponse.json(propertyWithImages);
   } catch (error) {
     console.error("Error fetching users:", error);
     return NextResponse.error();
@@ -40,7 +72,7 @@ export const PUT = async (request: NextRequest, { params }: { params: { id: stri
 
     return NextResponse.json({
       message: "Property successfully updated.",
-      property: updatedProperty,
+      property: updatedProperty
     });
   } catch (error) {
     console.error("PATCH Handler Error:", error);
@@ -65,7 +97,7 @@ export const DELETE = async (request: NextRequest, { params }: { params: { id: s
 
     return NextResponse.json({
       message: "Property successfully deleted.",
-      property: deletedProperty,
+      property: deletedProperty
     });
   } catch (error) {
     console.error("DELETE Handler Error:", error);

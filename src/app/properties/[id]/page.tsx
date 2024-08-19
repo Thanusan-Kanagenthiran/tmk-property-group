@@ -9,12 +9,19 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  Button,
+  CardActionArea,
+  CardContent
 } from "@mui/material";
 import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
-import KingBedIcon from "@mui/icons-material/KingBed";
-import BathtubIcon from "@mui/icons-material/Bathtub";
 import HighlightAltIcon from "@mui/icons-material/HighlightAlt";
+import AddFormContainer from "@/components/Common/Layout/AddFormContainer";
+import Image from "next/image";
+import PropertyImagesList from "@/components/Properties/PropertyImagesList";
+
+export const revalidate = 0;
+
 async function getProperties(id: string) {
   try {
     const res = await fetch(`http://localhost:3000/api/properties/${id}`);
@@ -30,6 +37,7 @@ async function getProperties(id: string) {
 
 export default async function Page({ params }: { params: { id: string } }) {
   const propertyDetails = await getProperties(params.id);
+  console.log(propertyDetails);
 
   if (propertyDetails === null) {
     return <div>Error fetching property details. Please try again later.</div>;
@@ -41,107 +49,172 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <Container maxWidth="lg">
-      <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "end" }}>
-        <Stack>
-          <Typography variant="h5" color="text.secondary">
-            {propertyDetails.title}
-          </Typography>
-          <Stack
-            sx={{ borderRadius: 4, border: "1px solid #ccc" }}
-            alignItems="center"
-            direction="row"
-            gap={1}
-            width={"fit-content"}
-            px={2}
-            py={0.5}>
-            <LocationOnIcon fontSize="small" />
-            <Typography variant="body1">{propertyDetails.location}</Typography>
+      <AddFormContainer>
+        <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "end", my: 2 }}>
+          <Stack>
+            <Typography variant="h5" color="text.secondary" gutterBottom>
+              {propertyDetails.title}
+            </Typography>
+            <Button
+              color="secondary"
+              variant="outlined"
+              startIcon={<LocationOnIcon fontSize="small" color="secondary" />}>
+              <Typography variant="body1">{propertyDetails.location}</Typography>
+              <span>{propertyDetails.address}</span>
+            </Button>
+          </Stack>
+          <Stack>
+            {/* <Typography variant="subtitle1" color="text.secondary">
+            Price
+          </Typography> */}
+            <Typography variant="h5" color="text.secondary">
+              {propertyDetails.price}
+            </Typography>
           </Stack>
         </Stack>
-        <Stack>
-          <Typography variant="subtitle1" color="text.secondary">
-            Price
-          </Typography>
-          <Typography variant="h5" color="text.secondary">
-            {propertyDetails.price}
-          </Typography>
-        </Stack>
-      </Stack>
-
-
-
-      <Grid container alignItems={"baseline"}>
-        <Grid item container md={6} xs={12} spacing={2}>
-          <Grid item xs={12}>
-            <Card variant="outlined" sx={{ p: 2, borderRadius: 0.5 }}>
-              <Stack alignItems="center" direction="row" gap={1} py={0.5}>
-                <Typography variant="body1">Description</Typography>
-              </Stack>
-              <Typography variant="body2" color="text.secondary">
-                {propertyDetails.description}
-              </Typography>
-            </Card>
-          </Grid>{" "}
-          <Grid item xs={12} sm={4}>
-            <Card variant="outlined" sx={{ p: 2, borderRadius: 0.5 }}>
-              <Stack alignItems="center" justifyContent="center" direction="row" gap={1} py={0.5}>
-                <HighlightAltIcon fontSize="small" />
-                <Typography variant="body1">Area</Typography>
-              </Stack>
-              <Typography textAlign="center" variant="h6" color="text.secondary">
-                12,000 SQ FT
-              </Typography>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Card variant="outlined" sx={{ p: 2, borderRadius: 0.5 }}>
-              <Stack alignItems="center" justifyContent="center" direction="row" gap={1} py={0.5}>
-                <KingBedIcon fontSize="small" />
-                <Typography variant="body1">Bedrooms</Typography>
-              </Stack>
-              <Typography textAlign={"center"} variant="h5" color="text.secondary">
-                05
-              </Typography>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Card variant="outlined" sx={{ p: 2, borderRadius: 0.5 }}>
-              <Stack alignItems="center" justifyContent="center" direction="row" gap={1} py={0.5}>
-                <BathtubIcon fontSize="small" />
-                <Typography variant="body1">Bathrooms</Typography>
-              </Stack>
-              <Typography textAlign={"center"} variant="h5" color="text.secondary">
-                05
-              </Typography>
-            </Card>
-          </Grid>
-        </Grid>
-        <Grid item md={6} xs={12} spacing={2}>
+        <Grid sx={{ my: 2 }}>
           <Box
-            sx={{
-              p: 1,
-              borderRadius: 0,
-              bgcolor: "background.default",
-              display: "grid",
-              gap: 2
+            style={{
+              position: "relative",
+              width: "100%",
+              height: "auto",
+              overflow: "hidden",
+              display: "flex",
+              justifyContent: "center"
             }}>
-            <List sx={{ fontSize: "small" }}>
-              <Typography sx={{ fontWeight: 600, pl: 2 }} variant="h6">
-                Key Features and Amenities
-              </Typography>
-              {propertyDetails.amenities &&
-                propertyDetails.amenities.map((feature: string, index: number) => (
-                  <ListItem key={index}>
-                    <ListItemIcon>
-                      <StarBorderPurple500Icon />
-                    </ListItemIcon>
-                    <ListItemText primary={feature} />
-                  </ListItem>
-                ))}
-            </List>
+            <Image
+              src={propertyDetails.featureImage}
+              alt=""
+              width={1000}
+              height={450}
+              style={{
+                width: "100%",
+                height: "100%"
+              }}
+            />
           </Box>
         </Grid>
-      </Grid>
+        <Grid container alignItems={"baseline"} spacing={2}>
+          <Grid item container md={8} xs={12} spacing={2}>
+            <Grid item xs={12}>
+              <Card>
+                <CardContent
+                  sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                  <Typography gutterBottom variant="h5" component="div">
+                    Description
+                  </Typography>
+                  <Typography variant="body2" px={2} color="text.secondary">
+                    {propertyDetails.description}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Card
+                sx={{ maxWidth: 345, textAlign: "center", display: "flex", flexDirection: "column", height: "100%" }}>
+                <CardActionArea sx={{ flex: 1 }}>
+                  <Box height="100" pt={2}>
+                    <HighlightAltIcon fontSize="small" />
+                  </Box>
+                  <CardContent
+                    sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                    <Typography gutterBottom variant="h5" component="div">
+                      Area
+                    </Typography>
+                    <Typography variant="body2" px={2} color="text.secondary">
+                      {propertyDetails.area} sqft
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Card
+                sx={{ maxWidth: 345, textAlign: "center", display: "flex", flexDirection: "column", height: "100%" }}>
+                <CardActionArea sx={{ flex: 1 }}>
+                  <Box height="100" pt={2}>
+                    <HighlightAltIcon fontSize="small" />
+                  </Box>
+                  <CardContent
+                    sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                    <Typography gutterBottom variant="h5" component="div">
+                      Area
+                    </Typography>
+                    <Typography variant="body2" px={2} color="text.secondary">
+                      {propertyDetails.area} sqft
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Card
+                sx={{ maxWidth: 345, textAlign: "center", display: "flex", flexDirection: "column", height: "100%" }}>
+                <CardActionArea sx={{ flex: 1 }}>
+                  <Box height="100" pt={2}>
+                    <HighlightAltIcon fontSize="small" />
+                  </Box>
+                  <CardContent
+                    sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                    <Typography gutterBottom variant="h5" component="div">
+                      Area
+                    </Typography>
+                    <Typography variant="body2" px={2} color="text.secondary">
+                      {propertyDetails.area} sqft
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Card
+                sx={{ maxWidth: 345, textAlign: "center", display: "flex", flexDirection: "column", height: "100%" }}>
+                <CardActionArea sx={{ flex: 1 }}>
+                  <Box height="100" pt={2}>
+                    <HighlightAltIcon fontSize="small" />
+                  </Box>
+                  <CardContent
+                    sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                    <Typography gutterBottom variant="h5" component="div">
+                      Area
+                    </Typography>
+                    <Typography variant="body2" px={2} color="text.secondary">
+                      {propertyDetails.area} sqft
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          </Grid>
+          <Grid item md={4} xs={12} spacing={2} sx={{ height: "100%" }}>
+            <Box
+              sx={{
+                p: 1,
+                borderRadius: 0,
+                bgcolor: "background.default",
+                display: "grid",
+                gap: 2,
+                height: "100%"
+              }}>
+              <List sx={{ fontSize: "small" }}>
+                <Typography sx={{ fontWeight: 600, pl: 2 }} variant="h6">
+                  Key Features and Amenities
+                </Typography>
+                {propertyDetails.amenities &&
+                  propertyDetails.amenities.map((feature: string, index: number) => (
+                    <ListItem key={index}>
+                      <ListItemIcon>
+                        <StarBorderPurple500Icon />
+                      </ListItemIcon>
+                      <ListItemText primary={feature} />
+                    </ListItem>
+                  ))}
+              </List>
+            </Box>
+          </Grid>
+        </Grid>
+        <PropertyImagesList tag={propertyDetails.id} />
+      </AddFormContainer>
     </Container>
   );
 }
