@@ -1,8 +1,8 @@
-// app/api/images/route.ts
+
 import { deleteImageFromCloudinary } from "@/actions/users/images";
 import { NextResponse } from "next/server";
 
-export const POST = async (request: Request) => {
+export const DELETE = async (request: Request) => {
   try {
     const { public_id } = await request.json();
 
@@ -21,3 +21,5 @@ export const POST = async (request: Request) => {
     return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });
   }
 };
+
+

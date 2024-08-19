@@ -8,7 +8,6 @@ cloudinary.config({
 
 export async function deleteImageFromCloudinary(public_id: string) {
   try {
-    // Call Cloudinary API to delete the image
     const result = await cloudinary.uploader.destroy(public_id);
 
     if (result.result !== "ok") {
@@ -17,7 +16,6 @@ export async function deleteImageFromCloudinary(public_id: string) {
 
     return { message: "Image deleted successfully" };
   } catch (error: unknown) {
-    // Type guard for the error to handle it properly
     if (error instanceof Error) {
       console.error("Error deleting image from Cloudinary:", error.message);
       return { error: error.message };
@@ -25,5 +23,37 @@ export async function deleteImageFromCloudinary(public_id: string) {
       console.error("Unexpected error:", error);
       return { error: "An unexpected error occurred" };
     }
+  }
+}
+
+export async function uploadImage(formData: FormData) {
+  "use server";
+  try {
+    const file = formData.get("image") as File;
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    console.log(buffer);
+
+    const result = await new Promise((resolve, reject) => {
+      cloudinary.uploader
+        .upload_stream(
+          {
+            tags: ["thanusan"],
+            upload_preset: "tmk-property-group"
+          },
+          function (error, result) {
+            if (error) {
+              reject(error);
+              return;
+            }
+            resolve(result);
+          }
+        )
+        .end(buffer);
+    });
+    console.log(result);
+  } catch (error) {
+    console.error("Error uploading image:", error);
   }
 }

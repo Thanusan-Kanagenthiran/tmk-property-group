@@ -19,7 +19,7 @@ interface ImageListProps {
 async function deleteImage(public_id: string) {
   try {
     const response = await fetch("/api/images", {
-      method: "POST",
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json"
       },
