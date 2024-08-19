@@ -1,79 +1,83 @@
 "use client";
+
 import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button, TextField, Typography, Container, Alert, Box, Link } from "@mui/material";
+import {
+  Button,
+  TextField,
+  Typography,
+  Container,
+  Alert,
+  Box,
+  Snackbar,
+  CircularProgress,
+  Grid,
+  FormControl
+} from "@mui/material";
 import { register } from "@/actions/users/register";
 import { Paths } from "@/constants/Paths";
+import Link from "next/link";
+import { validateEmail, validateName, validatePassword } from "@/utils/validation";
+import AppSpinner from "../Common/AppSpinner";
+import { useRouter } from "next/navigation";
 
-export default function Register() {
+const initialErrors = { email: "", password: "", name: "" };
+
+export default function RegisterForm() {
+  const formRef = useRef<HTMLFormElement>(null);
   const [isPropertyOwner, setIsPropertyOwner] = useState(false);
-  const [errors, setErrors] = useState({ email: "", password: "", name: "", phone: "", image: "" });
+  const [errors, setErrors] = useState(initialErrors);
   const [loading, setLoading] = useState(false);
   const [backendError, setBackendError] = useState<string | null>(null);
-  const router = useRouter();
-  const ref = useRef<HTMLFormElement>(null);
+  const [backendSuccess, setBackendSuccess] = useState<string | null>(null);
 
-  const validateFields = (formData: FormData) => {
-    let valid = true;
-    const newErrors = { email: "", password: "", name: "", phone: "", image: "" };
+  const validateFields = (formData: FormData): boolean => {
+    const formSubmissionErrors = { ...initialErrors };
+    let isValid = true;
 
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-    const name = formData.get("name") as string;
-    const phone = formData.get("phone") as string;
-    const image = formData.get("image") as string;
 
-    if (!email || !email.includes("@")) {
-      newErrors.email = "Invalid email address.";
-      valid = false;
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.isValid) {
+      formSubmissionErrors.email = emailValidation.reason || "";
+      isValid = false;
     }
 
-    if (!password || password.length < 4) {
-      newErrors.password = "Password must be at least 6 characters long.";
-      valid = false;
+    const nameValidation = validateName(formData.get("name") as string);
+    if (!nameValidation.isValid) {
+      formSubmissionErrors.name = nameValidation.reason || "";
+      isValid = false;
     }
 
-    if (!name) {
-      newErrors.name = "Name is required.";
-      valid = false;
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      formSubmissionErrors.password = passwordValidation.reason || "";
+      isValid = false;
     }
 
-    if (!phone || phone.length < 10) {
-      newErrors.phone = "Phone number is invalid.";
-      valid = false;
-    }
-
-    if (!image) {
-      newErrors.image = "Image is required.";
-      valid = false;
-    }
-
-    setErrors(newErrors);
-    return valid;
+    setErrors(formSubmissionErrors);
+    return isValid;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-
-    if (!validateFields(formData)) return;
-
     setLoading(true);
 
-    const email = formData.get("email");
-    const password = formData.get("password");
-    const name = formData.get("name");
-    const phone = formData.get("phone");
-    const image = formData.get("image");
+    const formData = new FormData(e.currentTarget);
 
-    const response = await register({
-      email: email as string,
-      password: password as string,
-      name: name as string,
-      phone: phone as string,
-      image: image as string,
-      role: isPropertyOwner ? "PROPERTY_OWNER" : ("USER" as string),
-    });
+    if (!validateFields(formData)) {
+      setLoading(false);
+      return;
+    }
+
+    const userData = {
+      email: formData.get("email") as string,
+      password: formData.get("password") as string,
+      name: formData.get("name") as string,
+      role: isPropertyOwner ? "PROPERTY_OWNER" : "USER"
+    };
+
+    const response = await register(userData);
 
     setLoading(false);
 
@@ -81,116 +85,137 @@ export default function Register() {
       setBackendError(response.error);
     } else {
       setBackendError(null);
-      ref.current?.reset();
-      router.push(`/sign-in?success=${encodeURIComponent("Registration successful! Please sign in.")}`);
+      formRef.current?.reset();
+      setErrors(initialErrors);
+      setBackendSuccess("Registration successful. Please login.");
     }
+  };
+
+  const router = useRouter();
+  const handleClose = () => {
+    if (backendError) {
+      setBackendError(null);
+      router.push("/dashboard");
+    }
+    setBackendSuccess(null);
   };
 
   return (
     <Container maxWidth="xs">
+      <Snackbar autoHideDuration={3000} onClose={handleClose} open={!!backendError}>
+        <Alert
+          severity="error"
+          action={
+            <Button href="/" color="inherit" size="small">
+              Try Again 🤷‍♀️
+            </Button>
+          }>
+          {backendError}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar autoHideDuration={3000} onClose={handleClose} open={!!backendSuccess}>
+        <Alert
+          severity="success"
+          action={
+            <Button href={Paths.SIGN_IN} color="inherit" size="small">
+              Sign In 👉
+            </Button>
+          }>
+          {backendSuccess}
+        </Alert>
+      </Snackbar>
+
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          textAlign: "center",
           justifyContent: "center",
-          minHeight: "100vh",
+          textAlign: "center"
         }}>
-        <Box mt={2}>
-          <Typography
-            variant="h5"
-            gutterBottom
-            sx={{
-              fontWeight: "bold",
-              color: isPropertyOwner ? "primary.main" : "secondary.main",
-            }}>
-            {!isPropertyOwner ? "✨ Join the Community of Users ✨" : "🏠 Become a Property Owner 🏠"}
+        <Typography
+          variant="h5"
+          gutterBottom
+          sx={{
+            fontWeight: "bold",
+            mt: -3,
+            mb: 4
+          }}>
+          {isPropertyOwner ? "🏠 Become a Property Owner 🏠" : "✨ Join the Community of Users ✨"}{" "}
+          <Typography variant="body2">
+            {isPropertyOwner ? "Want to rent a property❔ " : "Looking for a place to stay❔ "}
+            <Link href={Paths.SIGN_UP}>
+              <span onClick={() => setIsPropertyOwner((prev) => !prev)}>
+                {isPropertyOwner ? "Register as a renter." : "Register as a property owner."}
+              </span>
+            </Link>
           </Typography>
+        </Typography>
 
-          <Typography variant="body1" sx={{ color: "text.secondary", mt: 2 }}>
-            {!isPropertyOwner
-              ? "Enter your email and password to sign up and start exploring property listings!"
-              : "Sign up with your email and password to manage your properties and connect with renters!"}
-          </Typography>
+        <form style={{ maxWidth: "350px" }} ref={formRef} onSubmit={handleSubmit} autoComplete="off">
+          <FormControl sx={{ mb: -1, width: "100%" }}>
+            <Typography variant="body2" color="secondary" textAlign="left" sx={{ mb: -1.5 }}>
+              Enter your name
+            </Typography>
+            <TextField
+              onClick={() => setErrors((prev) => ({ ...prev, name: "" }))}
+              size="small"
+              variant="outlined"
+              margin="normal"
+              name="name"
+              error={!!errors.name}
+              helperText={errors.name ? errors.name : " "}
+            />
+          </FormControl>
+          <FormControl sx={{ mb: -0.4, width: "100%" }}>
+            <Typography variant="body2" color="secondary" textAlign="left" sx={{ mb: -1.5 }}>
+              Email address
+            </Typography>
+            <TextField
+              onClick={() => setErrors((prev) => ({ ...prev, email: "" }))}
+              size="small"
+              variant="outlined"
+              margin="normal"
+              name="email"
+              error={!!errors.email}
+              helperText={errors.email ? errors.email : " "}
+            />
+          </FormControl>
 
-          <Typography
-            onClick={() => setIsPropertyOwner((prevState) => !prevState)}
-            sx={{
-              color: "primary.main",
-              cursor: "pointer",
-            }}>
-            {isPropertyOwner ? "Register as a renter" : "Register as a property owner"}
-          </Typography>
-        </Box>
-        {backendError && (
-          <Alert variant="outlined" severity="error">
-            This is an outlined error Alert.
-          </Alert>
-        )}
-        <form ref={ref} onSubmit={handleSubmit}>
-          <TextField
-            variant="standard"
-            autoComplete="off"
-            fullWidth
-            margin="normal"
-            label="Full Name"
-            name="name"
-            error={!!errors.name}
-            helperText={errors.name}
-          />
-          <TextField
-            variant="standard"
-            autoComplete="off"
-            fullWidth
-            margin="normal"
-            label="Email"
-            name="email"
-            type="email"
-            error={!!errors.email}
-            helperText={errors.email}
-          />
-          <TextField
-            variant="standard"
-            autoComplete="off"
-            fullWidth
-            margin="normal"
-            label="Phone"
-            name="phone"
-            error={!!errors.phone}
-            helperText={errors.phone}
-          />
-          <TextField
-            variant="standard"
-            autoComplete="off"
-            fullWidth
-            margin="normal"
-            label="Image"
-            name="image"
-            error={!!errors.image}
-            helperText={errors.image}
-          />
-          <TextField
-            variant="standard"
-            autoComplete="off"
-            fullWidth
-            margin="normal"
-            label="Password"
-            name="password"
-            type="password"
-            error={!!errors.password}
-            helperText={errors.password}
-          />
+          <FormControl sx={{ mb: -0.4, width: "100%" }}>
+            <Typography variant="body2" color="secondary" textAlign="left" sx={{ mb: -1.5 }}>
+              Password
+            </Typography>
+            <TextField
+              onClick={() => setErrors((prev) => ({ ...prev, password: "" }))}
+              size="small"
+              variant="outlined"
+              margin="normal"
+              name="password"
+              type="password"
+              error={!!errors.password}
+              helperText={errors.password ? errors.password : " "}
+            />
+          </FormControl>
 
-          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
-            {loading ? "Signing Up..." : "Sign Up"}
-          </Button>
+          <Grid container justifyContent="center" gap={2}>
+            <Button
+              type="submit"
+              variant="contained"
+              startIcon={loading ? <AppSpinner size={15} /> : ""}
+              size="large"
+              fullWidth
+              color="primary">
+              Create Account
+            </Button>
+          </Grid>
           <Box mt={2}>
-            <Typography variant="body2" >
-              Already have an account?<Link href={Paths.SIGN_IN}> Sign In </Link>
+            <Typography variant="body2">
+              Already have an account? <Link href={Paths.SIGN_IN}>Sign In</Link>
             </Typography>
           </Box>
-        </form>{" "}
+        </form>
       </Box>
     </Container>
   );
