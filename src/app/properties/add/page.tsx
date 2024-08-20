@@ -2,9 +2,6 @@ import React from "react";
 import PropertiesForm from "@/components/Properties/PropertiesForm";
 import PropertiesImagesUpload from "@/components/Properties/propertiesImagesUpload";
 import { Container } from "@mui/material";
-import { revalidatePath } from "next/cache";
-
-revalidatePath("/properties/add");
 
 const SignIn = () => {
   return (

@@ -1,34 +1,16 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
 const Schema = mongoose.Schema;
 
 const ImageSchema = new Schema(
   {
-    name: {
+    image_url: {
       type: String,
       required: true
     },
-    email: {
+    public_id: {
       type: String,
       required: true
-    },
-    image: {
-      image_url: {
-        type: String,
-        required: true
-      },
-      public_id: {
-        type: String,
-        required: true
-      }
-    },
-    password: {
-      type: String,
-      required: true
-    },
-    phone: {
-      type: String,
-      verbose: true
     }
   },
   {
