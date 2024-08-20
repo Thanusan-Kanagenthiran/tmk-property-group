@@ -1,4 +1,3 @@
-
 import { deleteImageFromCloudinary } from "@/actions/users/images";
 import { NextResponse } from "next/server";
 
@@ -21,5 +20,3 @@ export const DELETE = async (request: Request) => {
     return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });
   }
 };
-
-

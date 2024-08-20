@@ -1,11 +1,4 @@
-import { v2 as cloudinary } from "cloudinary";
-import { revalidatePath } from "next/cache";
-
-cloudinary.config({
-  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
-});
+import cloudinary from "@/lib/cloudinary";
 
 export async function deleteImageFromCloudinary(public_id: string) {
   try {
@@ -72,5 +65,3 @@ export async function fetchPropertiesAllByImages(id: string): Promise<any[]> {
     throw new Error("Failed to fetch resources from Source");
   }
 }
-
-

@@ -1,17 +1,11 @@
 import { revalidatePath } from "next/cache";
-import { v2 as cloudinary } from "cloudinary";
+import cloudinary from "@/lib/cloudinary";
 import CldImage from "@/components/CldImage";
 import ImageUploadField from "./ImageUploadField";
 import { Grid, Box, Button, Typography } from "@mui/material";
 import ImageDeleteButton from "./ImageDeleteButton";
 import AddFormContainer from "../Common/Layout/AddFormContainer";
 import type { CloudinaryResource } from "@/interfaces/Image";
-
-cloudinary.config({
-  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
-});
 
 interface PropertiesImagesUploadProps {
   propertyId: string;
