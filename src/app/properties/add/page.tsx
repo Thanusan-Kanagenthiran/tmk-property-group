@@ -7,7 +7,7 @@ const SignIn = () => {
   return (
     <Container maxWidth={"lg"} sx={{ mt: 4 }}>
       <PropertiesForm />
-      <PropertiesImagesUpload propertyId="66c27d9fd334debbc8f9545d" />
+      <PropertiesImagesUpload />
     </Container>
   );
 };

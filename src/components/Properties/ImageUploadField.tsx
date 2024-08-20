@@ -1,21 +1,22 @@
 "use client";
-
 import React, { useState, createRef } from "react";
 import Cropper, { ReactCropperElement } from "react-cropper";
 import "cropperjs/dist/cropper.css";
-import { Box, Grid, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 interface ImageUploadFieldProps {
-  name: string;
-  id: string;
+  onImageChange: (file: File) => void;
+  buttonWidth?: string;
 }
 
-export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ name, id }) => {
+export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ onImageChange, buttonWidth = "210px" }) => {
   const [image, setImage] = useState<string | undefined>(undefined);
   const [cropData, setCropData] = useState<string>("#");
   const cropperRef = createRef<ReactCropperElement>();
   const fileInputRef = createRef<HTMLInputElement>();
   const [imageCropped, setImageCropped] = useState<boolean>(false);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   const dataURLToFile = (dataURL: string, filename: string) => {
     const [header, base64] = dataURL.split(",");
@@ -37,6 +38,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ name, id }) 
       const reader = new FileReader();
       reader.onload = () => {
         setImage(reader.result as string);
+        setDialogOpen(true);
       };
       reader.readAsDataURL(files[0]);
     }
@@ -48,30 +50,46 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ name, id }) 
       setCropData(croppedImage);
 
       const file = dataURLToFile(croppedImage, "cropped-image.png");
-      const dataTransfer = new DataTransfer();
-      dataTransfer.items.add(file);
-
-      if (fileInputRef.current) {
-        fileInputRef.current.files = dataTransfer.files;
-      }
+      onImageChange(file);
       setImageCropped(true);
+      setDialogOpen(false);
     }
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
   };
 
   return (
     <div>
-      <TextField size="small" variant="outlined" type="file" onChange={onChange} />
+      <Button
+        component="label"
+        role={undefined}
+        variant="contained"
+        tabIndex={-1}
+        sx={{ width: `${buttonWidth}`, display: "flex", justifyContent: "center" }}>
+        <CloudUploadIcon />
+        <TextField
+          style={{ display: "none" }}
+          size="small"
+          variant="outlined"
+          type="file"
+          inputRef={fileInputRef}
+          onChange={onChange}
+          hidden
+        />
+      </Button>
 
-      <input id={id} ref={fileInputRef} type="file" name={name} required style={{ display: "none" }} />
-      <Grid container sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-        <Grid item md={4}>
-          <Box sx={{ display: "flex", justifyContent: "center", height: 300, width: 345 }}>
-            {image ? (
+      <Dialog open={dialogOpen} onClose={handleDialogClose} maxWidth="md" fullWidth>
+        <DialogTitle>Crop Image</DialogTitle>
+        <DialogContent>
+          <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
+            {image && (
               <Cropper
                 ref={cropperRef}
-                style={{ height: "100%", width: "100%" }}
+                style={{ height: "360px", width: "640px" }}
                 zoomTo={0.5}
-                initialAspectRatio={16 / 9}
+                aspectRatio={16 / 9}
                 preview=".img-preview"
                 src={image}
                 viewMode={1}
@@ -82,26 +100,18 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ name, id }) 
                 autoCropArea={1}
                 checkOrientation={false}
                 guides={true}
+                disabled={true}
               />
-            ) : (
-              <img src="https://placehold.co/345x300?text=Please+upload\n+an+image" alt="Please upload an image" />
             )}
           </Box>
-        </Grid>
-        <Grid item md={6}>
-          {imageCropped && <img style={{ height: 300, width: 533.33 }} src={cropData} alt="Cropped Image" />}
-          {!imageCropped && (
-            <img
-              style={{ height: 300, width: 533.33 }}
-              src="https://placehold.co/533x300?text=Cropped+Image"
-              alt="Cropped Image"
-            />
-          )}
-        </Grid>
-      </Grid>
-      <Button sx={{ mt: 2 }} size="small" onClick={getCropData} disabled={!image} variant="contained" color="primary">
-        Crop Image
-      </Button>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose}>Cancel</Button>
+          <Button onClick={getCropData} disabled={!image} variant="contained" color="primary">
+            Crop Image
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

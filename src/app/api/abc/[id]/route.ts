@@ -1,10 +1,10 @@
 import { deleteImageFromCloudinary } from "@/lib/delete-image";
-import { ImageModel } from "@/lib/image-model";
+import { UserModelWithImage } from "@/lib/image-model";
 import { uploadImageToCloudinary } from "@/lib/image-upload";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest, { params }: { params: { id: string } }) => {
-  const image = await ImageModel.findOne({ _id: params.id });
+  const image = await UserModelWithImage.findOne({ _id: params.id });
   const data = {
     id: image._id,
     image_url: image.image_url,
@@ -16,7 +16,7 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
 
 export const DELETE = async (req: NextRequest, { params }: { params: { id: string } }) => {
   try {
-    const public_id = await ImageModel.findOne({ _id: params.id });
+    const public_id = await UserModelWithImage.findOne({ _id: params.id });
     if (!public_id) {
       return NextResponse.json({ error: "Image is not found" }, { status: 400 });
     }
@@ -24,7 +24,7 @@ export const DELETE = async (req: NextRequest, { params }: { params: { id: strin
     if (result_delete_from_cloudinary.error as string) {
       return NextResponse.json({ error: result_delete_from_cloudinary.error }, { status: 400 });
     }
-    await ImageModel.findOneAndDelete({ _id: params.id });
+    await UserModelWithImage.findOneAndDelete({ _id: params.id });
 
     return NextResponse.json({ message: "Image deleted successfully" }, { status: 200 });
   } catch (error) {
@@ -37,7 +37,7 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
     const formData = await req.formData();
     const newImage = formData.get("image") as unknown as File;
 
-    const image = await ImageModel.findOne({ _id: params.id });
+    const image = await UserModelWithImage.findOne({ _id: params.id });
     if (!image) {
       return NextResponse.json({ error: "Image not found" }, { status: 404 });
     }
@@ -55,7 +55,7 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
     }
 
     // Update the image details in the database
-    const updatedImage = await ImageModel.findOneAndUpdate(
+    const updatedImage = await UserModelWithImage.findOneAndUpdate(
       { _id: params.id },
       { image_url: cloudinaryResponse.url, public_id: cloudinaryResponse.public_id },
       { new: true } // Return the updated document

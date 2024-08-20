@@ -1,16 +1,20 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
 const ImageSchema = new Schema(
   {
-    image_url: {
+    name: {
       type: String,
       required: true
     },
-    public_id: {
-      type: String,
-      required: true
+    image: {
+      image_url: {
+        type: String
+      },
+      public_id: {
+        type: String
+      }
     }
   },
   {
@@ -18,4 +22,4 @@ const ImageSchema = new Schema(
   }
 );
 
-export const ImageModel = mongoose.models.Image || mongoose.model("Image", ImageSchema);
+export const UserModelWithImage = mongoose.models.Image || mongoose.model("Image", ImageSchema);

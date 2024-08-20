@@ -1,95 +1,89 @@
-import { revalidatePath } from "next/cache";
-import cloudinary from "@/lib/cloudinary";
-import CldImage from "@/components/CldImage";
+"use client";
 import ImageUploadField from "./ImageUploadField";
-import { Grid, Box, Button, Typography } from "@mui/material";
-import ImageDeleteButton from "./ImageDeleteButton";
+import { Box, Button, Snackbar, Alert, TextField } from "@mui/material";
 import AddFormContainer from "../Common/Layout/AddFormContainer";
-import type { CloudinaryResource } from "@/interfaces/Image";
+import { useState, ChangeEvent, FormEvent } from "react";
+import axios from "axios";
 
-interface PropertiesImagesUploadProps {
-  propertyId: string;
-}
+export default function PropertiesImagesUpload() {
+  const [submitting, setSubmitting] = useState(false);
+  const [name, setName] = useState<string>("");
+  const [image, setImage] = useState<File | null>(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
+  const [severity, setSeverity] = useState<"success" | "error">("success");
 
-async function PropertiesImagesUpload({ propertyId }: PropertiesImagesUploadProps) {
-  const { resources: images } = await cloudinary.api.resources_by_tag("66c381243d9694a4c059a504", {
-    context: true
-  });
+  const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (name === "name") {
+      setName(value);
+    }
+  };
 
-  async function create(formData: FormData) {
-    "use server";
-    const file = formData.get("image") as File;
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+  const onImageChange = (file: File) => {
+    setImage(file);
+  };
 
-    await new Promise((resolve, reject) => {
-      cloudinary.uploader
-        .upload_stream(
-          { tags: ["66c381243d9694a4c059a504"], upload_preset: "tmk-property-group" },
-          function (error, result) {
-            if (error) {
-              reject(error);
-              return;
-            }
-            resolve(result);
-          }
-        )
-        .end(buffer);
-    });
-    revalidatePath("/properties/add");
-  }
+  const onUploadHandler = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitting(true);
 
-  const count = images.length;
+    try {
+      if (!image || !name) {
+        setSnackbarMessage("Please select an image and provide a name");
+        setSnackbarOpen(true);
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("image", image);
+      formData.append("name", name);
+
+      await axios.post("/api/abc", formData);
+      setSnackbarMessage("Image uploaded successfully");
+      setSeverity("success");
+      setSnackbarOpen(true);
+      setImage(null);
+      setName("");
+    } catch (error) {
+      console.error("Error: ", error);
+      setSnackbarMessage("An error occurred while uploading the image");
+      setSeverity("error");
+      setSnackbarOpen(true);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <AddFormContainer>
-      {count < 10 && (
-        <Box maxWidth="lg">
-          <h2>Add Images here</h2>
-          <form action={create}>
-            <Typography variant="body1" color="secondary" textAlign="left">
-              Still you can upload up to {10 - count} images
-            </Typography>
-            <ImageUploadField name="image" id="image" />
-            <Box sx={{ mt: -4, px: 4, display: "flex", justifyContent: "flex-end" }}>
-              <Button size="small" color="secondary" type="submit" variant="contained">
-                Submit
-              </Button>
-            </Box>
-          </form>
-          <h2 className="text-xl font-bold mb-4">Images</h2>
-        </Box>
-      )}
-      <Grid container spacing={2} py={2}>
-        {images.map((image: CloudinaryResource) => (
-          <Grid key={image.public_id} item xs={12} sm={6} md={4}>
-            <Box
-              style={{
-                position: "relative",
-                width: "100%",
-                height: "auto",
-                overflow: "hidden",
-                display: "flex",
-                justifyContent: "center"
-              }}>
-              <CldImage
-                src={image.public_id}
-                alt=""
-                width={300}
-                height={200}
-                style={{
-                  width: "80%",
-                  height: "100%"
-                }}
-                crop="fill"
-                gravity="center"
-              />
-              <ImageDeleteButton id={image.public_id} />
-            </Box>
-          </Grid>
-        ))}
-      </Grid>
+      <Box maxWidth="lg">
+        <h2>Add Images here</h2>
+        <form onSubmit={onUploadHandler}>
+          <TextField
+            type="text"
+            name="name"
+            value={name}
+            size="small"
+            onChange={onInputChange}
+            placeholder="Enter image name"
+            disabled={submitting}
+            sx={{ mb: 2 }}
+          />
+          <ImageUploadField onImageChange={onImageChange} />
+          <Box sx={{ mt: -4, px: 4, display: "flex", justifyContent: "flex-end" }}>
+            <Button size="small" color="secondary" type="submit" variant="contained" disabled={submitting}>
+              Submit
+            </Button>
+          </Box>
+        </form>
+        <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)}>
+          <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: "100%" }}>
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+        <h2 className="text-xl font-bold mb-4">Images</h2>
+      </Box>
     </AddFormContainer>
   );
 }
-
-export default PropertiesImagesUpload;
