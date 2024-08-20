@@ -2,8 +2,9 @@
 import React, { useState, createRef } from "react";
 import Cropper, { ReactCropperElement } from "react-cropper";
 import "cropperjs/dist/cropper.css";
-import { Box, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Box, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Slider } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import CloudDoneIcon from "@mui/icons-material/CloudDone";
 
 interface ImageUploadFieldProps {
   onImageChange: (file: File) => void;
@@ -17,6 +18,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ onImageChang
   const fileInputRef = createRef<HTMLInputElement>();
   const [imageCropped, setImageCropped] = useState<boolean>(false);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [zoomValue, setZoomValue] = useState<number>(50);
 
   const dataURLToFile = (dataURL: string, filename: string) => {
     const [header, base64] = dataURL.split(",");
@@ -31,10 +33,12 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ onImageChang
     return new File([blob], filename, { type: mime });
   };
 
+  const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/svg+xml"];
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const files = e.target.files;
-    if (files && files[0]) {
+    if (files && files[0] && allowedTypes.includes(files[0].type)) {
       const reader = new FileReader();
       reader.onload = () => {
         setImage(reader.result as string);
@@ -65,10 +69,10 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ onImageChang
       <Button
         component="label"
         role={undefined}
-        variant="contained"
+        variant="outlined"
         tabIndex={-1}
         sx={{ width: `${buttonWidth}`, display: "flex", justifyContent: "center" }}>
-        <CloudUploadIcon />
+        {imageCropped ? <CloudDoneIcon color="success" /> : <CloudUploadIcon color="action" />}
         <TextField
           style={{ display: "none" }}
           size="small"
@@ -76,6 +80,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ onImageChang
           type="file"
           inputRef={fileInputRef}
           onChange={onChange}
+          inputProps={{ accept: "image/png, image/jpeg, image/jpg, image/svg+xml" }}
           hidden
         />
       </Button>
@@ -83,21 +88,24 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ onImageChang
       <Dialog open={dialogOpen} onClose={handleDialogClose} maxWidth="md" fullWidth>
         <DialogTitle>Crop Image</DialogTitle>
         <DialogContent>
-          <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
+          <Slider
+            size="small"
+            defaultValue={zoomValue}
+            onChange={(e, value) => setZoomValue(value as number)}
+            aria-label="Small"
+            valueLabelDisplay="auto"
+          />
+          <Box sx={{ display: "flex", justifyContent: "center", width: "100%", alignItems: "center" }}>
             {image && (
               <Cropper
                 ref={cropperRef}
-                style={{ height: "360px", width: "640px" }}
-                zoomTo={0.5}
+                style={{ height: "100%", maxHeight: "350px", width: "100%" }}
+                zoomTo={zoomValue / 100}
                 aspectRatio={16 / 9}
-                preview=".img-preview"
                 src={image}
                 viewMode={1}
-                minCropBoxHeight={10}
-                minCropBoxWidth={10}
                 background={false}
                 responsive={true}
-                autoCropArea={1}
                 checkOrientation={false}
                 guides={true}
                 disabled={true}
