@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import styles from "./home.module.scss";
-
 import AppSpinner from "@/components/Common/AppSpinner";
+
 export default function Home() {
   return (
     <main className={styles.main}>

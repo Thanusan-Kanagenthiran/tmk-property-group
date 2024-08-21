@@ -1,5 +1,5 @@
 "use server";
-
+import { fetchPropertiesAllByImages } from "@/actions/users/images";
 import { connectDB } from "@/lib/connection";
 import Property from "@/models/Property";
 import { getUserId } from "@/utils/auth";
@@ -10,14 +10,32 @@ export const GET = async (request: NextRequest) => {
     await connectDB();
 
     const properties = await Property.find()
-        .populate({
-          path: "owner",
-          select: "name email phone",
-        })
-        .exec();
-      return NextResponse.json(properties);
+      .populate({
+        path: "owner",
+        select: "name email phone"
+      })
+      .exec();
 
+    const propertiesWithImages = await Promise.all(
+      properties.map(async (property) => {
+        const images = await fetchPropertiesAllByImages(property._id);
+        const imageUrls = images.map((image: { url: string }) => image.url);
+        return {
+          id: property._id.toString(),
+          image: imageUrls[0] || null,
+          packageType: property.packageType,
+          propertyType: property.propertyType,
+          title: property.title,
+          description: property.description,
+          location: property.location,
+          numberOfBeds: property.noOfBeds,
+          numberOfBaths: property.noOfBaths,
+          area: property.area
+        };
+      })
+    );
 
+    return NextResponse.json(propertiesWithImages);
   } catch (error) {
     console.error("Error fetching users:", error);
     return NextResponse.error();
@@ -31,7 +49,7 @@ export const POST = async (request: NextRequest) => {
     const body = await request.json();
     const newProperty = new Property({
       ...body,
-      owner: userId,
+      owner: userId
     });
     await newProperty.save();
 

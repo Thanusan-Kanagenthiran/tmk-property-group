@@ -9,19 +9,26 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import KingBedIcon from "@mui/icons-material/KingBed";
 import BathtubIcon from "@mui/icons-material/Bathtub";
-import { Property } from "@/interfaces/property";
 
-interface PropertyCardProps {
-  property: Property;
+export interface PropertyCardProps {
+  id: string;
+  image?: string;
+  packageType: string;
+  propertyType: string;
+  title: string;
+  description: string;
+  location: string;
+  numberOfBeds: string;
+  numberOfBaths: string;
+  area: string;
 }
+const PropertyCard: React.FC<{ property: PropertyCardProps }> = ({ property }) => {
+  const { id, title, description, image, numberOfBaths, numberOfBeds, location, area } = property;
 
-const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
-  const { _id, title, description, price, bedrooms, bathrooms, image } = property;
-  console.log(property);
-
+  const featureImage = image ? image : `https://placehold.co/300x140?text=${encodeURIComponent(title)}`;
   return (
     <Card sx={{ maxWidth: 350, p: 2, m: "auto", height: "100%" }}>
-      {image && <CardMedia sx={{ height: 140, mx: 2, mt: 2 }} className="rounded" image={image} title={title} />}
+      <CardMedia sx={{ height: 140, mx: 2, mt: 2 }} className="rounded" image={featureImage} />
       <CardContent>
         <Typography
           sx={{
@@ -53,25 +60,31 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
           <Chip
             sx={{ px: 0.5 }}
             icon={<KingBedIcon fontSize="small" />}
-            label={`${bedrooms} Beds`}
+            label={`${numberOfBeds} Beds`}
             variant="outlined"
           />
           <Chip
             sx={{ px: 0.5, ml: 1 }}
             icon={<BathtubIcon fontSize="small" />}
-            label={`${bathrooms} Baths`}
+            label={`${numberOfBaths} Baths`}
+            variant="outlined"
+          />
+          <Chip
+            sx={{ px: 0.5, ml: 1 }}
+            icon={<BathtubIcon fontSize="small" />}
+            label={`${area} sqft`}
             variant="outlined"
           />
         </Stack>
       </CardContent>
       <CardActions sx={{ justifyContent: "space-between", alignItems: "end", px: 2 }}>
         <div>
-          <Typography variant="body2" color="text.secondary">
+          {/* <Typography variant="body2" color="text.secondary">
             Price
-          </Typography>
-          <Typography variant="subtitle1">${price}</Typography>
+          </Typography> */}
+          <Typography variant="subtitle1">{location}</Typography>
         </div>
-        <Button sx={{ fontSize: "11px" }} href={`http://localhost:3000/properties/${_id}`} variant="contained">
+        <Button sx={{ fontSize: "11px" }} href={`http://localhost:3000/properties/${id}`} variant="contained">
           View Details
         </Button>
       </CardActions>
