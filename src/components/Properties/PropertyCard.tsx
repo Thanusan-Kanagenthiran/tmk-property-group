@@ -10,19 +10,7 @@ import Stack from "@mui/material/Stack";
 import KingBedIcon from "@mui/icons-material/KingBed";
 import BathtubIcon from "@mui/icons-material/Bathtub";
 
-export interface PropertyCardProps {
-  id: string;
-  image?: string;
-  packageType: string;
-  propertyType: string;
-  title: string;
-  description: string;
-  location: string;
-  numberOfBeds: string;
-  numberOfBaths: string;
-  area: string;
-}
-const PropertyCard: React.FC<{ property: PropertyCardProps }> = ({ property }) => {
+const PropertyCard: React.FC<{ property: any }> = ({ property }) => {
   const { id, title, description, image, numberOfBaths, numberOfBeds, location, area } = property;
 
   const featureImage = image ? image : `https://placehold.co/300x140?text=${encodeURIComponent(title)}`;

@@ -1,14 +1,14 @@
 "use server";
 import type { RegisterValues } from "@/interfaces/UserActions";
-import { connectDB } from "@/lib/connection";
-import User from "@/models/User";
+import dbConnect from "@/lib/db/dbConnect";
+import User from "@/lib/db/models/User";
 import bcrypt from "bcryptjs";
 
 export const register = async (values: RegisterValues) => {
   const { email, password, name, role } = values;
 
   try {
-    await connectDB();
+    await dbConnect();
     const userFound = await User.findOne({ email });
     if (userFound) {
       if (userFound.isDeleted) {

@@ -1,6 +1,6 @@
-import { connectDB } from "@/lib/connection";
-import { UserModelWithImage } from "@/lib/image-model";
-import { uploadImageToCloudinary } from "@/lib/image-upload";
+import dbConnect from "@/lib/db/dbConnect";
+import { UserModelWithImage } from "@/lib/cloudinary/image-model";
+import { uploadImageToCloudinary } from "@/lib/cloudinary/image-upload";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
@@ -47,7 +47,7 @@ export const POST = async (req: NextRequest) => {
 };
 
 export const GET = async (req: NextRequest) => {
-  connectDB();
+  dbConnect();
   const users = await UserModelWithImage.find();
   const data = users.map((user) => {
     const id = user._id;

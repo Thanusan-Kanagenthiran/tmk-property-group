@@ -4,11 +4,10 @@ import PropertyCard from "@/components/Properties/PropertyCard";
 import { Box, Container, Grid } from "@mui/material";
 import styles from "./home.module.scss";
 import { revalidatePath } from "next/cache";
-import { PropertyCardProps } from "@/components/Properties/PropertyCard";
 
-async function getProperties(): Promise<PropertyCardProps[]> {
+async function getProperties(): Promise<[]> {
   try {
-    const response = await fetch(`http://localhost:3000/api/properties`);
+    const response = await fetch(`http://localhost:3000/api/property`);
     revalidatePath("/properties");
     if (!response.ok) {
       throw new Error("Failed to fetch properties");
@@ -31,7 +30,7 @@ export default async function Page() {
   );
 }
 
-function PropertyList({ properties }: { properties: PropertyCardProps[] }) {
+function PropertyList({ properties }: { properties: [] }) {
   if (properties.length === 0) {
     return (
       <Grid
@@ -206,7 +205,7 @@ function PropertyList({ properties }: { properties: PropertyCardProps[] }) {
 
   return (
     <Grid container spacing={{ xs: 2 }}>
-      {properties.map((property: PropertyCardProps) => (
+      {properties.map((property ) => (
         <Grid item xs={12} sm={6} md={4} key={property.id} display="flex" justifyContent="center">
           <PropertyCard property={property} />
         </Grid>

@@ -1,22 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
-import {
-  Button,
-  TextField,
-  Typography,
-  Container,
-  Alert,
-  Box,
-  Snackbar,
-  CircularProgress,
-  Grid,
-  FormControl
-} from "@mui/material";
+import { Button, TextField, Typography, Container, Alert, Box, Snackbar, Grid, FormControl } from "@mui/material";
 import { register } from "@/actions/users/register";
 import { Paths } from "@/constants/Paths";
 import Link from "next/link";
-import { validateEmail, validateName, validatePassword } from "@/utils/validation";
 import AppSpinner from "../Common/AppSpinner";
 import { useRouter } from "next/navigation";
 
@@ -34,24 +22,15 @@ export default function RegisterForm() {
     const formSubmissionErrors = { ...initialErrors };
     let isValid = true;
 
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
-    const emailValidation = validateEmail(email);
-    if (!emailValidation.isValid) {
-      formSubmissionErrors.email = emailValidation.reason || "";
+    if (!formData.get("email")) {
       isValid = false;
     }
 
-    const nameValidation = validateName(formData.get("name") as string);
-    if (!nameValidation.isValid) {
-      formSubmissionErrors.name = nameValidation.reason || "";
+    if (!formData.get("password")) {
       isValid = false;
     }
 
-    const passwordValidation = validatePassword(password);
-    if (!passwordValidation.isValid) {
-      formSubmissionErrors.password = passwordValidation.reason || "";
+    if (!formData.get("name")) {
       isValid = false;
     }
 

@@ -24,7 +24,7 @@ export const revalidate = 0;
 
 async function getProperties(id: string) {
   try {
-    const res = await fetch(`http://localhost:3000/api/properties/${id}`);
+    const res = await fetch(`http://localhost:3000/api/property/${id}`);
     if (!res.ok) {
       throw new Error("Network response was not ok");
     }
