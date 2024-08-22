@@ -1,6 +1,6 @@
 import { model, Schema } from "mongoose";
 
-interface PropertyTypeDocument {
+export interface PropertyTypeDocument {
   name: string;
   description: string;
 }

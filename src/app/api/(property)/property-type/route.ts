@@ -6,13 +6,22 @@ import { NextResponse, type NextRequest } from "next/server";
 export const GET = async (request: NextRequest) => {
   try {
     await dbConnect();
+    const properties = await PropertyType.find().select("-createdAt -updatedAt").lean().exec();
 
-    const propertiesType = await PropertyType.find().select("+_id +name +description");
+    const data = properties.map((property: any) => {
+      const { _id, ...rest } = property;
+      return {
+        id: _id,
+        ...rest
+      };
+    });
 
-    return NextResponse.json(propertiesType);
+    if (data.length === 0) {
+      return NextResponse.json({ error: "No property type found" }, { status: 404 });
+    }
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    console.error("Error fetching users:", error);
-    return NextResponse.error();
+    return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });
   }
 };
 
