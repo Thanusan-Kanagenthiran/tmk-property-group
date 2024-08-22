@@ -8,7 +8,7 @@ const getAuthToken = async (req: NextRequest) => {
   try {
     const token = await getToken({ req, secret });
     if (!token?.sub) {
-      throw new Error("Invalid token");
+     return null;
     }
     return token;
   } catch (error) {
@@ -18,22 +18,22 @@ const getAuthToken = async (req: NextRequest) => {
 
 const isAdmin = async (req: NextRequest) => {
   const token = await getAuthToken(req);
-  return token.role === UserRole.ADMIN;
+  return token?.role === UserRole.ADMIN;
 };
 
 const isPropertyOwner = async (req: NextRequest) => {
   const token = await getAuthToken(req);
-  return token.role === UserRole.PROPERTY_OWNER;
+  return token?.role === UserRole.PROPERTY_OWNER;
 };
 
 const isUser = async (req: NextRequest) => {
   const token = await getAuthToken(req);
-  return token.role === UserRole.USER;
+  return token?.role === UserRole.USER;
 };
 
 const getUserId = async (req: NextRequest) => {
   const token = await getAuthToken(req);
-  return token.sub;
+  return token?.sub;
 };
 
 export const authUtils = { isAdmin, isPropertyOwner, isUser, getUserId };

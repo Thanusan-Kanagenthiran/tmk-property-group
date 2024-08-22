@@ -1,5 +1,3 @@
-import { REGEX_PATTERNS } from "@/constants/RegexPatterns";
-import { UserRole } from "@/constants/Users";
 import mongoose, { Schema, model } from "mongoose";
 
 export interface UserDocument {
@@ -11,7 +9,7 @@ export interface UserDocument {
     url: string;
     public_id: string;
   };
-  role: UserRole;
+  role: "admin" | "user" | "host";
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;
@@ -30,14 +28,12 @@ const UserSchema = new Schema<UserDocument>(
     },
     name: {
       type: String,
-      required: [true, "Name is required"],
-      match: [REGEX_PATTERNS.NAME, "Name can only contain letters and spaces"]
+      required: [true, "Name is required"]
     },
     phone: {
       type: String,
       unique: true,
-      sparse: true,
-      match: [REGEX_PATTERNS.PHONE, "Phone number is invalid"]
+      sparse: true
     },
     image: {
       url: {
@@ -49,8 +45,8 @@ const UserSchema = new Schema<UserDocument>(
     },
     role: {
       type: String,
-      enum: Object.values(UserRole),
-      default: UserRole.USER
+      enum: ["admin", "user", "host"],
+      default: "user"
     },
     isDeleted: {
       type: Boolean,

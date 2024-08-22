@@ -2,7 +2,7 @@ import AppSpinner from "@/components/Common/AppSpinner";
 import { Box } from "@mui/material";
 import React from "react";
 
-const loading = () => {
+const Loading = () => {
   return (
     <Box
       sx={{
@@ -18,4 +18,4 @@ const loading = () => {
   );
 };
 
-export default loading;
+export default Loading;

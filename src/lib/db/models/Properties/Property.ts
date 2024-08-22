@@ -58,6 +58,7 @@ const PropertySchema = new Schema<PropertyDocument>(
     pricePerNight: { type: Number, required: true },
     packages: [
       {
+        _id: false,
         packageName: { type: String, required: true },
         packagePricePerDay: { type: Number, required: true },
         durationRequirementDays: {
@@ -66,7 +67,7 @@ const PropertySchema = new Schema<PropertyDocument>(
         }
       }
     ],
-    images: [{ url: { type: String }, public_id: { type: String } }],
+    images: [{ _id: false, url: { type: String }, public_id: { type: String } }],
     host: { type: Schema.Types.ObjectId, ref: "User", required: true },
     isDeleted: { type: Boolean, default: false }
   },

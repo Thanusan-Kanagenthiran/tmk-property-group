@@ -19,5 +19,5 @@ const PropertyTypeSchema = new Schema<PropertyTypeDocument>(
   { timestamps: true, versionKey: false }
 );
 
-const PropertyType = mongoose.models?.PropertyType || model<PropertyTypeDocument>("property_type", PropertyTypeSchema);
+const PropertyType = mongoose.models?.PropertyType || model<PropertyTypeDocument>("PropertyType", PropertyTypeSchema);
 export default PropertyType;

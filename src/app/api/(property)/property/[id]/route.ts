@@ -2,20 +2,27 @@
 import dbConnect from "@/lib/db/dbConnect";
 import Property from "@/lib/db/models/Properties/Property";
 import { NextResponse, type NextRequest } from "next/server";
+import { authUtils } from "@/lib/auth";
 
 export const GET = async (request: NextRequest, { params }: { params: { id: string } }) => {
   try {
     await dbConnect();
+    // const userId = await authUtils.getUserId(request);
 
     const property = await Property.findOne({ _id: params.id });
 
     if (!property) {
-      throw new Error("Property not found");
+      return NextResponse.json({ error: "Property not found" }, { status: 404 });
     }
+
+    // if (property.host.toString() !== userId) {
+    //   return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    // }
+
     return NextResponse.json({ property });
   } catch (error) {
-    console.error("Error fetching users:", error);
-    return NextResponse.error();
+    console.error("An error occurred:", error); // Log the error for debugging
+    return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
   }
 };
 
@@ -25,7 +32,7 @@ export const PUT = async (request: NextRequest, { params }: { params: { id: stri
     // const userId = await getUserId(request);
     const body = await request.json();
 
-    const property = await Property.findOne({ _id: params.id }).$where("this.isDeleted == false");
+    const property = await Property.findOne({ _id: params.id }).where("this.isDeleted == false");
     if (!property) {
       return NextResponse.json({ error: "Property not found" }, { status: 404 });
     }
