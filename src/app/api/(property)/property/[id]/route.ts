@@ -9,17 +9,31 @@ export const GET = async (request: NextRequest, { params }: { params: { id: stri
     await dbConnect();
     // const userId = await authUtils.getUserId(request);
 
-    const property = await Property.findOne({ _id: params.id });
+    // Find the property by _id and ensure it's not deleted
+    const property = await Property.findOne({
+      _id: params.id,
+      isDeleted: false
+    })
+      .lean()
+      .exec();
 
     if (!property) {
       return NextResponse.json({ error: "Property not found" }, { status: 404 });
     }
 
+    // Uncomment and modify the following lines if you need to check user authorization
     // if (property.host.toString() !== userId) {
     //   return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     // }
 
-    return NextResponse.json({ property });
+    // No need to call toObject() if using lean()
+    const { _id, ...rest } = property as { _id: string; [key: string]: any };
+
+    const data = {
+      id: _id, // `_id` should be a string
+      ...rest
+    };
+    return NextResponse.json(data);
   } catch (error) {
     console.error("An error occurred:", error); // Log the error for debugging
     return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
@@ -40,14 +54,10 @@ export const PUT = async (request: NextRequest, { params }: { params: { id: stri
     // if (property.owner.toString() !== userId) {
     //   return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     // }
-    const updatedProperty = await Property.findOneAndUpdate({ _id: params.id }, body, { new: true });
+    await Property.findOneAndUpdate({ _id: params.id }, body, { new: true });
 
-    return NextResponse.json({
-      message: "Property successfully updated.",
-      property: updatedProperty
-    });
+    return NextResponse.json({ message: "Property successfully updated." });
   } catch (error) {
-    console.error("PATCH Handler Error:", error);
     return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });
   }
 };
@@ -65,11 +75,9 @@ export const DELETE = async (request: NextRequest, { params }: { params: { id: s
     //   return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     // }
 
-    const deletedProperty = await Property.findOneAndUpdate({ _id: params.id }, { isDeleted: true });
+    await Property.findOneAndUpdate({ _id: params.id }, { isDeleted: true });
 
-    return NextResponse.json({
-      message: "Property successfully deleted."
-    });
+    return NextResponse.json({ message: "Property successfully deleted." });
   } catch (error) {
     return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });
   }

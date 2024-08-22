@@ -53,7 +53,7 @@ export default function RegisterForm() {
       email: formData.get("email") as string,
       password: formData.get("password") as string,
       name: formData.get("name") as string,
-      role: isPropertyOwner ? "PROPERTY_OWNER" : "USER"
+      role: isPropertyOwner ? "host" : "user"
     };
 
     const response = await register(userData);
