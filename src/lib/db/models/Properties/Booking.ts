@@ -5,8 +5,8 @@ interface BookingDocument {
   propertyId: Schema.Types.ObjectId;
   hostId: Schema.Types.ObjectId;
   amount: number;
-  startsAt: Date;
-  endsAt: Date;
+  checkIn: Date;
+  checkOut: Date;
   paymentStatus: "pending" | "paid";
   paymentDate?: Date;
   approvedDate?: Date;
@@ -18,25 +18,10 @@ interface BookingDocument {
 
 const BookingSchema = new Schema<BookingDocument>(
   {
-    tenantId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true
-    },
-    propertyId: {
-      type: Schema.Types.ObjectId,
-      ref: "Property",
-      required: true
-    },
-    amount: {
-      type: Number,
-      required: true
-    },
-    paymentStatus: {
-      type: String,
-      enum: ["pending", "paid"],
-      default: "pending"
-    },
+    tenantId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    propertyId: { type: Schema.Types.ObjectId, ref: "Property", required: true },
+    amount: { type: Number, required: true },
+    paymentStatus: { type: String, enum: ["pending", "paid"], default: "pending" },
     paymentDate: Date,
     status: {
       type: String,
@@ -47,19 +32,9 @@ const BookingSchema = new Schema<BookingDocument>(
     approvedDate: Date,
     cancelledDate: Date,
     canceledReason: String,
-    endsAt: {
-      type: Date,
-      required: true
-    },
-    startsAt: {
-      type: Date,
-      required: true
-    },
-    hostId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true
-    }
+    checkIn: { type: Date, required: true },
+    checkOut: { type: Date, required: true },
+    hostId: { type: Schema.Types.ObjectId, ref: "User", required: true }
   },
   { timestamps: true, versionKey: false }
 );

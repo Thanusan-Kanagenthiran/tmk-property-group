@@ -7,14 +7,8 @@ export interface PropertyTypeDocument {
 
 const PropertyTypeSchema = new Schema<PropertyTypeDocument>(
   {
-    name: {
-      type: String,
-      required: true
-    },
-    description: {
-      type: String,
-      required: true
-    }
+    name: { type: String, required: true },
+    description: { type: String, required: true }
   },
   { timestamps: true, versionKey: false }
 );

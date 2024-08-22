@@ -17,41 +17,16 @@ export interface UserDocument {
 
 const UserSchema = new Schema<UserDocument>(
   {
-    email: {
-      type: String,
-      unique: true,
-      required: true
-    },
-    password: {
-      type: String,
-      required: [true, "Password is required"]
-    },
-    name: {
-      type: String,
-      required: [true, "Name is required"]
-    },
-    phone: {
-      type: String,
-      unique: true,
-      sparse: true
-    },
+    email: { type: String, unique: true, required: true },
+    password: { type: String, required: [true, "Password is required"] },
+    name: { type: String, required: [true, "Name is required"] },
+    phone: { type: String, unique: true, sparse: true },
     image: {
-      url: {
-        type: String
-      },
-      public_id: {
-        type: String
-      }
+      url: { type: String },
+      public_id: { type: String }
     },
-    role: {
-      type: String,
-      enum: ["admin", "user", "host"],
-      default: "user"
-    },
-    isDeleted: {
-      type: Boolean,
-      default: false
-    }
+    role: { type: String, enum: ["admin", "user", "host"], default: "user" },
+    isDeleted: { type: Boolean, default: false }
   },
   { timestamps: true, versionKey: false }
 );

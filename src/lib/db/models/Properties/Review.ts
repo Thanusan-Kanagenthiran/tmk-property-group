@@ -6,34 +6,16 @@ interface ReviewDocument {
   host: Schema.Types.ObjectId;
   review: string;
   rating: 1 | 2 | 3 | 4 | 5;
+  createdAt: Date;
 }
 
 const ReviewSchema = new Schema<ReviewDocument>(
   {
-    bookingId: {
-      type: Schema.Types.ObjectId,
-      ref: "Booking",
-      required: true
-    },
-    tenant: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true
-    },
-    host: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true
-    },
-    review: {
-      type: String,
-      required: true
-    },
-    rating: {
-      type: Number,
-      enum: [1, 2, 3, 4, 5],
-      required: true
-    }
+    bookingId: { type: Schema.Types.ObjectId, ref: "Booking", required: true },
+    tenant: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    host: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    review: { type: String, required: true },
+    rating: { type: Number, enum: [1, 2, 3, 4, 5], required: true }
   },
   { timestamps: true, versionKey: false }
 );
