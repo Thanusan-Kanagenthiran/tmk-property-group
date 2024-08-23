@@ -18,7 +18,6 @@ import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
 import HighlightAltIcon from "@mui/icons-material/HighlightAlt";
 import AddFormContainer from "@/components/Common/Layout/AddFormContainer";
 import Image from "next/image";
-import PropertyImagesList from "@/components/Properties/PropertyImagesList";
 
 export const revalidate = 0;
 
@@ -59,7 +58,9 @@ export default async function Page({ params }: { params: { id: string } }) {
               color="secondary"
               variant="outlined"
               startIcon={<LocationOnIcon fontSize="small" color="secondary" />}>
-              <Typography variant="body1">{propertyDetails.location}</Typography>
+              <Typography sx={{ mr: 1 }} variant="body1">
+                {propertyDetails.region}
+              </Typography>
               <span>{propertyDetails.address}</span>
             </Button>
           </Stack>
@@ -122,7 +123,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                       Area
                     </Typography>
                     <Typography variant="body2" px={2} color="text.secondary">
-                      {propertyDetails.area} sqft
+                      {propertyDetails.noOfBeds} sqft
                     </Typography>
                   </CardContent>
                 </CardActionArea>
@@ -141,7 +142,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                       Area
                     </Typography>
                     <Typography variant="body2" px={2} color="text.secondary">
-                      {propertyDetails.area} sqft
+                      {propertyDetails.noOfBaths} sqft
                     </Typography>
                   </CardContent>
                 </CardActionArea>
@@ -160,31 +161,13 @@ export default async function Page({ params }: { params: { id: string } }) {
                       Area
                     </Typography>
                     <Typography variant="body2" px={2} color="text.secondary">
-                      {propertyDetails.area} sqft
+                      {propertyDetails.maxNoOfGuests} sqft
                     </Typography>
                   </CardContent>
                 </CardActionArea>
               </Card>
             </Grid>
-            <Grid item xs={6} sm={3}>
-              <Card
-                sx={{ maxWidth: 345, textAlign: "center", display: "flex", flexDirection: "column", height: "100%" }}>
-                <CardActionArea sx={{ flex: 1 }}>
-                  <Box height="100" pt={2}>
-                    <HighlightAltIcon fontSize="small" />
-                  </Box>
-                  <CardContent
-                    sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                    <Typography gutterBottom variant="h5" component="div">
-                      Area
-                    </Typography>
-                    <Typography variant="body2" px={2} color="text.secondary">
-                      {propertyDetails.area} sqft
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Grid>
+           
           </Grid>
           <Grid item md={4} xs={12} spacing={2} sx={{ height: "100%" }}>
             <Box
@@ -213,7 +196,6 @@ export default async function Page({ params }: { params: { id: string } }) {
             </Box>
           </Grid>
         </Grid>
-        <PropertyImagesList tag={propertyDetails.id} />
       </AddFormContainer>
     </Container>
   );

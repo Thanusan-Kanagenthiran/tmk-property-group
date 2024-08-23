@@ -11,7 +11,7 @@ import KingBedIcon from "@mui/icons-material/KingBed";
 import BathtubIcon from "@mui/icons-material/Bathtub";
 
 const PropertyCard: React.FC<{ property: any }> = ({ property }) => {
-  const { id, title, description, image, numberOfBaths, numberOfBeds, location, area } = property;
+  const { id, title, description, image, noOfBaths, noOfBeds, location, maxNoOfGuests } = property;
 
   const featureImage = image ? image : `https://placehold.co/300x140?text=${encodeURIComponent(title)}`;
   return (
@@ -48,29 +48,29 @@ const PropertyCard: React.FC<{ property: any }> = ({ property }) => {
           <Chip
             sx={{ px: 0.5 }}
             icon={<KingBedIcon fontSize="small" />}
-            label={`${numberOfBeds} Beds`}
+            label={`${noOfBeds} Beds`}
             variant="outlined"
           />
           <Chip
             sx={{ px: 0.5, ml: 1 }}
             icon={<BathtubIcon fontSize="small" />}
-            label={`${numberOfBaths} Baths`}
+            label={`${noOfBaths} Baths`}
             variant="outlined"
           />
           <Chip
             sx={{ px: 0.5, ml: 1 }}
             icon={<BathtubIcon fontSize="small" />}
-            label={`${area} sqft`}
+            label={`${maxNoOfGuests} sqft`}
             variant="outlined"
           />
         </Stack>
       </CardContent>
       <CardActions sx={{ justifyContent: "space-between", alignItems: "end", px: 2 }}>
         <div>
-          {/* <Typography variant="body2" color="text.secondary">
-            Price
-          </Typography> */}
-          <Typography variant="subtitle1">{location}</Typography>
+          <Typography variant="body2" color="text.secondary">
+            Price starts from
+          </Typography>
+          <Typography variant="subtitle1">{`$${property.pricePerNight}`}</Typography>
         </div>
         <Button sx={{ fontSize: "11px" }} href={`http://localhost:3000/properties/${id}`} variant="contained">
           View Details

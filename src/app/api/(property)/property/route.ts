@@ -20,11 +20,10 @@ export const GET = async (request: NextRequest) => {
 
       return {
         id: _id,
-        image: images[0]?.url || null,
         ...rest
       };
     });
-    return NextResponse.json(data);
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
     console.error("Error fetching users:", error);
     return NextResponse.error();

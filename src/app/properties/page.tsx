@@ -5,22 +5,25 @@ import { Box, Container, Grid } from "@mui/material";
 import styles from "./home.module.scss";
 import { revalidatePath } from "next/cache";
 
-async function getProperties(): Promise<[]> {
-  try {
-    const response = await fetch(`http://localhost:3000/api/property`);
-    revalidatePath("/properties");
-    if (!response.ok) {
-      throw new Error("Failed to fetch properties");
-    }
-    return response.json();
-  } catch (error) {
-    console.error("Error fetching properties:", error);
-    return [];
-  }
-}
+import { propertiesService } from "@/services/properties.service";
+
+// async function getProperties(): Promise<[]> {
+//   try {
+//     const response = await fetch(`http://localhost:3000/api/property`);
+//     console.log(response);
+//     revalidatePath("/properties");
+//     if (!response.ok) {
+//       throw new Error("Failed to fetch properties");
+//     }
+//     return response.json();
+//   } catch (error) {
+//     console.error("Error fetching properties:", error);
+//     return [];
+//   }
+// }
 
 export default async function Page() {
-  const properties = await getProperties();
+  const properties = await propertiesService.GetProperties();
 
   console.log(properties);
   return (
@@ -205,7 +208,7 @@ function PropertyList({ properties }: { properties: [] }) {
 
   return (
     <Grid container spacing={{ xs: 2 }}>
-      {properties.map((property ) => (
+      {properties.map((property) => (
         <Grid item xs={12} sm={6} md={4} key={property.id} display="flex" justifyContent="center">
           <PropertyCard property={property} />
         </Grid>

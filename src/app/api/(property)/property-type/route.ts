@@ -18,6 +18,7 @@ export const GET = async (request: NextRequest) => {
         ...rest
       };
     });
+    
 
     return NextResponse.json(data, { status: 200 });
   } catch (error) {

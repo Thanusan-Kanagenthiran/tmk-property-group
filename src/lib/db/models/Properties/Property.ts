@@ -1,4 +1,4 @@
-import mongoose, { Schema, model } from "mongoose";
+import mongoose, { Model, Schema, model } from "mongoose";
 
 export interface PropertyDocument {
   propertyType: Schema.Types.ObjectId;
@@ -80,5 +80,7 @@ const PropertySchema = new Schema<PropertyDocument>(
   }
 );
 
-const Property = mongoose.models?.Property || model<PropertyDocument>("Property", PropertySchema);
+const Property: Model<PropertyDocument> =
+  mongoose.models.Property || model<PropertyDocument>("Property", PropertySchema);
+
 export default Property;
