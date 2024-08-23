@@ -7,7 +7,6 @@ import { NextResponse, type NextRequest } from "next/server";
 export const GET = async (request: NextRequest) => {
   try {
     await dbConnect();
-
     const properties = await Property.find()
       .select("-packages -host -createdAt -updatedAt -packages -isDeleted ")
       .populate("propertyType")

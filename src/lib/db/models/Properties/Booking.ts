@@ -1,4 +1,4 @@
-import mongoose, { model, Schema } from "mongoose";
+import mongoose, { Model, model, Schema } from "mongoose";
 
 interface BookingDocument {
   tenantId: Schema.Types.ObjectId;
@@ -39,5 +39,6 @@ const BookingSchema = new Schema<BookingDocument>(
   { timestamps: true, versionKey: false }
 );
 
-const Booking = mongoose.models?.Booking || model<BookingDocument>("Booking", BookingSchema);
+const Booking: Model<BookingDocument> = mongoose.models.Booking || model<BookingDocument>("Booking", BookingSchema);
+
 export default Booking;

@@ -1,4 +1,4 @@
-import mongoose, { model, Schema } from "mongoose";
+import mongoose, { Model, model, Schema } from "mongoose";
 
 interface ReviewDocument {
   bookingId: Schema.Types.ObjectId;
@@ -20,5 +20,6 @@ const ReviewSchema = new Schema<ReviewDocument>(
   { timestamps: true, versionKey: false }
 );
 
-const Review = mongoose.models?.Review || model<ReviewDocument>("Review", ReviewSchema);
+const Review: Model<ReviewDocument> = mongoose.models.Review || model<ReviewDocument>("Review", ReviewSchema);
+
 export default Review;
