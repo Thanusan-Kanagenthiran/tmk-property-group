@@ -1,8 +1,8 @@
-import mongoose, { Model, Schema, model } from "mongoose";
+import mongoose, { model, Model, Schema, Types } from "mongoose";
 
 export interface PropertyDocument {
-  propertyType: Schema.Types.ObjectId;
-  host: Schema.Types.ObjectId;
+  propertyType: Types.ObjectId; 
+  host: Types.ObjectId; 
 
   title: string;
   description: string;
@@ -30,15 +30,14 @@ export interface PropertyDocument {
     public_id: string;
   }[];
 
-  bookings?: Schema.Types.ObjectId[];
-  reviews?: Schema.Types.ObjectId[];
+  bookings?: Types.ObjectId[];
+  reviews?: Types.ObjectId[];
   isDeleted: boolean;
   status?: "active" | "inactive" | "suspended";
   remarks?: string;
   createdAt: Date;
   updatedAt: Date;
 }
-
 const PropertySchema = new Schema<PropertyDocument>(
   {
     propertyType: { type: Schema.Types.ObjectId, ref: "PropertyType", required: true },
@@ -57,7 +56,7 @@ const PropertySchema = new Schema<PropertyDocument>(
         packageName: { type: String, required: true },
         packagePricePerDay: { type: Number, required: true },
         durationRequirementDays: {
-          daysOrWeeks: { type: String, required: true },
+          daysOrWeeks: { type: String, enum: ["days", "weeks"], required: true },
           count: { type: Number, required: true }
         }
       }
@@ -71,8 +70,8 @@ const PropertySchema = new Schema<PropertyDocument>(
     bookings: [{ type: Schema.Types.ObjectId, ref: "Booking" }],
     reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
     isDeleted: { type: Boolean, required: true, default: false },
-    status: { type: String, required: true, default: "active" },
-    remarks: { type: String, required: false }
+    status: { type: String, enum: ["active", "inactive", "suspended"], default: "active" },
+    remarks: { type: String }
   },
   {
     timestamps: true,

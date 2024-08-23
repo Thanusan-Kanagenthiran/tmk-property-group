@@ -175,6 +175,8 @@ export default function PropertiesForm({ editData, id }: PropertiesFormProps) {
         ) : null}
       </Box>
 
+      <PropertiesImagesUpload />
+
       <Dialog open={openConfirmDialog} onClose={handleCancel}>
         <DialogTitle>Confirm Property Details</DialogTitle>
         <DialogContent>

@@ -13,7 +13,7 @@ export interface PropertyPostData {
   amenities: string[];
 }
 
-const endpoint="/property";
+const endpoint = "/property";
 
 async function GetProperties(): Promise<any> {
   try {
@@ -34,7 +34,6 @@ async function AddProperty(propertyData: PropertyPostData): Promise<any> {
   }
 }
 
-
 async function UpdateProperty(propertyData: PropertyPostData, id: string): Promise<any> {
   try {
     const response = await axiosClient.put(`${endpoint}/${id}`, propertyData);
@@ -45,8 +44,30 @@ async function UpdateProperty(propertyData: PropertyPostData, id: string): Promi
   }
 }
 
+async function GetPropertyTypes(): Promise<any> {
+  try {
+    const response = await axiosClient.get("/property-type");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching property type data:", error);
+    throw error;
+  }
+}
+
+async function GetSingleProperty(id: string): Promise<any> {
+  try {
+    const response = await axiosClient.get(`${endpoint}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching property data:", error);
+    throw error;
+  }
+}
+
 export const propertiesService = {
   AddProperty,
   UpdateProperty,
-  GetProperties
+  GetProperties,
+  GetPropertyTypes,
+  GetSingleProperty,
 };

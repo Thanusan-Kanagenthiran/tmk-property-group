@@ -1,7 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["res.cloudinary.com", "localhost", "https://placehold.co"]
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com"
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com"
+      },
+      {
+        protocol: "http",
+        hostname: "localhost"
+      },
+      {
+        protocol: "https",
+        hostname: "placehold.co"
+      }
+    ]
   },
   async redirects() {
     return [

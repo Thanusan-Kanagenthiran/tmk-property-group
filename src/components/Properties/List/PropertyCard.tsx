@@ -9,9 +9,21 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import KingBedIcon from "@mui/icons-material/KingBed";
 import BathtubIcon from "@mui/icons-material/Bathtub";
+import PeopleIcon from "@mui/icons-material/People";
 
-const PropertyCard: React.FC<{ property: any }> = ({ property }) => {
-  const { id, title, description, image, noOfBaths, noOfBeds, location, maxNoOfGuests } = property;
+export interface PropertyDTO {
+  id: string;
+  title: string;
+  description: string;
+  image?: string;
+  noOfBaths: number;
+  noOfBeds: number;
+  maxNoOfGuests: number;
+  pricePerNight: number;
+}
+
+const PropertyCard: React.FC<{ property: PropertyDTO }> = ({ property }) => {
+  const { id, title, description, image, noOfBaths, noOfBeds, maxNoOfGuests, pricePerNight } = property;
 
   const featureImage = image ? image : `https://placehold.co/300x140?text=${encodeURIComponent(title)}`;
   return (
@@ -59,8 +71,8 @@ const PropertyCard: React.FC<{ property: any }> = ({ property }) => {
           />
           <Chip
             sx={{ px: 0.5, ml: 1 }}
-            icon={<BathtubIcon fontSize="small" />}
-            label={`${maxNoOfGuests} sqft`}
+            icon={<PeopleIcon fontSize="small" />}
+            label={`${maxNoOfGuests} Guests`}
             variant="outlined"
           />
         </Stack>
@@ -70,7 +82,7 @@ const PropertyCard: React.FC<{ property: any }> = ({ property }) => {
           <Typography variant="body2" color="text.secondary">
             Price starts from
           </Typography>
-          <Typography variant="subtitle1">{`$${property.pricePerNight}`}</Typography>
+          <Typography variant="subtitle1">{`LKR ${property.pricePerNight}`}</Typography>
         </div>
         <Button sx={{ fontSize: "11px" }} href={`http://localhost:3000/properties/${id}`} variant="contained">
           View Details

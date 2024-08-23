@@ -1,4 +1,4 @@
-import mongoose, { Model, model, Schema } from "mongoose";
+import mongoose, { model, Model, Schema, Types } from "mongoose";
 
 export interface PropertyTypeDocument {
   title: string;

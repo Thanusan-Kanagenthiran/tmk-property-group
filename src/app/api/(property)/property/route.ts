@@ -7,25 +7,34 @@ import { NextResponse, type NextRequest } from "next/server";
 export const GET = async (request: NextRequest) => {
   try {
     await dbConnect();
-    const properties = await Property.find()
-      .select("-packages -host -createdAt -updatedAt -packages -isDeleted ")
-      .populate("propertyType")
-      .where("isDeleted==false")
+
+    const properties = await Property.find({ isDeleted: false })
+      .select("-packages -host -createdAt -updatedAt -isDeleted")
+      .populate({
+        path: "propertyType",
+        select: "+_id +title"
+      })
       .lean()
       .exec();
 
-    const data = properties.map((property) => {
-      const { _id, images, ...rest } = property;
+    const data = properties.map((property: any) => {
+      const { _id, images, propertyType, ...rest } = property;
 
       return {
         id: _id,
+        propertyType: {
+          id: propertyType?._id.toString(),
+          title: propertyType.title
+        },
+        image: images[0].url,
         ...rest
       };
     });
+
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    console.error("Error fetching users:", error);
-    return NextResponse.error();
+    console.error("Error fetching properties:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 };
 
