@@ -5,45 +5,46 @@ import LocationCityIcon from "@mui/icons-material/LocationCity";
 import VillaIcon from "@mui/icons-material/Villa";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import NightShelterIcon from "@mui/icons-material/NightShelter";
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { Typography } from "@mui/material";
 import AddFormContainer from "../Common/Layout/AddFormContainer";
 import { PropertyType } from "@/constants/Property";
+import { Apartment } from "@mui/icons-material";
 
 const commonIconStyles = { height: "35%", width: "35%" };
 
 const Icons: Record<string, ReactNode> = {
-  LocationCityIcon: <LocationCityIcon sx={commonIconStyles} />,
-  VillaIcon: <VillaIcon sx={commonIconStyles} />,
-  StorefrontIcon: <StorefrontIcon sx={commonIconStyles} />,
-  NightShelterIcon: <NightShelterIcon sx={commonIconStyles} />
+  apartment: <LocationCityIcon sx={commonIconStyles} />,
+  house: <VillaIcon sx={commonIconStyles} />,
+  villa: <StorefrontIcon sx={commonIconStyles} />,
+  hotel: <NightShelterIcon sx={commonIconStyles} />
 };
 
 const propertyData = {
   propertyType: [
     {
-      id: 1,
-      title: PropertyType.APARTMENT,
+      id: "66c87d81841416445a215aa0",
+      title: "house",
       description: "Furnished and self-catering accommodations where guests rent the entire place.",
-      icon: "LocationCityIcon"
+      iconKey: "apartment"
     },
     {
-      id: 2,
+      id: "2",
       title: PropertyType.HOUSE,
       description: "Properties like apartments, vacation homes, villas, etc. List your property.",
-      icon: "VillaIcon"
+      icon: "house"
     },
     {
-      id: 3,
+      id: "3",
       title: PropertyType.VILLA,
       description: "Properties like hotels, B&Bs, guest houses, hostels, condo hotels, etc. List your property.",
-      icon: "StorefrontIcon"
+      icon: "villa"
     },
     {
-      id: 4,
+      id: "4",
       title: PropertyType.Hotel,
       description: "Alternative Places Properties like boats, campgrounds, luxury tents, etc. add for.",
-      icon: "NightShelterIcon"
+      icon: "hotel"
     }
   ]
 };
@@ -57,14 +58,13 @@ const PropertiesTypeList: React.FC<PropertiesTypeListProps> = ({ onTypeSelect })
 
   const handleSelectType = (selectedPropertyType: string) => {
     setSelectedPropertyType(selectedPropertyType);
-    onTypeSelect(selectedPropertyType); // Notify the parent component
-    console.log(`Type ${selectedPropertyType} selected`);
+    onTypeSelect(selectedPropertyType);
   };
 
   return (
     <AddFormContainer>
-      <Typography variant="body1" color="text.primary" textAlign="left" sx={{ mb: -1.5 }}>
-        Select Property Type
+      <Typography ml={2} variant="body1" color="text.primary" textAlign="left" sx={{ mb: -1.5 }}>
+        Select Property Type ( Note: * You can't change this later )
       </Typography>
       <Grid container spacing={2} py={2}>
         {propertyData.propertyType.map((property, index) => {
@@ -73,7 +73,7 @@ const PropertiesTypeList: React.FC<PropertiesTypeListProps> = ({ onTypeSelect })
             <Grid item xs={6} md={3} key={index}>
               <PropertiesTypeCard
                 title={property.title}
-                action={() => handleSelectType(property.title)}
+                action={() => handleSelectType(property.id)}
                 description={property.description}
                 actionButtonColor={selectedPropertyType === property.title ? "primary" : "secondary"}
                 actionLabel={selectedPropertyType === property.title ? "Selected" : "Select"}

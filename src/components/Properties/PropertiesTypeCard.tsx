@@ -27,7 +27,7 @@ const PropertiesTypeCard: React.FC<PropertiesTypeCardProps> = ({
   return (
     <Card sx={{ maxWidth: 345, textAlign: "center", display: "flex", flexDirection: "column", height: "100%" }}>
       <CardActionArea sx={{ flex: 1 }}>
-        <Box height="100" pt={2}>
+        <Box height="50" pt={2}>
           {icon}
         </Box>
         <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>

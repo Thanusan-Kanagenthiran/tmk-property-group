@@ -1,19 +1,21 @@
-import { model, Schema } from "mongoose";
+import mongoose, { Model, model, Schema } from "mongoose";
 
 export interface PropertyTypeDocument {
   title: string;
   description: string;
+  iconKey: string;
 }
 
 const PropertyTypeSchema = new Schema<PropertyTypeDocument>(
   {
     title: { type: String, required: true },
-    description: { type: String, required: true }
+    description: { type: String, required: true },
+    iconKey: { type: String, required: true }
   },
   { timestamps: true, versionKey: false }
 );
 
-const PropertyType = mongoose.models?.PropertyType || model<PropertyTypeDocument>("PropertyType", PropertyTypeSchema);
+const PropertyType: Model<PropertyTypeDocument> =
+  mongoose.models.PropertyType || model<PropertyTypeDocument>("PropertyType", PropertyTypeSchema);
+
 export default PropertyType;
-
-

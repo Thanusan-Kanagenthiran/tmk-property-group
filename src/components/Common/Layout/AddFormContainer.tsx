@@ -6,7 +6,7 @@ const AddFormContainer = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <Paper elevation={3} sx={{ p: 4, my: 4 }}>
+    <Paper elevation={2} sx={{ p: 4, my: 4 }}>
       {children}
     </Paper>
   );

@@ -62,10 +62,10 @@ const KeyFeaturesAmenitiesForm: React.FC<KeyFeaturesAmenitiesFormProps> = ({ onS
 
   return (
     <AddFormContainer>
+      <Typography ml={2} variant="body1" color="text.primary" textAlign="left" sx={{ mb: -1.5 }}>
+        Key Features and Amenities
+      </Typography>
       <form onSubmit={handleSubmit}>
-        <Typography variant="body1" color="text.primary" textAlign="left" sx={{ mb: -1.5 }}>
-          Key Features and Amenities
-        </Typography>
         <Grid container spacing={2} p={2}>
           {labels.map((label) => (
             <Grid item xs={12} sm={6} md={4} key={label.key}>

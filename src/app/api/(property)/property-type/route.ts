@@ -1,5 +1,5 @@
 "use server";
-import dbConnect from "@/lib/db/dbConnect";
+import { dbConnect } from "@/lib/db/dbConnect";
 import PropertyType from "@/lib/db/models/Properties/PropertyType";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -8,6 +8,9 @@ export const GET = async (request: NextRequest) => {
     await dbConnect();
     const properties = await PropertyType.find().select("-createdAt -updatedAt").lean().exec();
 
+    if (!properties) {
+      return NextResponse.json({ error: "No property type found" }, { status: 404 });
+    }
     const data = properties.map((property: any) => {
       const { _id, ...rest } = property;
       return {
@@ -16,9 +19,6 @@ export const GET = async (request: NextRequest) => {
       };
     });
 
-    if (data.length === 0) {
-      return NextResponse.json({ error: "No property type found" }, { status: 404 });
-    }
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });
@@ -33,7 +33,7 @@ export const POST = async (request: NextRequest) => {
       ...body
     });
     await newPropertyType.save();
-    return NextResponse.json(newPropertyType, { status: 201 });
+    return NextResponse.json({ message: "Property type successfully created." }, { status: 201 });
   } catch (error) {
     console.error("POST Handler Error:", error);
     return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });

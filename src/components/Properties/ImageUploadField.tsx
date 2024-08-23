@@ -113,9 +113,11 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ onImageChang
             )}
           </Box>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDialogClose}>Cancel</Button>
-          <Button onClick={getCropData} disabled={!image} variant="contained" color="primary">
+        <DialogActions sx={{ mb: 2, px: 5 }}>
+          <Button color="secondary" size="small" variant="outlined" onClick={handleDialogClose}>
+            Cancel
+          </Button>
+          <Button color="secondary" size="small" onClick={getCropData} disabled={!image} variant="contained">
             Crop Image
           </Button>
         </DialogActions>

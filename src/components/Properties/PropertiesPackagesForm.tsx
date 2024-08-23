@@ -38,16 +38,12 @@ const propertyPackagesData = {
     }
   ]
 };
-interface PropertiesPackageListProps {
-  onPackageSelect: (packageType: string) => void;
-}
 
-const PropertiesPackageList: React.FC<PropertiesPackageListProps> = ({ onPackageSelect }) => {
+const PropertiesPackagesForm: React.FC = () => {
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
 
   const handleSelectPackage = (packageType: string) => {
     setSelectedPackage(packageType);
-    onPackageSelect(packageType); // Notify the parent component
     console.log(`Package ${packageType} selected`);
   };
 
@@ -57,8 +53,8 @@ const PropertiesPackageList: React.FC<PropertiesPackageListProps> = ({ onPackage
 
   return (
     <AddFormContainer>
-      <Typography variant="body1" color="text.primary" textAlign="left" sx={{ mb: -1.5 }}>
-        Select Convenient Package for you
+      <Typography ml={2} variant="body1" color="text.primary" textAlign="left">
+        Add packages to your listing ( Optional )
       </Typography>
 
       <Grid container spacing={2} py={2}>
@@ -84,4 +80,4 @@ const PropertiesPackageList: React.FC<PropertiesPackageListProps> = ({ onPackage
   );
 };
 
-export default PropertiesPackageList;
+export default PropertiesPackagesForm;

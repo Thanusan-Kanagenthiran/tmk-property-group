@@ -1,4 +1,4 @@
-import mongoose, { Schema, model } from "mongoose";
+import mongoose, { Schema, Model, model } from "mongoose";
 
 export interface UserDocument {
   email: string;
@@ -20,7 +20,12 @@ const UserSchema = new Schema<UserDocument>(
     email: { type: String, unique: true, required: true },
     password: { type: String, required: [true, "Password is required"] },
     name: { type: String, required: [true, "Name is required"] },
-    phone: { type: String, unique: true, sparse: true },
+    phone: {
+      type: String,
+      unique: true,
+      sparse: true,
+      match: [/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/, "Please enter a valid phone number"]
+    },
     image: {
       url: { type: String },
       public_id: { type: String }
@@ -31,5 +36,6 @@ const UserSchema = new Schema<UserDocument>(
   { timestamps: true, versionKey: false }
 );
 
-export const User = mongoose.models?.User || model<UserDocument>("User", UserSchema);
+const User: Model<UserDocument> = mongoose.models.User || model<UserDocument>("User", UserSchema);
+
 export default User;

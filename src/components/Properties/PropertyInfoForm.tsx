@@ -54,7 +54,7 @@ const PropertyInfoForm: React.FC<PropertyInfoFormProps> = ({ onSubmit }) => {
   return (
     <AddFormContainer>
       <form onSubmit={handleSubmit}>
-        <Typography variant="body1" color="text.primary" textAlign="left" sx={{ mb: -1.5 }}>
+        <Typography ml={2} variant="body1" color="text.primary" textAlign="left" sx={{ mb: -1.5 }}>
           Property Information
         </Typography>
         <Grid container spacing={2} p={2}>
@@ -88,7 +88,7 @@ const PropertyInfoForm: React.FC<PropertyInfoFormProps> = ({ onSubmit }) => {
             <Grid item xs={12}>
               <FormControl sx={{ mb: 0.4, width: "100%" }}>
                 <Typography variant="body2" color="secondary" textAlign="left" sx={{ mb: 0.5 }}>
-                  Country Region
+                  Region of Island
                 </Typography>
                 <Select size="small" name="region" labelId="demo-simple-select-label" id="demo-simple-select">
                   {cities.map((city, index) => (
