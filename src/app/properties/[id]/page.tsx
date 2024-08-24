@@ -25,6 +25,37 @@ import PeopleIcon from "@mui/icons-material/People";
 import PropertiesPackagesForm from "@/components/Properties/PropertiesPackagesList";
 export const revalidate = 0;
 
+export interface PackageDTO {
+  packageName: string;
+  packageDescription: string;
+  durationRequirementDays: {
+    daysOrWeeks: "days" | "weeks";
+    count: number;
+  };
+  packagePricePerDay: number;
+}
+
+const propertyPackages: PackageDTO[] = [
+  {
+    packageName: "standard",
+    packageDescription: "The standard Lorem Ipsum passage, used since the 1500s",
+    durationRequirementDays: { daysOrWeeks: "days", count: 2 },
+    packagePricePerDay: 15000
+  },
+  {
+    packageName: "deluxe",
+    packageDescription: "The deluxe Lorem Ipsum passage, with more features",
+    durationRequirementDays: { daysOrWeeks: "weeks", count: 1 },
+    packagePricePerDay: 13500
+  },
+  {
+    packageName: "premium",
+    packageDescription: "The premium Lorem Ipsum passage, with the best features",
+    durationRequirementDays: { daysOrWeeks: "weeks", count: 2 },
+    packagePricePerDay: 10000
+  }
+];
+
 export default async function Page({ params }: { params: { id: string } }) {
   let propertyDetails: PropertyDocument | null = null;
   console.log("Property ID:", params.id);
@@ -203,7 +234,12 @@ export default async function Page({ params }: { params: { id: string } }) {
           </Grid>
         </Grid>
       </AddFormContainer>
-      <PropertiesPackagesForm />
+      <PropertiesPackagesForm
+        propertyId={params.id}
+        pricePerNight={propertyDetails.pricePerNight}
+        hostId={propertyDetails.host.toString()}
+        propertyPackages={propertyPackages}
+      />
     </Container>
   );
 }

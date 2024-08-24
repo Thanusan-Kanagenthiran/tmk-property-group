@@ -9,8 +9,8 @@ import { Box, IconButton } from "@mui/material";
 import { type ReactNode } from "react";
 
 interface PackageDTO {
-  title: string;
-  description: string;
+  packageName: string;
+  packageDescription: string;
   durationRequirementDays: {
     daysOrWeeks: "days" | "weeks";
     count: number;
@@ -45,10 +45,10 @@ const PropertiesPackageCard: React.FC<PropertiesPackageCardProps> = ({
       </Box>
       <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
         <Typography gutterBottom variant="h5" component="div">
-          {propertyPackage.title}
+          {propertyPackage.packageName}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {propertyPackage.description}
+          {propertyPackage.packageDescription}
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center", fontWeight: "bold" }}>
           for
@@ -65,11 +65,11 @@ const PropertiesPackageCard: React.FC<PropertiesPackageCardProps> = ({
       <CardActions sx={{ justifyContent: "end" }}>
         <Button
           disabled={isDisabled}
-          variant={selectedPackage === propertyPackage.title ? "contained" : "outlined"}
+          variant={selectedPackage === propertyPackage.packageName ? "contained" : "outlined"}
           size="small"
           color="secondary"
           onClick={action}>
-          {selectedPackage === propertyPackage.title ? "Selected" : "Select package"}
+          {selectedPackage === propertyPackage.packageName ? "Selected" : "Select package"}
         </Button>
       </CardActions>
     </Card>

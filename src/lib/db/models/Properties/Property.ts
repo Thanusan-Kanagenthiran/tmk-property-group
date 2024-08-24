@@ -1,8 +1,8 @@
 import mongoose, { model, Model, Schema, Types } from "mongoose";
 
 export interface PropertyDocument {
-  propertyType: Types.ObjectId; 
-  host: Types.ObjectId; 
+  propertyType: Types.ObjectId;
+  host: Types.ObjectId;
 
   title: string;
   description: string;
@@ -16,10 +16,11 @@ export interface PropertyDocument {
   amenities: string[];
 
   pricePerNight: number;
-  
+
   packages?: {
     packageName: string;
     packagePricePerDay: number;
+    packageDescription: string;
     durationRequirementDays?: {
       daysOrWeeks: "days" | "weeks";
       count: number;
@@ -56,6 +57,7 @@ const PropertySchema = new Schema<PropertyDocument>(
       {
         packageName: { type: String, required: true },
         packagePricePerDay: { type: Number, required: true },
+        packageDescription: { type: String },
         durationRequirementDays: {
           daysOrWeeks: { type: String, enum: ["days", "weeks"], required: true },
           count: { type: Number, required: true }

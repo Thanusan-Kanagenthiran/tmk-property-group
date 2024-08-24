@@ -8,7 +8,7 @@ export const POST = async (request: NextRequest, { params }: { params: { id: str
     const body = await request.json();
 
     // Validate the body content
-    const { packageName, packagePricePerDay, durationRequirementDays } = body;
+    const { packageName, packagePricePerDay, durationRequirementDays, packageDescription } = body;
     if (!packageName || !packagePricePerDay) {
       return NextResponse.json({ error: "packageName and packagePricePerDay are required." }, { status: 400 });
     }
@@ -23,7 +23,8 @@ export const POST = async (request: NextRequest, { params }: { params: { id: str
     property.packages?.push({
       packageName,
       packagePricePerDay,
-      durationRequirementDays
+      durationRequirementDays,
+      packageDescription
     });
 
     await property.save();
@@ -58,7 +59,7 @@ export const PUT = async (request: NextRequest, { params }: { params: { id: stri
     await dbConnect();
     const body = await request.json();
 
-    const { packageName, packagePricePerDay, durationRequirementDays } = body;
+    const { packageName, packagePricePerDay, durationRequirementDays, packageDescription } = body;
 
     if (!packageName) {
       return NextResponse.json({ error: "packageName is required to identify the package." }, { status: 400 });

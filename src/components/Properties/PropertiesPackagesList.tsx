@@ -1,91 +1,132 @@
 "use client";
-
-import React, { useState, type ReactNode } from "react";
-import PropertiesPackageCard from "./PropertiesPackageCard";
+import React, { useState } from "react";
 import Grid from "@mui/material/Grid";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
-import { Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import AddFormContainer from "../Common/Layout/AddFormContainer";
 import CheckInCheckOutPicker from "./BookingDatePicker";
+import { Dayjs } from "dayjs";
+import PropertiesPackageCard from "./PropertiesPackageCard";
+import { PackageDTO } from "@/app/properties/[id]/page";
 
 const commonIconStyles = { height: "50px", width: "50px" };
 
-const Icons: Record<string, ReactNode> = {
+const Icons: Record<string, React.ReactNode> = {
   standard: <StarBorderIcon sx={commonIconStyles} />,
   deluxe: <StarBorderPurple500Icon sx={commonIconStyles} />,
   premium: <AutoAwesomeIcon sx={commonIconStyles} />
 };
 
-interface PackageDTO {
-  title: string;
-  description: string;
-  durationRequirementDays: {
-    daysOrWeeks: "days" | "weeks";
-    count: number;
-  };
-  packagePricePerDay: number;
+interface PropertiesPackagesListProps {
+  propertyId: string;
+  pricePerNight: number;
+  hostId: string;
+  propertyPackages: PackageDTO[];
 }
 
-const propertyPackages: PackageDTO[] = [
-  {
-    title: "standard",
-    description: "The standard Lorem Ipsum passage, used since the 1500s",
-    durationRequirementDays: { daysOrWeeks: "days", count: 2 },
-    packagePricePerDay: 15000
-  },
-  {
-    title: "deluxe",
-    description: "The deluxe Lorem Ipsum passage, with more features",
-    durationRequirementDays: { daysOrWeeks: "weeks", count: 1 },
-    packagePricePerDay: 13500
-  },
-  {
-    title: "premium",
-    description: "The premium Lorem Ipsum passage, with the best features",
-    durationRequirementDays: { daysOrWeeks: "weeks", count: 2 },
-    packagePricePerDay: 10000
-  }
-];
-
-const PropertiesPackagesList: React.FC = () => {
+const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
+  propertyId,
+  pricePerNight,
+  hostId,
+  propertyPackages
+}) => {
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
+  const [daysCount, setDaysCount] = useState(0);
+  const [guests, setGuests] = useState<number>(0);
+  const [checkIn, setCheckIn] = useState<Dayjs | null>(null);
+  const [checkOut, setCheckOut] = useState<Dayjs | null>(null);
+
   const handleSelectPackage = (title: string) => {
     setSelectedPackage(title);
   };
 
-  const [daysCount, setDaysCount] = useState(0);
-
   const handleDaysCountChange = (daysCount: number) => {
-    console.log("Days Count Updated:", daysCount); // Debugging line
     setDaysCount(daysCount);
+  };
+
+  const handleDateChange = (checkIn: Dayjs | null, checkOut: Dayjs | null) => {
+    setCheckIn(checkIn);
+    setCheckOut(checkOut);
+  };
+
+  const handleSubmit = () => {
+    let totalPrice = 0;
+
+    if (selectedPackage) {
+      const selectedPackageDetails = propertyPackages.find((pkg) => pkg.packageName === selectedPackage);
+      if (selectedPackageDetails) {
+        totalPrice = selectedPackageDetails.packagePricePerDay * daysCount;
+      }
+    } else {
+      totalPrice = pricePerNight * daysCount;
+    }
+
+    const data = {
+      propertyId: propertyId,
+      hostId: hostId,
+      isPackage: selectedPackage,
+      daysCount,
+      guests,
+      checkIn: checkIn ? checkIn.format("YYYY-MM-DD") : null,
+      checkOut: checkOut ? checkOut.format("YYYY-MM-DD") : null,
+      totalPrice
+    };
+
+    // Replace with your actual endpoint and submission logic
+    console.log("Form submitted with data:", data);
+    // axios.post('/your-endpoint', data)
+    //   .then(response => {
+    //     console.log('Success:', response.data);
+    //   })
+    //   .catch(error => {
+    //     console.error('Error:', error);
+    //   });
   };
 
   return (
     <AddFormContainer>
-      <CheckInCheckOutPicker onDaysCountChange={handleDaysCountChange} />
-      <Typography ml={2} variant="body1" color="text.primary" textAlign="left">
+      <Grid justifyContent={"space-between"} container>
+        <Grid item xs={12} md={8}>
+          <CheckInCheckOutPicker onDaysCountChange={handleDaysCountChange} onDateChange={handleDateChange} />
+        </Grid>
+        <Grid mt={1} item xs={12} md={4}>
+          <Box display={"flex"} justifyContent={"end"} alignItems={"center"}>
+            <TextField
+              placeholder="Number of Guests"
+              type="number"
+              variant="outlined"
+              label="No of Guests"
+              name="guests"
+              value={guests}
+              onChange={(e) => setGuests(parseInt(e.target.value, 10))}
+            />
+            <Button type="submit" sx={{ ml: 2, py: 1.75 }} variant="contained" size="large" onClick={handleSubmit}>
+              Save
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
+      <Typography mt={4} variant="body1" color="text.primary" textAlign="left">
         Select your preferred package or go with the basic price per day
       </Typography>
 
       <Grid container spacing={2} py={2}>
         {propertyPackages.map((packageType) => {
-          const icon = Icons[packageType.title];
+          const icon = Icons[packageType.packageName];
 
-          const totalDaysCount =
+          const eligibleDaysCount =
             packageType.durationRequirementDays.daysOrWeeks === "weeks"
               ? packageType.durationRequirementDays.count * 7
               : packageType.durationRequirementDays.count;
 
-          console.log("Total Days Count:", totalDaysCount); // Debugging line
-
           return (
-            <Grid item xs={12} sm={6} md={4} key={packageType.title}>
+            <Grid item xs={12} sm={6} md={4} key={packageType.packageName}>
               <PropertiesPackageCard
-                isDisabled={daysCount < totalDaysCount}
+                isDisabled={daysCount < eligibleDaysCount}
                 propertyPackage={packageType}
-                action={() => handleSelectPackage(packageType.title)}
+                action={() => handleSelectPackage(packageType.packageName)}
                 icon={icon}
                 selectedPackage={selectedPackage}
               />
@@ -93,11 +134,6 @@ const PropertiesPackagesList: React.FC = () => {
           );
         })}
       </Grid>
-      {selectedPackage && (
-        <Typography variant="h6" mt={2}>
-          Selected Package: {selectedPackage}
-        </Typography>
-      )}
     </AddFormContainer>
   );
 };
