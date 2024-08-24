@@ -59,19 +59,19 @@ const PropertyCard: React.FC<{ property: PropertyDTO }> = ({ property }) => {
         </Typography>
         <Stack direction="row" justifyContent={"start"} mt={1}>
           <Chip
-            sx={{ px: 0.5 }}
+          
             icon={<KingBedIcon fontSize="small" />}
             label={`${noOfBeds} Beds`}
             variant="outlined"
           />
           <Chip
-            sx={{ px: 0.5, ml: 1 }}
+            sx={{ ml: 1 }}
             icon={<BathtubIcon fontSize="small" />}
             label={`${noOfBaths} Baths`}
             variant="outlined"
           />
           <Chip
-            sx={{ px: 0.5, ml: 1 }}
+            sx={{  ml: 1 }}
             icon={<PeopleIcon fontSize="small" />}
             label={`${maxNoOfGuests} Guests`}
             variant="outlined"

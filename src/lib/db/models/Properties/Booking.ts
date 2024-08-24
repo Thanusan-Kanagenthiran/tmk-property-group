@@ -12,6 +12,7 @@ interface BookingDocument {
   approvedDate?: Date;
   cancelledDate?: Date;
   canceledReason?: string;
+  isPackage?: "standard" | "premium" | "deluxe";
   status: "pending" | "accepted" | "rejected" | "cancelled" | "completed" | "partially_completed";
   partiallyCompletedReason?: string;
 }

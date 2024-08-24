@@ -59,7 +59,9 @@ const AppBar = styled(MuiAppBar, {
   })
 }));
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== "open" })(({ theme, open }) => ({
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== "open"
+})(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
     position: "relative",
     whiteSpace: "nowrap",
@@ -93,19 +95,13 @@ export default function Dashboard() {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar position="absolute" open={open}>
-        <Toolbar
-          sx={{
-            pr: "24px"
-          }}>
+        <Toolbar sx={{ pr: "24px" }}>
           <IconButton
             edge="start"
             color="inherit"
             aria-label="open drawer"
             onClick={toggleDrawer}
-            sx={{
-              marginRight: "36px",
-              ...(open && { display: "none" })
-            }}>
+            sx={{ marginRight: "36px", ...(open && { display: "none" }) }}>
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
@@ -121,7 +117,6 @@ export default function Dashboard() {
       <Drawer variant="permanent" open={open}>
         <Toolbar sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end", px: [1] }}>
           <IconButton onClick={toggleDrawer}>
-            {" "}
             <ChevronLeftIcon />
           </IconButton>
         </Toolbar>

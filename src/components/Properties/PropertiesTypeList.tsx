@@ -56,7 +56,7 @@ const PropertiesTypeList: React.FC<PropertiesTypeListProps> = ({ onTypeSelect })
   return (
     <AddFormContainer>
       <Typography ml={2} variant="body1" color="text.primary" textAlign="left" sx={{ mb: -1.5 }}>
-        Select Property Type ( Note: * You can't change this later )
+        Select Property Type ( Note: * You cant change this later )
       </Typography>
       <Grid container spacing={2} py={2}>
         {propertyData.map((property) => {

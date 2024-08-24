@@ -69,5 +69,5 @@ export const propertiesService = {
   UpdateProperty,
   GetProperties,
   GetPropertyTypes,
-  GetSingleProperty,
+  GetSingleProperty
 };

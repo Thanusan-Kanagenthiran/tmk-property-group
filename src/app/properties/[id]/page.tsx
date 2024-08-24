@@ -15,7 +15,6 @@ import {
   CardContent
 } from "@mui/material";
 import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
-import HighlightAltIcon from "@mui/icons-material/HighlightAlt";
 import AddFormContainer from "@/components/Common/Layout/AddFormContainer";
 import Image from "next/image";
 import { propertiesService } from "@/services/properties.service";
@@ -23,10 +22,12 @@ import { PropertyDocument } from "@/lib/db/models/Properties/Property";
 import KingBedIcon from "@mui/icons-material/KingBed";
 import BathtubIcon from "@mui/icons-material/Bathtub";
 import PeopleIcon from "@mui/icons-material/People";
+import PropertiesPackagesForm from "@/components/Properties/PropertiesPackagesList";
 export const revalidate = 0;
 
 export default async function Page({ params }: { params: { id: string } }) {
   let propertyDetails: PropertyDocument | null = null;
+  console.log("Property ID:", params.id);
   let error: string | null = null;
 
   try {
@@ -34,7 +35,6 @@ export default async function Page({ params }: { params: { id: string } }) {
 
     if (!propertyDetails) {
       // Optionally, you can use Next.js's built-in error handling for not found
-      ("fgmd");
     }
   } catch (err) {
     console.error("Error fetching property details:", err);
@@ -50,6 +50,8 @@ export default async function Page({ params }: { params: { id: string } }) {
     // In case notFound() was not used
     return <div>Property not found</div>;
   }
+
+  console.log("Property Details:", propertyDetails.packages);
 
   const featureImage =
     Array.isArray(propertyDetails.images) && propertyDetails.images.length > 0
@@ -201,6 +203,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           </Grid>
         </Grid>
       </AddFormContainer>
+      <PropertiesPackagesForm />
     </Container>
   );
 }

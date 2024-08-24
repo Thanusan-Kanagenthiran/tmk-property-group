@@ -9,6 +9,7 @@ import PropertiesImagesUpload from "../propertiesImagesUpload";
 import PropertiesPricingForm from "../PropertiesPricingForm";
 import { propertiesService, PropertyPostData } from "@/services/properties.service";
 import { ApiEndPoints } from "@/constants/api";
+import PropertiesPackagesForm from "../PropertiesPackagesList";
 
 interface InfoFormValues {
   title: string;

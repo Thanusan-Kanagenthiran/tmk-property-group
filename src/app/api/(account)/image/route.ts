@@ -1,4 +1,4 @@
-import { User } from "@/lib/db/models/User";
+import User from "@/lib/db/models/User";
 import { uploadImageToCloudinary } from "@/lib/cloudinary/image-upload";
 import { NextRequest, NextResponse } from "next/server";
 import { authUtils } from "@/lib/auth/authUtils";

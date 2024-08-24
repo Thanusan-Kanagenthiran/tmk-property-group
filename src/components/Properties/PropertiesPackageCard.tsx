@@ -1,79 +1,78 @@
 "use client";
+
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Box, CardActionArea } from "@mui/material";
-import { useState, type ReactNode } from "react";
-import PropertiesPackageForm from "./PropertiesPackageForm";
+import { Box, IconButton } from "@mui/material";
+import { type ReactNode } from "react";
 
-interface PropertiesPackageCardProps {
+interface PackageDTO {
   title: string;
   description: string;
+  durationRequirementDays: {
+    daysOrWeeks: "days" | "weeks";
+    count: number;
+  };
+  packagePricePerDay: number;
+}
+
+interface PropertiesPackageCardProps {
+  propertyPackage: PackageDTO;
   action: () => void;
-  actionLabel: string;
-  secondaryAction?: () => void;
-  secondaryActionLabel?: string;
   icon: ReactNode;
-  actionButtonColor?: "primary" | "secondary" | "error" | "warning" | "info" | "success";
+  selectedPackage: string | null;
+  isDisabled: boolean;
 }
 
 const PropertiesPackageCard: React.FC<PropertiesPackageCardProps> = ({
-  title,
-  description,
-  actionLabel,
-  secondaryAction,
-  secondaryActionLabel,
-  actionButtonColor = "secondary",
-  icon
+  propertyPackage,
+  action,
+  icon,
+  selectedPackage,
+  isDisabled
 }) => {
-  const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const isFullWidth = !secondaryAction || !secondaryActionLabel;
-
   return (
-    <>
-      <Card sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-        <CardActionArea sx={{ flex: 1 }}>
-          <Box sx={{ textAlign: "center" }} mt={4}>
-            {icon}
+    <Card
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%"
+      }}>
+      <Box sx={{ textAlign: "center" }} mt={4}>
+        {icon}
+      </Box>
+      <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+        <Typography gutterBottom variant="h5" component="div">
+          {propertyPackage.title}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {propertyPackage.description}
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center", fontWeight: "bold" }}>
+          for
+          <IconButton color="primary" aria-label="delete" size="small" sx={{ px: 1.5 }}>
+            {propertyPackage.durationRequirementDays.count}
+          </IconButton>
+          {propertyPackage.durationRequirementDays.daysOrWeeks} at{" "}
+          <Box component="span" sx={{ color: "secondary.main", fontWeight: "bold", fontSize: "1.2em" }}>
+            Rs.{propertyPackage.packagePricePerDay}
           </Box>
-          <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-            <Typography gutterBottom variant="h5" component="div">
-              {title}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {description}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-        <CardActions sx={{ justifyContent: "end" }}>
-          {secondaryAction && secondaryActionLabel && (
-            <Button variant="outlined" size="small" color="secondary" onClick={secondaryAction}>
-              {secondaryActionLabel}
-            </Button>
-          )}
-          <Button
-            variant="contained"
-            size="small"
-            color={actionButtonColor}
-            onClick={handleClickOpen}
-            fullWidth={isFullWidth}>
-            {actionLabel}
-          </Button>
-        </CardActions>
-      </Card>
-      <PropertiesPackageForm open={open} handleClose={handleClose} />
-    </>
+        </Typography>
+      </CardContent>
+
+      <CardActions sx={{ justifyContent: "end" }}>
+        <Button
+          disabled={isDisabled}
+          variant={selectedPackage === propertyPackage.title ? "contained" : "outlined"}
+          size="small"
+          color="secondary"
+          onClick={action}>
+          {selectedPackage === propertyPackage.title ? "Selected" : "Select package"}
+        </Button>
+      </CardActions>
+    </Card>
   );
 };
 
