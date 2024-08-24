@@ -1,12 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Container, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
-import PropertiesTypeList from "../../PropertiesTypeList";
-import PropertyInfoForm from "../../PropertyInfoForm";
-import RoomsAndMeasurementsForm from "../../RoomsAndMeasurementsForm";
-import KeyFeaturesAmenitiesForm from "../../KeyFeaturesAmenitiesForm";
-import PropertiesImagesUpload from "../../propertiesImagesUpload";
-import PropertiesPricingForm from "../../PropertiesPricingForm";
+import PropertiesTypeList from "../PropertiesTypeList";
+import PropertyInfoForm from "../PropertyInfoForm";
+import RoomsAndMeasurementsForm from "../RoomsAndMeasurementsForm";
+import KeyFeaturesAmenitiesForm from "../KeyFeaturesAmenitiesForm";
+import PropertiesImagesUpload from "../propertiesImagesUpload";
+import PropertiesPricingForm from "../PropertiesPricingForm";
 import { propertiesService, PropertyPostData } from "@/services/properties.service";
 import { ApiEndPoints } from "@/constants/api";
 

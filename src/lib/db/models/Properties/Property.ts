@@ -16,6 +16,7 @@ export interface PropertyDocument {
   amenities: string[];
 
   pricePerNight: number;
+  
   packages?: {
     packageName: string;
     packagePricePerDay: number;

@@ -20,6 +20,9 @@ import AddFormContainer from "@/components/Common/Layout/AddFormContainer";
 import Image from "next/image";
 import { propertiesService } from "@/services/properties.service";
 import { PropertyDocument } from "@/lib/db/models/Properties/Property";
+import KingBedIcon from "@mui/icons-material/KingBed";
+import BathtubIcon from "@mui/icons-material/Bathtub";
+import PeopleIcon from "@mui/icons-material/People";
 export const revalidate = 0;
 
 export default async function Page({ params }: { params: { id: string } }) {
@@ -72,10 +75,10 @@ export default async function Page({ params }: { params: { id: string } }) {
             </Button>
           </Stack>
           <Stack>
-            {/* <Typography variant="subtitle1" color="text.secondary">
-            Price
-          </Typography> */}
-            <Typography variant="h5" color="text.secondary">
+            <Typography variant="subtitle1" color="text.secondary">
+              Price per night starts from
+            </Typography>
+            <Typography variant="h5" color="secondary" textAlign={"right"}>
               {propertyDetails.pricePerNight}
             </Typography>
           </Stack>
@@ -120,7 +123,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 sx={{ maxWidth: 345, textAlign: "center", display: "flex", flexDirection: "column", height: "100%" }}>
                 <CardActionArea sx={{ flex: 1 }}>
                   <Box height="100" pt={2}>
-                    <HighlightAltIcon fontSize="small" />
+                    <KingBedIcon />
                   </Box>
                   <CardContent
                     sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
@@ -139,7 +142,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 sx={{ maxWidth: 345, textAlign: "center", display: "flex", flexDirection: "column", height: "100%" }}>
                 <CardActionArea sx={{ flex: 1 }}>
                   <Box height="100" pt={2}>
-                    <HighlightAltIcon fontSize="small" />
+                    <BathtubIcon />
                   </Box>
                   <CardContent
                     sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
@@ -158,7 +161,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 sx={{ maxWidth: 345, textAlign: "center", display: "flex", flexDirection: "column", height: "100%" }}>
                 <CardActionArea sx={{ flex: 1 }}>
                   <Box height="100" pt={2}>
-                    <HighlightAltIcon fontSize="small" />
+                    <PeopleIcon />
                   </Box>
                   <CardContent
                     sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>

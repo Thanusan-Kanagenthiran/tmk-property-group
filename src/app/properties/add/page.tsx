@@ -1,5 +1,5 @@
 import React from "react";
-import PropertiesForm from "@/components/Properties/Form/Add/PropertiesAddForm";
+import PropertiesForm from "@/components/Properties/Form/PropertiesForm";
 import { Container } from "@mui/material";
 
 

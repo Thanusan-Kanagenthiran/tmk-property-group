@@ -20,10 +20,11 @@ export interface PropertyDTO {
   noOfBeds: number;
   maxNoOfGuests: number;
   pricePerNight: number;
+  region: string;
 }
 
 const PropertyCard: React.FC<{ property: PropertyDTO }> = ({ property }) => {
-  const { id, title, description, image, noOfBaths, noOfBeds, maxNoOfGuests, pricePerNight } = property;
+  const { id, title, description, image, noOfBaths, noOfBeds, maxNoOfGuests, pricePerNight, region } = property;
 
   const featureImage = image ? image : `https://placehold.co/300x140?text=${encodeURIComponent(title)}`;
   return (
@@ -41,7 +42,7 @@ const PropertyCard: React.FC<{ property: PropertyDTO }> = ({ property }) => {
           gutterBottom
           variant="h6"
           component="div">
-          {title}
+          <span> {region} </span> {title}
         </Typography>
         <Typography
           variant="body2"
@@ -56,7 +57,7 @@ const PropertyCard: React.FC<{ property: PropertyDTO }> = ({ property }) => {
           }}>
           {description}
         </Typography>
-        <Stack direction="row" justifyContent={"start"} mt={2}>
+        <Stack direction="row" justifyContent={"start"} mt={1}>
           <Chip
             sx={{ px: 0.5 }}
             icon={<KingBedIcon fontSize="small" />}
@@ -77,12 +78,12 @@ const PropertyCard: React.FC<{ property: PropertyDTO }> = ({ property }) => {
           />
         </Stack>
       </CardContent>
-      <CardActions sx={{ justifyContent: "space-between", alignItems: "end", px: 2 }}>
+      <CardActions sx={{ justifyContent: "space-between", alignItems: "end", px: 2, py: -1 }}>
         <div>
           <Typography variant="body2" color="text.secondary">
             Price starts from
           </Typography>
-          <Typography variant="subtitle1">{`LKR ${property.pricePerNight}`}</Typography>
+          <Typography variant="subtitle1">{`LKR ${pricePerNight}`}</Typography>
         </div>
         <Button sx={{ fontSize: "11px" }} href={`http://localhost:3000/properties/${id}`} variant="contained">
           View Details

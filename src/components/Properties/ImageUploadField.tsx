@@ -9,9 +9,14 @@ import CloudDoneIcon from "@mui/icons-material/CloudDone";
 interface ImageUploadFieldProps {
   onImageChange: (file: File) => void;
   buttonWidth?: string;
+  aspectRatio?: number;
 }
 
-export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ onImageChange, buttonWidth = "210px" }) => {
+export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
+  onImageChange,
+  buttonWidth = "210px",
+  aspectRatio = 16 / 9
+}) => {
   const [image, setImage] = useState<string | undefined>(undefined);
   const [cropData, setCropData] = useState<string>("#");
   const cropperRef = createRef<ReactCropperElement>();
@@ -101,7 +106,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({ onImageChang
                 ref={cropperRef}
                 style={{ height: "100%", maxHeight: "350px", width: "100%" }}
                 zoomTo={zoomValue / 100}
-                aspectRatio={16 / 9}
+                aspectRatio={aspectRatio}
                 src={image}
                 viewMode={1}
                 background={false}
