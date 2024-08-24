@@ -1,5 +1,5 @@
 import { Typography, Grid, TextField, Box, Button } from "@mui/material";
-import AddFormContainer from "../Common/Layout/AddFormContainer";
+import AddFormContainer from "@/components/Common/Layout/AddFormContainer";
 
 interface PropertyInfoFormProps {
   onSubmit: (values: { maxNoOfGuests: number; noOfBeds: number; noOfBaths: number }) => void;
@@ -14,13 +14,11 @@ const RoomsAndMeasurementsForm: React.FC<PropertyInfoFormProps> = ({ onSubmit })
     const noOfBathsValue = formData.get("noOfBaths");
     const maxNoOfGuestsValue = formData.get("maxNoOfGuests");
 
-    // Ensure all fields are provided
     if (
       typeof noOfBedsValue !== "string" ||
       typeof noOfBathsValue !== "string" ||
       typeof maxNoOfGuestsValue !== "string"
     ) {
-      console.log("All fields are required.");
       return;
     }
 
@@ -35,14 +33,7 @@ const RoomsAndMeasurementsForm: React.FC<PropertyInfoFormProps> = ({ onSubmit })
       return;
     }
 
-    // Create a response object
-    const response = {
-      noOfBeds,
-      noOfBaths,
-      maxNoOfGuests
-    };
-
-    console.log(response);
+    const response = { noOfBeds, noOfBaths, maxNoOfGuests };
     onSubmit(response);
   };
 

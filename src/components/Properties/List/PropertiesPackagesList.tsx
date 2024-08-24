@@ -5,11 +5,12 @@ import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import AddFormContainer from "../Common/Layout/AddFormContainer";
+import AddFormContainer from "../../Common/Layout/AddFormContainer";
 import CheckInCheckOutPicker from "./BookingDatePicker";
 import { Dayjs } from "dayjs";
 import PropertiesPackageCard from "./PropertiesPackageCard";
 import { PackageDTO } from "@/app/properties/[id]/page";
+import { useSession } from "next-auth/react";
 
 const commonIconStyles = { height: "50px", width: "50px" };
 
@@ -32,6 +33,9 @@ const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
   hostId,
   propertyPackages
 }) => {
+  const { data: session } = useSession();
+  const userRole = session?.user?.role;
+  console.log(userRole);
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [daysCount, setDaysCount] = useState(0);
   const [guests, setGuests] = useState<number>(0);
@@ -97,7 +101,6 @@ const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
               placeholder="Number of Guests"
               type="number"
               variant="outlined"
-              label="No of Guests"
               name="guests"
               value={guests}
               onChange={(e) => setGuests(parseInt(e.target.value, 10))}

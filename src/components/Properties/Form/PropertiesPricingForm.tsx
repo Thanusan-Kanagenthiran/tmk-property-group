@@ -1,5 +1,5 @@
 import { Typography, Grid, TextField, Box, Button, Paper } from "@mui/material";
-import AddFormContainer from "../Common/Layout/AddFormContainer";
+import AddFormContainer from "../../Common/Layout/AddFormContainer";
 
 interface PropertiesPricingFormProps {
   onSubmit: (value: number) => void;

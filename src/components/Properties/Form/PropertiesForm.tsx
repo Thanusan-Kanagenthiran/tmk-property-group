@@ -1,14 +1,12 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Container, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
-import PropertiesTypeList from "../PropertiesTypeList";
-import PropertyInfoForm from "../PropertyInfoForm";
-import RoomsAndMeasurementsForm from "../RoomsAndMeasurementsForm";
-import KeyFeaturesAmenitiesForm from "../KeyFeaturesAmenitiesForm";
-import PropertiesImagesUpload from "../propertiesImagesUpload";
-import PropertiesPricingForm from "../PropertiesPricingForm";
+import PropertiesTypeList from "./PropertiesTypeList";
+import PropertyInfoForm from "./PropertyInfoForm";
+import RoomsAndMeasurementsForm from "./RoomsAndMeasurementsForm";
+import KeyFeaturesAmenitiesForm from "./KeyFeaturesAmenitiesForm";
+import PropertiesPricingForm from "./PropertiesPricingForm";
 import { propertiesService, PropertyPostData } from "@/services/properties.service";
-import { ApiEndPoints } from "@/constants/api";
 
 interface InfoFormValues {
   title: string;
@@ -23,55 +21,29 @@ interface RoomAndMeasurementsFormValues {
   noOfBaths: number;
 }
 
-interface PropertiesFormProps {
-  editData?: PropertyPostData;
-  id: string;
-}
-
-export default function PropertiesForm({ editData, id }: PropertiesFormProps) {
-  const [selectedPropertyType, setSelectedPropertyType] = useState<string | null>(editData?.propertyType ?? null);
-  const [isPropertyInfoFormResponse, setIsPropertyInfoFormResponse] = useState<boolean>(!!editData);
-  const [isRoomAndMeasurementsFormResponse, setIsRoomAndMeasurementsFormResponse] = useState<boolean>(!!editData);
-  const [isKeyFeaturesAmenitiesFormResponse, setIsKeyFeaturesAmenitiesFormResponse] = useState<boolean>(!!editData);
-  const [pricePerNight, setPricePerNight] = useState<number | null>(editData?.pricePerNight ?? null);
-  const [keyFeaturesAmenitiesFormValues, setKeyFeaturesAmenitiesFormValues] = useState<string[]>(
-    editData?.amenities ?? []
-  );
+export default function PropertiesForm() {
+  const [selectedPropertyType, setSelectedPropertyType] = useState<string | null>(null);
+  const [isPropertyInfoFormResponse, setIsPropertyInfoFormResponse] = useState<boolean>(false);
+  const [isRoomAndMeasurementsFormResponse, setIsRoomAndMeasurementsFormResponse] = useState<boolean>(false);
+  const [isKeyFeaturesAmenitiesFormResponse, setIsKeyFeaturesAmenitiesFormResponse] = useState<boolean>(false);
+  const [pricePerNight, setPricePerNight] = useState<number | null>(null);
+  const [keyFeaturesAmenitiesFormValues, setKeyFeaturesAmenitiesFormValues] = useState<string[]>([]);
 
   const [infoFormValues, setInfoFormValues] = useState<InfoFormValues>({
-    title: editData?.title ?? "",
-    description: editData?.description ?? "",
-    region: editData?.region ?? "",
-    address: editData?.address ?? ""
+    title: "",
+    description: "",
+    region: "",
+    address: ""
   });
 
   const [roomAndMeasurementsFormValues, setRoomAndMeasurementsFormValues] = useState<RoomAndMeasurementsFormValues>({
-    maxNoOfGuests: editData?.maxNoOfGuests ?? 0,
-    noOfBeds: editData?.noOfBeds ?? 0,
-    noOfBaths: editData?.noOfBaths ?? 0
+    maxNoOfGuests: 0,
+    noOfBeds: 0,
+    noOfBaths: 0
   });
 
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [confirmData, setConfirmData] = useState<PropertyPostData | null>(null);
-
-  useEffect(() => {
-    if (editData) {
-      setSelectedPropertyType(editData.propertyType);
-      setInfoFormValues({
-        title: editData.title,
-        description: editData.description,
-        region: editData.region,
-        address: editData.address
-      });
-      setRoomAndMeasurementsFormValues({
-        maxNoOfGuests: editData.maxNoOfGuests,
-        noOfBeds: editData.noOfBeds,
-        noOfBaths: editData.noOfBaths
-      });
-      setKeyFeaturesAmenitiesFormValues(editData.amenities);
-      setPricePerNight(editData.pricePerNight);
-    }
-  }, [editData]);
 
   const handleTypeSelect = (selectedProperty: string) => {
     setSelectedPropertyType(selectedProperty);
@@ -114,13 +86,9 @@ export default function PropertiesForm({ editData, id }: PropertiesFormProps) {
 
   const handleConfirmSubmit = async () => {
     if (confirmData) {
-      const endpoint = ApiEndPoints.PROPERTIES;
       try {
-        if (editData) {
-          await propertiesService.UpdateProperty(confirmData, id);
-        } else {
-          await propertiesService.AddProperty(confirmData);
-        }
+        await propertiesService.AddProperty(confirmData);
+
         console.log("Property saved successfully");
         setOpenConfirmDialog(false);
         resetForm();
@@ -174,8 +142,6 @@ export default function PropertiesForm({ editData, id }: PropertiesFormProps) {
           <PropertiesPricingForm onSubmit={handlePricePerNightSubmit} />
         ) : null}
       </Box>
-
-      <PropertiesImagesUpload />
 
       <Dialog open={openConfirmDialog} onClose={handleCancel}>
         <DialogTitle>Confirm Property Details</DialogTitle>

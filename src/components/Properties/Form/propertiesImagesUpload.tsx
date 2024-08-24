@@ -1,12 +1,14 @@
 "use client";
-import ImageUploadField from "./ImageUploadField";
+import ImageUploadField from "./ImageUpload/ImageUploadField";
 import { Box, Button, Snackbar, Alert, Grid, Typography, Paper } from "@mui/material";
-import AddFormContainer from "../Common/Layout/AddFormContainer";
+import AddFormContainer from "../../Common/Layout/AddFormContainer";
 import { useState, FormEvent, useEffect } from "react";
 import axios from "axios";
 import Image from "next/image";
 
-export default function PropertiesImagesUpload() {
+
+
+export default function PropertiesImagesUpload({ propertyId }: { propertyId: string }) {
   const [submitting, setSubmitting] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -42,7 +44,7 @@ export default function PropertiesImagesUpload() {
       const formData = new FormData();
       formData.append("image", image);
 
-      await axios.post("/api/property/66c8d827933f65f0af96b9e0/gallery", formData);
+      await axios.post("/api/property/66ca0e7fc4e8bac711f73320/gallery", formData);
       setSnackbarMessage("Image uploaded successfully");
       setSeverity("success");
       setSnackbarOpen(true);

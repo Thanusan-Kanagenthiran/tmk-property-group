@@ -6,7 +6,7 @@ import VillaIcon from "@mui/icons-material/Villa";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import NightShelterIcon from "@mui/icons-material/NightShelter";
 import { Typography } from "@mui/material";
-import AddFormContainer from "../Common/Layout/AddFormContainer";
+import AddFormContainer from "../../Common/Layout/AddFormContainer";
 import { Apartment } from "@mui/icons-material";
 import PropertiesTypeCard from "./PropertiesTypeCard";
 
@@ -30,7 +30,7 @@ interface PropertiesTypeListProps {
   onTypeSelect: (typeId: string) => void;
 }
 
-const PropertiesTypeList: React.FC<PropertiesTypeListProps> = ({ onTypeSelect }) => {
+export const PropertiesTypeList: React.FC<PropertiesTypeListProps> = ({ onTypeSelect }) => {
   const [propertyData, setPropertyData] = useState<Property[]>([]);
   const [selectedPropertyType, setSelectedPropertyType] = useState<string | null>(null);
 
@@ -39,7 +39,7 @@ const PropertiesTypeList: React.FC<PropertiesTypeListProps> = ({ onTypeSelect })
       try {
         const response = await fetch("http://localhost:3000/api/property-type");
         const data = await response.json();
-        setPropertyData(data); // Adjust based on actual API response structure
+        setPropertyData(data);
       } catch (error) {
         console.error("Failed to fetch property types:", error);
       }

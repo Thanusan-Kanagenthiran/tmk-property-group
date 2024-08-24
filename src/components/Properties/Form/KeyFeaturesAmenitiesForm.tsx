@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Typography, Grid, Box, Button, Checkbox, FormControlLabel } from "@mui/material";
-import AddFormContainer from "../Common/Layout/AddFormContainer";
+import AddFormContainer from "@/components/Common/Layout/AddFormContainer";
 
 interface Label {
   label: string;

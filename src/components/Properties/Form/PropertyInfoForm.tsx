@@ -1,6 +1,6 @@
 import React from "react";
-import { Typography, Grid, FormControl, TextField, Box, Button, InputLabel, MenuItem, Select } from "@mui/material";
-import AddFormContainer from "../Common/Layout/AddFormContainer";
+import { Typography, Grid, FormControl, TextField, Box, Button, MenuItem, Select } from "@mui/material";
+import AddFormContainer from "@/components/Common/Layout/AddFormContainer";
 
 const cities = [
   { name: "Colombo", province: "Western" },

@@ -6,7 +6,7 @@ import { Container } from "@mui/material";
 const SignIn = () => {
   return (
     <Container maxWidth={"lg"}>
-      <PropertiesForm id={""} />
+      <PropertiesForm  />
     </Container>
   );
 };

@@ -22,7 +22,7 @@ import { PropertyDocument } from "@/lib/db/models/Properties/Property";
 import KingBedIcon from "@mui/icons-material/KingBed";
 import BathtubIcon from "@mui/icons-material/Bathtub";
 import PeopleIcon from "@mui/icons-material/People";
-import PropertiesPackagesForm from "@/components/Properties/PropertiesPackagesList";
+import PropertiesPackagesList from "@/components/Properties/List/PropertiesPackagesList";
 export const revalidate = 0;
 
 export interface PackageDTO {
@@ -234,7 +234,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           </Grid>
         </Grid>
       </AddFormContainer>
-      <PropertiesPackagesForm
+      <PropertiesPackagesList
         propertyId={params.id}
         pricePerNight={propertyDetails.pricePerNight}
         hostId={propertyDetails.host.toString()}

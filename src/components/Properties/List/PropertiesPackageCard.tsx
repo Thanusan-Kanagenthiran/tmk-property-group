@@ -5,7 +5,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Box, IconButton } from "@mui/material";
+import { Box } from "@mui/material";
 import { type ReactNode } from "react";
 
 interface PackageDTO {
@@ -50,13 +50,13 @@ const PropertiesPackageCard: React.FC<PropertiesPackageCardProps> = ({
         <Typography variant="body2" color="text.secondary">
           {propertyPackage.packageDescription}
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ textAlign: "center", fontWeight: "bold" }}>
-          for
-          <IconButton color="primary" aria-label="delete" size="small" sx={{ px: 1.5 }}>
-            {propertyPackage.durationRequirementDays.count}
-          </IconButton>
-          {propertyPackage.durationRequirementDays.daysOrWeeks} at{" "}
-          <Box component="span" sx={{ color: "secondary.main", fontWeight: "bold", fontSize: "1.2em" }}>
+        <Typography variant="body2" color="text.secondary" sx={{ fontWeight: "bold" }}>
+          For
+          <Box component="span" sx={{ color: "primary.main", fontWeight: "bold", fontSize: "1.2em", px: 0.5 }}>
+            {propertyPackage.durationRequirementDays.count} {propertyPackage.durationRequirementDays.daysOrWeeks}
+          </Box>
+          at{" "}
+          <Box component="span" sx={{ color: "secondary.main", fontWeight: "bold", fontSize: "1.2em", px: 0.5 }}>
             Rs.{propertyPackage.packagePricePerDay}
           </Box>
         </Typography>
