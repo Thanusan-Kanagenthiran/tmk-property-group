@@ -1,6 +1,6 @@
-import { deleteImageFromCloudinary } from "@/lib/delete-image";
-import { UserModelWithImage } from "@/lib/image-model";
-import { uploadImageToCloudinary } from "@/lib/image-upload";
+import { deleteImageFromCloudinary } from "@/lib/cloudinary/delete-image";
+import { UserModelWithImage } from "@/lib/cloudinary/image-model";
+import { uploadImageToCloudinary } from "@/lib/cloudinary/image-upload";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest, { params }: { params: { id: string } }) => {

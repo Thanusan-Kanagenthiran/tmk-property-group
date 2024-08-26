@@ -1,7 +1,7 @@
 export enum PropertyPackageTypes {
-  STANDARD = "Standard",
-  PREMIUM = "Premium",
-  DELUXE = "Deluxe"
+  STANDARD = "standard",
+  PREMIUM = "premium",
+  DELUXE = "deluxe"
 }
 
 export enum PropertyStatus {

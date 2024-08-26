@@ -1,23 +1,30 @@
 import axiosClient from ".";
 
-interface PropertyPostData {
-  packageType: string;
+export interface PropertyPostData {
   propertyType: string;
-
+  pricePerNight: number;
   title: string;
   description: string;
-  location: string;
+  region: string;
   address: string;
-
-  noOfRooms: string;
-  noOfBeds: string;
-  noOfBaths: string;
-  area: string;
-
+  maxNoOfGuests: number;
+  noOfBeds: number;
+  noOfBaths: number;
   amenities: string[];
 }
 
-async function AddProperty(propertyData: PropertyPostData, endpoint: string): Promise<any> {
+const endpoint = "/property";
+
+async function GetProperties(): Promise<any> {
+  try {
+    const response = await axiosClient.get(endpoint);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching property data:", error);
+    throw error;
+  }
+}
+async function AddProperty(propertyData: PropertyPostData): Promise<any> {
   try {
     const response = await axiosClient.post(endpoint, propertyData);
     return response.data;
@@ -27,6 +34,40 @@ async function AddProperty(propertyData: PropertyPostData, endpoint: string): Pr
   }
 }
 
+async function UpdateProperty(propertyData: PropertyPostData, id: string): Promise<any> {
+  try {
+    const response = await axiosClient.put(`${endpoint}/${id}`, propertyData);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating property data:", error);
+    throw error;
+  }
+}
+
+async function GetPropertyTypes(): Promise<any> {
+  try {
+    const response = await axiosClient.get("/property-type");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching property type data:", error);
+    throw error;
+  }
+}
+
+async function GetSingleProperty(id: string): Promise<any> {
+  try {
+    const response = await axiosClient.get(`${endpoint}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching property data:", error);
+    throw error;
+  }
+}
+
 export const propertiesService = {
-  AddProperty
+  AddProperty,
+  UpdateProperty,
+  GetProperties,
+  GetPropertyTypes,
+  GetSingleProperty
 };
