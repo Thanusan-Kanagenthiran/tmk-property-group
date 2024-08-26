@@ -3,19 +3,22 @@ import { authUtils } from "@/lib/auth";
 import dbConnect from "@/lib/db/dbConnect";
 import Property from "@/lib/db/models/Properties/Property";
 import { NextResponse, type NextRequest } from "next/server";
+import PropertyType from "@/lib/db/models/Properties/PropertyType";
 
 export const GET = async (request: NextRequest) => {
   try {
     await dbConnect();
-
+    const propertyTypes = await PropertyType.find().select("_id title").lean().exec();
     const properties = await Property.find({ isDeleted: false })
-      .select("-packages -host -createdAt -updatedAt -isDeleted")
-      .populate({
-        path: "propertyType",
-        select: "+_id +title"
-      })
+      .select("-host -isDeleted -createdAt -updatedAt")
+      .populate("propertyType", "_id title")
       .lean()
       .exec();
+    console.timeEnd("Fetching properties");
+
+    if (!properties || properties.length === 0) {
+      return NextResponse.json({ message: "No properties found." }, { status: 404 });
+    }
 
     const data = properties.map((property: any) => {
       const { _id, images, propertyType, ...rest } = property;
@@ -26,7 +29,7 @@ export const GET = async (request: NextRequest) => {
           id: propertyType?._id.toString(),
           title: propertyType.title
         },
-        image: images[0].url,
+        image: images.length > 0 ? images[0].url : "",
         ...rest
       };
     });

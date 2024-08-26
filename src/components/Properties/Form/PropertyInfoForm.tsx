@@ -57,7 +57,7 @@ const PropertyInfoForm: React.FC<PropertyInfoFormProps> = ({ onSubmit }) => {
         <Typography ml={2} variant="body1" color="text.primary" textAlign="left" sx={{ mb: -1.5 }}>
           Property Information
         </Typography>
-        <Grid container spacing={2} p={2}>
+        <Grid container spacing={2} p={2} maxWidth={900}>
           <Grid item xs={12} md={8} spacing={2} container>
             <Grid item xs={12}>
               <FormControl sx={{ mb: -0.4, width: "100%" }}>
@@ -86,7 +86,7 @@ const PropertyInfoForm: React.FC<PropertyInfoFormProps> = ({ onSubmit }) => {
           </Grid>
           <Grid item xs={12} md={4} spacing={2} container>
             <Grid item xs={12}>
-              <FormControl sx={{ mb: 0.4, width: "100%" }}>
+              <FormControl sx={{ mb: 0.4 }} fullWidth>
                 <Typography variant="body2" color="secondary" textAlign="left" sx={{ mb: 0.5 }}>
                   Region of Island
                 </Typography>
@@ -100,7 +100,7 @@ const PropertyInfoForm: React.FC<PropertyInfoFormProps> = ({ onSubmit }) => {
               </FormControl>
             </Grid>
             <Grid item xs={12}>
-              <FormControl sx={{ mb: -0.4, width: "100%" }}>
+              <FormControl sx={{ mb: -0.4 }} fullWidth>
                 <Typography variant="body2" color="secondary" textAlign="left" sx={{ mb: -1.5 }}>
                   Address
                 </Typography>

@@ -33,15 +33,23 @@ interface PropertiesTypeListProps {
 export const PropertiesTypeList: React.FC<PropertiesTypeListProps> = ({ onTypeSelect }) => {
   const [propertyData, setPropertyData] = useState<Property[]>([]);
   const [selectedPropertyType, setSelectedPropertyType] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("http://localhost:3000/api/property-type");
-        const data = await response.json();
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data: Property[] = await response.json();
         setPropertyData(data);
       } catch (error) {
+        setError("Failed to fetch property types.");
         console.error("Failed to fetch property types:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -53,10 +61,13 @@ export const PropertiesTypeList: React.FC<PropertiesTypeListProps> = ({ onTypeSe
     onTypeSelect(selectedPropertyType);
   };
 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
   return (
     <AddFormContainer>
       <Typography ml={2} variant="body1" color="text.primary" textAlign="left" sx={{ mb: -1.5 }}>
-        Select Property Type ( Note: * You cant change this later )
+        Select Property Type (Note: * You cant change this later)
       </Typography>
       <Grid container spacing={2} py={2}>
         {propertyData.map((property) => {

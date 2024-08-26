@@ -1,5 +1,5 @@
 import mongoose, { model, Model, Schema, Types } from "mongoose";
-
+import PropertyType from "./PropertyType";
 export interface PropertyDocument {
   propertyType: Types.ObjectId;
   host: Types.ObjectId;
@@ -42,8 +42,8 @@ export interface PropertyDocument {
 }
 const PropertySchema = new Schema<PropertyDocument>(
   {
-    propertyType: { type: Schema.Types.ObjectId, ref: "PropertyType", required: true },
-    host: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    propertyType: { type: Schema.Types.ObjectId, ref: "PropertyType", required: true, index: true },
+    host: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
     address: { type: String, required: true },
@@ -72,7 +72,7 @@ const PropertySchema = new Schema<PropertyDocument>(
     ],
     bookings: [{ type: Schema.Types.ObjectId, ref: "Booking" }],
     reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
-    isDeleted: { type: Boolean, required: true, default: false },
+    isDeleted: { type: Boolean, required: true, default: false, index: true },
     status: { type: String, enum: ["active", "inactive", "suspended"], default: "active" },
     remarks: { type: String }
   },

@@ -8,9 +8,8 @@ export default async function Page() {
   try {
     propertiesTypes = await propertiesService.GetPropertyTypes();
     properties = await propertiesService.GetProperties();
+    console.log(propertiesTypes);
   } catch (error) {
-    console.error("Failed to fetch data:", error);
-    // Handle error or return a fallback UI
     return <div>Error loading data</div>;
   }
   console.log(properties);
