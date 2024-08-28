@@ -39,8 +39,7 @@ export default function AccountDetails() {
     }
 
     fetchProperties();
-  }, []); // Empty dependency array to ensure the effect runs only once
-
+  }, []);
   if (loading) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
@@ -62,7 +61,6 @@ export default function AccountDetails() {
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
         My Account
       </Typography>
-      {/* Display account details */}
       <Typography variant="body1">Name: {accountDetails.name}</Typography>
       <Typography variant="body1">Email: {accountDetails.email}</Typography>
       <Typography variant="body1">Phone: {accountDetails.phone}</Typography>

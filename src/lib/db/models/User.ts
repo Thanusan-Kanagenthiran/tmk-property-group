@@ -24,7 +24,7 @@ const UserSchema = new Schema<UserDocument>(
       type: String,
       unique: true,
       sparse: true,
-      match: [/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/, "Please enter a valid phone number"]
+      trim: true
     },
     image: {
       url: { type: String },

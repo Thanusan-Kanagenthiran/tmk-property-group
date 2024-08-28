@@ -61,7 +61,7 @@ export const DELETE = async (request: NextRequest, { params }: { params: { id: s
   }
 };
 
-export const PUT = async (request: NextRequest, { params }: { params: { id: string } }) => {
+export const PUT = async (request: NextRequest) => {
   try {
     const userId = await authUtils.getUserId(request);
     if (!userId) {
@@ -71,7 +71,7 @@ export const PUT = async (request: NextRequest, { params }: { params: { id: stri
     await dbConnect();
     const body = await request.json();
 
-    const user = await User.findOneAndUpdate({ _id: params.id }, body, { new: true });
+    const user = await User.findOneAndUpdate({ _id: userId }, body, { new: true });
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }

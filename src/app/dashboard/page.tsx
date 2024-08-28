@@ -1,7 +1,8 @@
 "use client";
 import * as React from "react";
 import { styled } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
+import EditPassword from "./EditPassword";
+import EditPhoneNumber from "./EditAccount";
 import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
@@ -77,7 +78,6 @@ export default function Dashboard() {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <CssBaseline />
       <AppBar position="absolute" open={open}>
         <Toolbar sx={{ pr: "24px" }}>
           <IconButton
@@ -136,6 +136,8 @@ export default function Dashboard() {
             <Grid item xs={12}>
               <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
                 <AccountDetails />
+                <EditPhoneNumber />
+                <EditPassword />
               </Paper>
             </Grid>
           </Grid>
