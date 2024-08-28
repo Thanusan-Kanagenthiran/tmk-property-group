@@ -20,7 +20,6 @@ async function GetProperties(): Promise<any> {
     const response = await axiosClient.get(endpoint);
     return response.data;
   } catch (error) {
-    console.error("Error fetching property data:", error);
     throw error;
   }
 }
@@ -29,7 +28,6 @@ async function AddProperty(propertyData: PropertyPostData): Promise<any> {
     const response = await axiosClient.post(endpoint, propertyData);
     return response.data;
   } catch (error) {
-    console.error("Error posting property data:", error);
     throw error;
   }
 }
@@ -39,7 +37,6 @@ async function UpdateProperty(propertyData: PropertyPostData, id: string): Promi
     const response = await axiosClient.put(`${endpoint}/${id}`, propertyData);
     return response.data;
   } catch (error) {
-    console.error("Error updating property data:", error);
     throw error;
   }
 }
@@ -49,7 +46,6 @@ async function GetPropertyTypes(): Promise<any> {
     const response = await axiosClient.get("/property-type");
     return response.data;
   } catch (error) {
-    console.error("Error fetching property type data:", error);
     throw error;
   }
 }
@@ -59,7 +55,6 @@ async function GetSingleProperty(id: string): Promise<any> {
     const response = await axiosClient.get(`${endpoint}/${id}`);
     return response.data;
   } catch (error) {
-    console.error("Error fetching property data:", error);
     throw error;
   }
 }

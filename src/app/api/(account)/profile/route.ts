@@ -11,7 +11,7 @@ export const GET = async (request: NextRequest) => {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
     await dbConnect();
-    const user = await User.findById(userId).select("-password -isDeleted -updatedAt -__v -_id");
+    const user = await User.findById(userId).select("-password -__v -_id");
 
     if (!user) {
       return NextResponse.json({ error: "user not found" }, { status: 404 });
@@ -25,8 +25,10 @@ export const GET = async (request: NextRequest) => {
       name: user.name,
       image: image,
       createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
       phone: user.phone || null,
-      role: user.role
+      role: user.role,
+      isDeleted: user.isDeleted
     };
 
     return NextResponse.json(data);
