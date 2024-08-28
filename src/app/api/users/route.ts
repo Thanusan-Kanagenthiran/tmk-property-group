@@ -1,19 +1,33 @@
 "use server";
-
-import { register } from "@/actions/users/register";
+import dbConnect from "@/lib/db/dbConnect";
+import User from "@/lib/db/models/User";
+import { authUtils } from "@/lib/auth";
 import { NextResponse, type NextRequest } from "next/server";
 
-export const POST = async (request: NextRequest) => {
+export const GET = async (request: NextRequest) => {
   try {
-    const body = await request.json();
-    const result = await register(body);
+    await dbConnect();
 
-    if (result.error) {
-      return NextResponse.json({ error: result.error }, { status: 400 });
+    const users = await User.find().select("-password  -updatedAt -__v ").lean().exec();
+
+    if (!users) {
+      return NextResponse.json({ error: "No users found" }, { status: 404 });
     }
-    return NextResponse.json(result.message, { status: 201 });
+
+    const data = users.map((user) => {
+      const { _id, image, ...rest } = user;
+
+      return {
+        id: _id,
+        image: image?.url || null,
+        ...rest
+      };
+    });
+
+    return NextResponse.json(data);
   } catch (error) {
-    console.error("POST Handler Error:", error);
-    return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });
+    console.error("Error fetching user:", error);
+    return NextResponse.error();
   }
 };
+

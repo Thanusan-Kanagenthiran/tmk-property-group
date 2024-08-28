@@ -1,20 +1,19 @@
 export enum PropertyPackageTypes {
-  BASIC = "basic",
   STANDARD = "standard",
   PREMIUM = "premium",
+  DELUXE = "deluxe"
 }
 
 export enum PropertyStatus {
-  AVAILABLE = "available",
-  RENTED = "rented",
-  UNDER_MAINTENANCE = "under_maintenance",
-  UNAVAILABLE = "unavailable",
+  AVAILABLE = "Available",
+  RENTED = "Rented",
+  UNDER_MAINTENANCE = "Under maintenance",
+  UNAVAILABLE = "Unavailable"
 }
 
 export enum PropertyType {
-  APARTMENT = "apartment",
-  HOUSE = "house",
-  VILLA = "villa",
-  STUDIO = "studio",
+  APARTMENT = "Apartment",
+  HOUSE = "House",
+  VILLA = "Villa",
+  Hotel = "Hotel"
 }
-

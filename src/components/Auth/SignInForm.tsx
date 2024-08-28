@@ -5,7 +5,6 @@ import { Button, TextField, Typography, Container, Alert, Box, Snackbar, Grid, F
 import { Paths } from "@/constants/Paths";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { validateEmail, validatePassword } from "@/utils/validation";
 import AppSpinner from "../Common/AppSpinner";
 import { useRouter } from "next/navigation";
 
@@ -22,18 +21,11 @@ export default function Register() {
     const formSubmissionErrors = { ...initialErrors };
     let isValid = true;
 
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
-    const emailValidation = validateEmail(email);
-    if (!emailValidation.isValid) {
-      formSubmissionErrors.email = emailValidation.reason || "";
+    if (!formData.get("email")) {
       isValid = false;
     }
 
-    const passwordValidation = validatePassword(password);
-    if (!passwordValidation.isValid) {
-      formSubmissionErrors.password = passwordValidation.reason || "";
+    if (!formData.get("password")) {
       isValid = false;
     }
 
