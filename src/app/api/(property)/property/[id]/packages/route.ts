@@ -94,3 +94,38 @@ export const PUT = async (request: NextRequest, { params }: { params: { id: stri
   }
 };
 
+
+export const DELETE = async (request: NextRequest, { params }: { params: { id: string } }) => {
+  try {
+    await dbConnect();
+
+    const body = await request.json();
+    const { packageName } = body;
+
+    if (!packageName) {
+      return NextResponse.json({ error: "packageName is required to delete a package." }, { status: 400 });
+    }
+
+    // Find the property by ID and ensure it's not deleted
+    const property = await Property.findOne({ _id: params.id, isDeleted: false });
+    if (!property) {
+      return NextResponse.json({ error: "Property not found." }, { status: 404 });
+    }
+
+    // Check if the package exists
+    const packageExists = property.packages?.some((pkg) => pkg.packageName === packageName);
+    if (!packageExists) {
+      return NextResponse.json({ error: `Package with packageName '${packageName}' does not exist.` }, { status: 404 });
+    }
+
+    // Remove the package from the array
+    property.packages = property.packages?.filter((pkg) => pkg.packageName !== packageName);
+
+    await property.save();
+
+    return NextResponse.json({ message: "Package successfully deleted.", property });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });
+  }
+};
