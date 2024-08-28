@@ -21,6 +21,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { mainListItems, secondaryListItems } from "./listItems";
 import AccountDetails from "./Account";
 const drawerWidth: number = 240;
+import CheckoutPage from "./PayHereButton";
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -75,6 +76,10 @@ export default function Dashboard() {
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  const amountToPay = 1500; // Amount in LKR
+  const orderId = "12345"; // Unique order ID
+  const itemsDescription = "Item Description"; // Description of items
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -137,6 +142,7 @@ export default function Dashboard() {
               <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
                 <AccountDetails />
                 <EditPhoneNumber />
+                <CheckoutPage />
                 <EditPassword />
               </Paper>
             </Grid>
