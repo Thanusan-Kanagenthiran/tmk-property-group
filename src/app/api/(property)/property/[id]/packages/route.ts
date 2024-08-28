@@ -2,39 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import dbConnect from "@/lib/db/dbConnect";
 import Property from "@/lib/db/models/Properties/Property";
 
-export const POST = async (request: NextRequest, { params }: { params: { id: string } }) => {
-  try {
-    await dbConnect();
-    const body = await request.json();
 
-    // Validate the body content
-    const { packageName, packagePricePerDay, durationRequirementDays, packageDescription } = body;
-    if (!packageName || !packagePricePerDay) {
-      return NextResponse.json({ error: "packageName and packagePricePerDay are required." }, { status: 400 });
-    }
-
-    // Find the property
-    const property = await Property.findOne({ _id: params.id, isDeleted: false });
-    if (!property) {
-      return NextResponse.json({ error: "Property not found." }, { status: 404 });
-    }
-
-    // Add the new package
-    property.packages?.push({
-      packageName,
-      packagePricePerDay,
-      durationRequirementDays,
-      packageDescription
-    });
-
-    await property.save();
-
-    return NextResponse.json({ message: "Package successfully added.", property });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });
-  }
-};
 
 export const GET = async (request: NextRequest, { params }: { params: { id: string } }) => {
   try {
@@ -47,7 +15,13 @@ export const GET = async (request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: "Property not found." }, { status: 404 });
     }
 
-    return NextResponse.json({ packages: property.packages });
+    // Manually remove the _id field from each package
+    const packages = property.packages?.map((pkg: any) => {
+      const { _id, ...rest } = pkg._doc; // '_doc' is used to access the original document without Mongoose meta fields
+      return rest;
+    });
+
+    return NextResponse.json({ packages });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });
@@ -59,42 +33,64 @@ export const PUT = async (request: NextRequest, { params }: { params: { id: stri
     await dbConnect();
     const body = await request.json();
 
-    const { packageName, packagePricePerDay, durationRequirementDays, packageDescription } = body;
+    const { packageName, packagePricePerDay, packageDescription, durationRequirementDays } = body;
 
+    // Validate that packageName is provided
     if (!packageName) {
-      return NextResponse.json({ error: "packageName is required to identify the package." }, { status: 400 });
+      return NextResponse.json({ error: "Package name is required." }, { status: 400 });
     }
 
-    // Find the property
+    // Find the property by ID and ensure it's not deleted
     const property = await Property.findOne({ _id: params.id, isDeleted: false });
     if (!property) {
       return NextResponse.json({ error: "Property not found." }, { status: 404 });
     }
 
-    // Ensure packages array is not undefined or null
-    property.packages = property.packages ?? [];
+    // Ensure packages array is initialized
+    property.packages = property.packages || [];
 
-    // Find the package by packageName
-    const packageIndex = property.packages.findIndex((pkg) => pkg.packageName === packageName);
+    // Check if a package with the same name already exists
+    const existingPackageIndex = property.packages.findIndex((pkg) => pkg.packageName === packageName);
 
-    if (packageIndex === -1) {
-      return NextResponse.json({ error: `Package with packageName '${packageName}' not found.` }, { status: 404 });
+    if (existingPackageIndex !== -1) {
+      // Package exists, update it
+      if (packagePricePerDay !== undefined) {
+        property.packages[existingPackageIndex].packagePricePerDay = packagePricePerDay;
+      }
+      if (packageDescription !== undefined) {
+        property.packages[existingPackageIndex].packageDescription = packageDescription;
+      }
+      if (durationRequirementDays !== undefined) {
+        property.packages[existingPackageIndex].durationRequirementDays = durationRequirementDays;
+      }
+
+      // Save the updated property with the modified package
+      await property.save();
+
+      return NextResponse.json({
+        message: "Package updated successfully.",
+        package: property.packages[existingPackageIndex]
+      });
+    } else {
+      // Package does not exist, create a new one
+      property.packages.push({
+        packageName,
+        packagePricePerDay,
+        packageDescription,
+        durationRequirementDays
+      });
+
+      // Save the updated property with the new package
+      await property.save();
+
+      return NextResponse.json({
+        message: "Package added successfully.",
+        package: property.packages.find((pkg) => pkg.packageName === packageName)
+      });
     }
-
-    // Update only the specified fields
-    if (packagePricePerDay !== undefined) {
-      property.packages[packageIndex].packagePricePerDay = packagePricePerDay;
-    }
-    if (durationRequirementDays !== undefined) {
-      property.packages[packageIndex].durationRequirementDays = durationRequirementDays;
-    }
-
-    // Save the updated property
-    await property.save();
-
-    return NextResponse.json({ message: "Package successfully updated.", property });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });
   }
 };
+
