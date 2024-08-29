@@ -5,9 +5,9 @@ const CheckoutPage = () => {
   const [hash, setHash] = useState<string>("");
 
   const fetchHash = async () => {
-    const orderId = "12345"; // Example order ID
-    const amount = 1000; // Example amount
-    const currency = "LKR"; // Example currency
+    const orderId = "12345";
+    const amount = 1000;
+    const currency = "LKR";
 
     try {
       const response = await fetch("/api/generate-hash", {
@@ -30,9 +30,9 @@ const CheckoutPage = () => {
   }, []);
 
   const merchantId = "1227798";
-  const returnUrl = "http://yourdomain.com/return";
-  const cancelUrl = "http://yourdomain.com/cancel";
-  const notifyUrl = "http://yourdomain.com/api/notify"; // Endpoint for payment notifications
+  const returnUrl = "http://localhost:3000/return";
+  const cancelUrl = "http://localhost:3000/cancel";
+  const notifyUrl = "http://localhost:3000/api/notify";
 
   return (
     <form method="post" action="https://sandbox.payhere.lk/pay/checkout">

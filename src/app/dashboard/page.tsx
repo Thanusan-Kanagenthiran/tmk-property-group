@@ -22,7 +22,8 @@ import { mainListItems, secondaryListItems } from "./listItems";
 import AccountDetails from "./Account";
 const drawerWidth: number = 240;
 import CheckoutPage from "./PayHereButton";
-
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@mui/material";
+import ProfileImageUpload from "@/components/Account/ProfileImageUpload";
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
@@ -75,6 +76,18 @@ export default function Dashboard() {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
+  };
+
+  const [openModal, setOpenModal] = React.useState(false);
+  const [modalContent, setModalContent] = React.useState<React.ReactNode>(null);
+
+  const handleOpenModal = (content: React.ReactNode) => {
+    setModalContent(content);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
   };
 
   const amountToPay = 1500; // Amount in LKR
@@ -140,15 +153,37 @@ export default function Dashboard() {
           <Grid container spacing={3} sx={{ mt: 4 }}>
             <Grid item xs={12}>
               <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                <AccountDetails />
+                {/* <AccountDetails />
+                <Button variant="outlined" onClick={handleClickOpenModal}>
+                  Open alert dialog
+                </Button>
                 <EditPhoneNumber />
                 <CheckoutPage />
-                <EditPassword />
+                <EditPassword /> */}
+                <Grid item xs={12}>
+                  <AccountDetails />
+                  <Button variant="outlined" onClick={() => handleOpenModal(<EditPhoneNumber />)}>
+                    Edit Phone Number
+                  </Button>
+                  <Button variant="outlined" onClick={() => handleOpenModal(<EditPassword />)}>
+                    Edit Password
+                  </Button>
+                  <Button variant="outlined" onClick={() => handleOpenModal(<ProfileImageUpload />)}>
+                    Edit Image
+                  </Button>
+                </Grid>
               </Paper>
             </Grid>
           </Grid>
         </Container>
       </Box>
+      <Dialog open={openModal} onClose={handleCloseModal} fullWidth maxWidth="sm">
+        <DialogTitle>Modal</DialogTitle>
+        <DialogContent>{modalContent}</DialogContent>
+        <Button onClick={handleCloseModal} sx={{ mt: 2 }}>
+          Close
+        </Button>
+      </Dialog>
     </Box>
   );
 }

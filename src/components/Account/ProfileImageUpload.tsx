@@ -64,9 +64,12 @@ export default function PropertiesImagesUpload() {
       <form onSubmit={onUploadHandler}>
         <Grid container spacing={3} justifyContent={"center"} alignItems={"center"} flexDirection={"column"}>
           {imageUrl ? (
-            <Button size="small" type="submit" variant="contained" disabled={submitting}>
-              Save
-            </Button>
+            <>
+              <Image src={imageUrl} alt="Profile Image" width={200} height={200} style={{ borderRadius: "50%" }} />
+              <Button size="small" type="submit" variant="contained" disabled={submitting}>
+                Save
+              </Button>
+            </>
           ) : (
             <ProfileImageUploadField onImageChange={onImageChange} />
           )}

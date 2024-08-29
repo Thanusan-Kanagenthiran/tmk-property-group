@@ -25,13 +25,15 @@ export default function EditPhoneNumber() {
     if (!phone) {
       formSubmissionErrors.phone = "Phone number is required";
       isValid = false;
+    } else if (!/^\d{10}$/.test(phone)) {
+      formSubmissionErrors.phone = "Phone number must be exactly 10 digits";
+      isValid = false;
     }
 
     setPhoneErrors(formSubmissionErrors);
     return isValid;
   };
 
-  // Handle phone number form submission
   const handlePhoneSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -62,7 +64,6 @@ export default function EditPhoneNumber() {
     }
   };
 
-  // Handle Snackbar close
   const handleClose = () => {
     if (backendError) {
       setBackendError(null);

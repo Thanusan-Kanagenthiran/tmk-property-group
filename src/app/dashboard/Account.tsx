@@ -81,7 +81,7 @@ export default function AccountDetails() {
             </Box>
           </Box>
         )}
-        <ProfileImagesUpload />
+        
       </Box>
     </React.Fragment>
   );
