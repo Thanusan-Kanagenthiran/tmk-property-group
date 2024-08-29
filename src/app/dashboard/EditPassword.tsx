@@ -97,7 +97,11 @@ export default function EditPassword() {
           justifyContent: "center",
           textAlign: "center"
         }}>
-        <form style={{ maxWidth: "350px" }} ref={passwordFormRef} onSubmit={handlePasswordSubmit} autoComplete="off">
+        <form
+          style={{ maxWidth: "350px", marginBottom: "2rem" }}
+          ref={passwordFormRef}
+          onSubmit={handlePasswordSubmit}
+          autoComplete="off">
           <FormControl sx={{ mb: -0.4, width: "100%" }}>
             <Typography variant="body2" color="secondary" textAlign="left" sx={{ mb: -1.5 }}>
               Current Password
@@ -112,7 +116,7 @@ export default function EditPassword() {
               error={!!passwordErrors.currentPassword}
               helperText={passwordErrors.currentPassword ? passwordErrors.currentPassword : " "}
             />
-            <Typography variant="body2" color="secondary" textAlign="left" sx={{ mb: -1.5 }}>
+            <Typography variant="body2" color="secondary" textAlign="left" sx={{ my: -2 }}>
               New Password
             </Typography>
             <TextField

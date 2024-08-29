@@ -1,9 +1,8 @@
 "use client";
-import { Box, Button, Snackbar, Alert, Grid } from "@mui/material";
+import { Box, Button, Snackbar, Alert } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import CloudDoneIcon from "@mui/icons-material/CloudDone";
 import React from "react";
 
 export default function ProfileImageDelete() {
@@ -35,8 +34,8 @@ export default function ProfileImageDelete() {
 
   return (
     <Box>
-      <Button onClick={deleteHandler} disabled={submitting} sx={{ display: "flex", justifyContent: "center" }}>
-        <CloudDoneIcon color="success" />
+      <Button variant="contained" color="error" onClick={deleteHandler} disabled={submitting} sx={{ m:0 }}>
+      Delete Image
       </Button>
 
       <Snackbar

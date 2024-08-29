@@ -2,9 +2,20 @@
 import React, { useState, createRef } from "react";
 import Cropper, { ReactCropperElement } from "react-cropper";
 import "cropperjs/dist/cropper.css";
-import { Box, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Slider } from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Slider,
+  ButtonGroup
+} from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CloudDoneIcon from "@mui/icons-material/CloudDone";
+import ProfileImageDelete from "./ProfileImageDelete";
 
 interface ProfileImageUploadFieldProps {
   onImageChange: (file: File) => void;
@@ -66,24 +77,24 @@ export const ProfileImageUploadField: React.FC<ProfileImageUploadFieldProps> = (
 
   return (
     <div>
-      <Button
-        component="label"
-        role={undefined}
-        variant="text"
-        tabIndex={-1}
-        sx={{ display: "flex", justifyContent: "center" }}>
-        {imageCropped ? <CloudDoneIcon color="success" /> : <CloudUploadIcon color="action" />}
-        <TextField
-          style={{ display: "none" }}
-          size="small"
-          variant="outlined"
-          type="file"
-          inputRef={fileInputRef}
-          onChange={onChange}
-          inputProps={{ accept: "image/png, image/jpeg, image/jpg, image/svg+xml" }}
-          hidden
-        />
-      </Button>
+      <ButtonGroup aria-label="Loading button group"  sx={{
+        display: "flex",
+        justifyContent: "center", 
+        gap: 2, 
+      }}>
+        <Button  variant="contained"  component="label" role={undefined}  tabIndex={-1}>
+          Upload an Image
+          <TextField
+            style={{ display: "none" }}
+            type="file"
+            inputRef={fileInputRef}
+            onChange={onChange}
+            inputProps={{ accept: "image/png, image/jpeg, image/jpg, image/svg+xml" }}
+            hidden
+          />
+        </Button>
+        <ProfileImageDelete />
+      </ButtonGroup>
 
       <Dialog open={dialogOpen} onClose={handleDialogClose} maxWidth="xs" sx={{ justifyContent: "center" }} fullWidth>
         <DialogTitle>Crop Image</DialogTitle>

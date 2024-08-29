@@ -5,8 +5,9 @@ import { useState, FormEvent, useEffect } from "react";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import AppSpinner from "../Common/AppSpinner";
 
-export default function PropertiesImagesUpload() {
+export default function ProfileImagesUpload() {
   const [submitting, setSubmitting] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -60,20 +61,40 @@ export default function PropertiesImagesUpload() {
   };
 
   return (
-    <Box maxWidth="100%" p={2}>
-      <form onSubmit={onUploadHandler}>
-        <Grid container spacing={3} justifyContent={"center"} alignItems={"center"} flexDirection={"column"}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center"
+      }}>
+      <form onSubmit={onUploadHandler} style={{ maxWidth: "350px" }}>
           {imageUrl ? (
             <>
-              <Image src={imageUrl} alt="Profile Image" width={200} height={200} style={{ borderRadius: "50%" }} />
-              <Button size="small" type="submit" variant="contained" disabled={submitting}>
-                Save
-              </Button>
+              <Image
+                src={imageUrl}
+                alt="Profile Image"
+                width={150}
+                height={150}
+                style={{ borderRadius: "50%", marginBlock: "2rem" }}
+              />
+              <Grid container justifyContent="center" gap={2}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  size="medium"
+                  fullWidth
+                  color="primary"
+                  startIcon={submitting ? <AppSpinner size={15} /> : null}>
+                  Update Image
+                </Button>
+              </Grid>
             </>
           ) : (
             <ProfileImageUploadField onImageChange={onImageChange} />
           )}
-        </Grid>
+   
       </form>
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)}>
         <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: "100%" }}>
