@@ -6,12 +6,23 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PeopleIcon from "@mui/icons-material/People";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import Link from "next/link";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import HouseIcon from "@mui/icons-material/House";
 
 export const mainListItems = (
   <React.Fragment>
+    <Link href="/dashboard" passHref>
+      <ListItemButton>
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Dashboard" />
+      </ListItemButton>
+    </Link>
     <ListItemButton>
       <ListItemIcon>
-        <DashboardIcon />
+        <HouseIcon />
       </ListItemIcon>
       <ListItemText primary="Properties" />
     </ListItemButton>
@@ -32,11 +43,13 @@ export const mainListItems = (
 
 export const secondaryListItems = (
   <React.Fragment>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Account" />
-    </ListItemButton>
+    <Link href="/dashboard/account" passHref>
+      <ListItemButton>
+        <ListItemIcon>
+          <ManageAccountsIcon />
+        </ListItemIcon>
+        <ListItemText primary="Account" />
+      </ListItemButton>
+    </Link>
   </React.Fragment>
 );

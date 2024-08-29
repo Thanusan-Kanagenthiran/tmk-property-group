@@ -15,7 +15,9 @@ let theme = createTheme({
       paper: "#020617"
     }
   },
-  components: {},
+  components: {
+   
+  },
   shape: {
     borderRadius: 6
   },
