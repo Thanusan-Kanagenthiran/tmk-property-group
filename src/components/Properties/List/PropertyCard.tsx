@@ -58,12 +58,7 @@ const PropertyCard: React.FC<{ property: PropertyDTO }> = ({ property }) => {
           {description}
         </Typography>
         <Stack direction="row" justifyContent={"start"} mt={1}>
-          <Chip
-          
-            icon={<KingBedIcon fontSize="small" />}
-            label={`${noOfBeds} Beds`}
-            variant="outlined"
-          />
+          <Chip icon={<KingBedIcon fontSize="small" />} label={`${noOfBeds} Beds`} variant="outlined" />
           <Chip
             sx={{ ml: 1 }}
             icon={<BathtubIcon fontSize="small" />}
@@ -71,7 +66,7 @@ const PropertyCard: React.FC<{ property: PropertyDTO }> = ({ property }) => {
             variant="outlined"
           />
           <Chip
-            sx={{  ml: 1 }}
+            sx={{ ml: 1 }}
             icon={<PeopleIcon fontSize="small" />}
             label={`${maxNoOfGuests} Guests`}
             variant="outlined"
@@ -85,7 +80,7 @@ const PropertyCard: React.FC<{ property: PropertyDTO }> = ({ property }) => {
           </Typography>
           <Typography variant="subtitle1">{`LKR ${pricePerNight}`}</Typography>
         </div>
-        <Button sx={{ fontSize: "11px" }} href={`http://localhost:3000/properties/${id}`} variant="contained">
+        <Button sx={{ fontSize: "11px" }} href={`http://localhost:3000/dashboard/properties/${id}`} variant="contained">
           View Details
         </Button>
       </CardActions>
