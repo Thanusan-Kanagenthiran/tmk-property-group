@@ -5,8 +5,7 @@ import AddFormContainer from "../../Common/Layout/AddFormContainer";
 import { useState, FormEvent, useEffect } from "react";
 import axios from "axios";
 import Image from "next/image";
-
-
+import PropertiesImageList from "./PropertiesImageList";
 
 export default function PropertiesImagesUpload({ propertyId }: { propertyId: string }) {
   const [submitting, setSubmitting] = useState(false);
@@ -15,6 +14,7 @@ export default function PropertiesImagesUpload({ propertyId }: { propertyId: str
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
   const [severity, setSeverity] = useState<"success" | "error">("success");
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [images, setImages] = useState<{ url: string; public_id: string }[]>([]);
 
   useEffect(() => {
     if (image) {
@@ -24,7 +24,21 @@ export default function PropertiesImagesUpload({ propertyId }: { propertyId: str
         URL.revokeObjectURL(url);
       };
     }
-  }, [image, submitting]);
+  }, [image]);
+
+  useEffect(() => {
+    // Fetch images whenever the component mounts or the propertyId changes
+    const fetchImages = async () => {
+      try {
+        const response = await axios.get(`/api/property/${propertyId}/images`);
+        setImages(response.data.data || []);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      }
+    };
+
+    fetchImages();
+  }, [propertyId]);
 
   const onImageChange = (file: File) => {
     setImage(file);
@@ -44,11 +58,18 @@ export default function PropertiesImagesUpload({ propertyId }: { propertyId: str
       const formData = new FormData();
       formData.append("image", image);
 
-      await axios.post("/api/property/66ca0e7fc4e8bac711f73320/gallery", formData);
+      await axios.post(`/api/property/${propertyId}/images`, formData);
       setSnackbarMessage("Image uploaded successfully");
       setSeverity("success");
       setSnackbarOpen(true);
+
+      // Refetch the images after uploading
+      const response = await axios.get(`/api/property/${propertyId}/images`);
+      setImages(response.data.data || []);
+
+      // Reset form state
       setImage(null);
+      setImageUrl(null);
     } catch (error) {
       console.error("Error: ", error);
       setSnackbarMessage("An error occurred while uploading the image");
@@ -61,6 +82,7 @@ export default function PropertiesImagesUpload({ propertyId }: { propertyId: str
 
   return (
     <AddFormContainer>
+      <PropertiesImageList images={images} propertyId={propertyId} />
       <Typography ml={2} py={2} variant="body1" color="text.primary" textAlign="left">
         Upload the property images
       </Typography>
@@ -84,7 +106,7 @@ export default function PropertiesImagesUpload({ propertyId }: { propertyId: str
             </Grid>
           </form>
           <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)}>
-            <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: "100%" }}>
+            <Alert onClose={() => setSnackbarOpen(false)} severity={severity} sx={{ width: "100%" }}>
               {snackbarMessage}
             </Alert>
           </Snackbar>

@@ -10,7 +10,6 @@ import CheckInCheckOutPicker from "./BookingDatePicker";
 import { Dayjs } from "dayjs";
 import PropertiesPackageCard from "./PropertiesPackageCard";
 import { PackageDTO } from "@/app/properties/[id]/page";
-import { useSession } from "next-auth/react";
 
 const commonIconStyles = { height: "50px", width: "50px" };
 
@@ -24,7 +23,7 @@ interface PropertiesPackagesListProps {
   propertyId: string;
   pricePerNight: number;
   hostId: string;
-  propertyPackages: PackageDTO[];
+  propertyPackages: PackageDTO[] | null;
 }
 
 const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
@@ -33,9 +32,6 @@ const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
   hostId,
   propertyPackages
 }) => {
-  const { data: session } = useSession();
-  const userRole = session?.user?.role;
-  console.log(userRole);
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [daysCount, setDaysCount] = useState(0);
   const [guests, setGuests] = useState<number>(0);
@@ -58,7 +54,7 @@ const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
   const handleSubmit = () => {
     let totalPrice = 0;
 
-    if (selectedPackage) {
+    if (selectedPackage && propertyPackages) {
       const selectedPackageDetails = propertyPackages.find((pkg) => pkg.packageName === selectedPackage);
       if (selectedPackageDetails) {
         totalPrice = selectedPackageDetails.packagePricePerDay * daysCount;
@@ -78,15 +74,7 @@ const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
       totalPrice
     };
 
-    // Replace with your actual endpoint and submission logic
     console.log("Form submitted with data:", data);
-    // axios.post('/your-endpoint', data)
-    //   .then(response => {
-    //     console.log('Success:', response.data);
-    //   })
-    //   .catch(error => {
-    //     console.error('Error:', error);
-    //   });
   };
 
   return (
@@ -111,32 +99,36 @@ const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
           </Box>
         </Grid>
       </Grid>
-      <Typography mt={4} variant="body1" color="text.primary" textAlign="left">
-        Select your preferred package or go with the basic price per day
-      </Typography>
+      {propertyPackages && propertyPackages.length > 0 && (
+        <>
+          {" "}
+          <Typography mt={4} variant="body1" color="text.primary" textAlign="left">
+            Select your preferred package or go with the basic price per day
+          </Typography>
+          <Grid container spacing={2} py={2}>
+            {propertyPackages.map((packageType) => {
+              const icon = Icons[packageType.packageName];
 
-      <Grid container spacing={2} py={2}>
-        {propertyPackages.map((packageType) => {
-          const icon = Icons[packageType.packageName];
+              const eligibleDaysCount =
+                packageType.durationRequirementDays.daysOrWeeks === "weeks"
+                  ? packageType.durationRequirementDays.count * 7
+                  : packageType.durationRequirementDays.count;
 
-          const eligibleDaysCount =
-            packageType.durationRequirementDays.daysOrWeeks === "weeks"
-              ? packageType.durationRequirementDays.count * 7
-              : packageType.durationRequirementDays.count;
-
-          return (
-            <Grid item xs={12} sm={6} md={4} key={packageType.packageName}>
-              <PropertiesPackageCard
-                isDisabled={daysCount < eligibleDaysCount}
-                propertyPackage={packageType}
-                action={() => handleSelectPackage(packageType.packageName)}
-                icon={icon}
-                selectedPackage={selectedPackage}
-              />
-            </Grid>
-          );
-        })}
-      </Grid>
+              return (
+                <Grid item xs={12} sm={6} md={4} key={packageType.packageName}>
+                  <PropertiesPackageCard
+                    isDisabled={daysCount < eligibleDaysCount}
+                    propertyPackage={packageType}
+                    action={() => handleSelectPackage(packageType.packageName)}
+                    icon={icon}
+                    selectedPackage={selectedPackage}
+                  />
+                </Grid>
+              );
+            })}
+          </Grid>
+        </>
+      )}
     </AddFormContainer>
   );
 };

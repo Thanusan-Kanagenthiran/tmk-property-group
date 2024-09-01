@@ -1,4 +1,4 @@
-import { Button, Container } from "@mui/material";
+import { Button } from "@mui/material";
 import { propertiesService } from "@/services/properties.service";
 import PropertyList from "@/components/Properties/List/PropertyList";
 

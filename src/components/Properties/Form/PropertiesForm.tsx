@@ -123,7 +123,6 @@ export default function PropertiesForm() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "100vh",
         width: "100%",
         padding: 0,
         margin: 0,

@@ -135,7 +135,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          height: "100vh",
+          minHeight: "100vh",
+          height: "100%",
           width: "100vw",
           overflow: "auto"
         }}>

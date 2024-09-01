@@ -65,7 +65,7 @@ export const PropertiesTypeList: React.FC<PropertiesTypeListProps> = ({ onTypeSe
   if (error) return <div>{error}</div>;
 
   return (
-    <AddFormContainer>
+    <>
       <Typography ml={2} variant="body1" color="text.primary" textAlign="left" sx={{ mb: -1.5 }}>
         Select Property Type (Note: * You cant change this later)
       </Typography>
@@ -86,7 +86,7 @@ export const PropertiesTypeList: React.FC<PropertiesTypeListProps> = ({ onTypeSe
           );
         })}
       </Grid>
-    </AddFormContainer>
+    </>
   );
 };
 

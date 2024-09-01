@@ -20,7 +20,6 @@ export interface PropertyDocument {
   packages?: {
     packageName: "standard" | "deluxe" | "premium";
     packagePricePerDay: number;
-    packageDescription: string;
     durationRequirementDays?: {
       daysOrWeeks: "days" | "weeks";
       count: number;
@@ -57,7 +56,6 @@ const PropertySchema = new Schema<PropertyDocument>(
       {
         packageName: { type: String, required: true, enum: ["standard", "deluxe", "premium"] },
         packagePricePerDay: { type: Number, required: true },
-        packageDescription: { type: String },
         durationRequirementDays: {
           daysOrWeeks: { type: String, enum: ["days", "weeks"], required: true },
           count: { type: Number, required: true }

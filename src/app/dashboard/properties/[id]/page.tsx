@@ -3,7 +3,6 @@ import {
   Grid,
   Typography,
   Stack,
-  Container,
   Box,
   Card,
   List,
@@ -15,84 +14,43 @@ import {
   CardContent
 } from "@mui/material";
 import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
-import AddFormContainer from "@/components/Common/Layout/AddFormContainer";
 import Image from "next/image";
 import { propertiesService } from "@/services/properties.service";
 import { PropertyDocument } from "@/lib/db/models/Properties/Property";
 import KingBedIcon from "@mui/icons-material/KingBed";
 import BathtubIcon from "@mui/icons-material/Bathtub";
 import PeopleIcon from "@mui/icons-material/People";
-import PropertiesPackagesList from "@/components/Properties/List/PropertiesPackagesList";
+import PropertiesImagesUpload from "@/components/Properties/Form/propertiesImagesUpload";
+import PackageList from "./PackageList";
+
 export const revalidate = 0;
-
-export interface PackageDTO {
-  packageName: string;
-  packageDescription: string;
-  durationRequirementDays: {
-    daysOrWeeks: "days" | "weeks";
-    count: number;
-  };
-  packagePricePerDay: number;
-}
-
-const propertyPackages: PackageDTO[] = [
-  {
-    packageName: "standard",
-    packageDescription: "The standard Lorem Ipsum passage, used since the 1500s",
-    durationRequirementDays: { daysOrWeeks: "days", count: 2 },
-    packagePricePerDay: 15000
-  },
-  {
-    packageName: "deluxe",
-    packageDescription: "The deluxe Lorem Ipsum passage, with more features",
-    durationRequirementDays: { daysOrWeeks: "weeks", count: 1 },
-    packagePricePerDay: 13500
-  },
-  {
-    packageName: "premium",
-    packageDescription: "The premium Lorem Ipsum passage, with the best features",
-    durationRequirementDays: { daysOrWeeks: "weeks", count: 2 },
-    packagePricePerDay: 10000
-  }
-];
 
 export default async function Page({ params }: { params: { id: string } }) {
   let propertyDetails: PropertyDocument | null = null;
-  console.log("Property ID:", params.id);
-  let error: string | null = null;
 
   try {
     propertyDetails = await propertiesService.GetSingleProperty(params.id);
-
-    if (!propertyDetails) {
-      // Optionally, you can use Next.js's built-in error handling for not found
-    }
-  } catch (err) {
-    console.error("Error fetching property details:", err);
-    error = "Error fetching property details. Please try again later.";
-  }
-
-  // Handle cases where there is an error or no property found
-  if (error) {
-    return <div>{error}</div>;
+  } catch (error) {
+    console.error("Error loading data:", error);
+    return <div>Error loading data</div>;
   }
 
   if (!propertyDetails) {
-    // In case notFound() was not used
-    return <div>Property not found</div>;
+    return <div>No property details available</div>;
   }
-
-  console.log("Property Details:", propertyDetails.packages);
 
   const featureImage =
     Array.isArray(propertyDetails.images) && propertyDetails.images.length > 0
       ? propertyDetails.images[0].url
       : `https://placehold.co/1300x940?text=${encodeURIComponent(propertyDetails.title)}`;
 
+
   return (
-    <Container maxWidth="lg">
-      <AddFormContainer>
-        <Stack direction="row" sx={{ justifyContent: "space-between", alignItems: "end", my: 2 }}>
+    <>
+      <Box>
+        <Stack
+          direction={{ xs: "column", sm: "row" }}
+          sx={{ justifyContent: "space-between", alignItems: "end", my: 2 }}>
           <Stack>
             <Typography variant="h5" color="text.secondary" gutterBottom>
               {propertyDetails.title}
@@ -119,7 +77,6 @@ export default async function Page({ params }: { params: { id: string } }) {
         <Grid sx={{ my: 2 }}>
           <Box
             style={{
-              position: "relative",
               width: "100%",
               height: "auto",
               overflow: "hidden",
@@ -233,13 +190,11 @@ export default async function Page({ params }: { params: { id: string } }) {
             </Grid>
           </Grid>
         </Grid>
-      </AddFormContainer>
-      <PropertiesPackagesList
-        propertyId={params.id}
-        pricePerNight={propertyDetails.pricePerNight}
-        hostId={propertyDetails.host.toString()}
-        propertyPackages={propertyPackages}
-      />
-    </Container>
+      </Box>
+      
+      <PropertiesImagesUpload propertyId={params.id} />
+      
+      <PackageList propertyId={params.id} />
+    </>
   );
 }

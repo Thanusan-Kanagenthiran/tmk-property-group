@@ -33,7 +33,7 @@ export const PUT = async (request: NextRequest, { params }: { params: { id: stri
     await dbConnect();
     const body = await request.json();
 
-    const { packageName, packagePricePerDay, packageDescription, durationRequirementDays } = body;
+    const { packageName, packagePricePerDay,  durationRequirementDays } = body;
 
     // Validate that packageName is provided
     if (!packageName) {
@@ -57,9 +57,6 @@ export const PUT = async (request: NextRequest, { params }: { params: { id: stri
       if (packagePricePerDay !== undefined) {
         property.packages[existingPackageIndex].packagePricePerDay = packagePricePerDay;
       }
-      if (packageDescription !== undefined) {
-        property.packages[existingPackageIndex].packageDescription = packageDescription;
-      }
       if (durationRequirementDays !== undefined) {
         property.packages[existingPackageIndex].durationRequirementDays = durationRequirementDays;
       }
@@ -76,7 +73,6 @@ export const PUT = async (request: NextRequest, { params }: { params: { id: stri
       property.packages.push({
         packageName,
         packagePricePerDay,
-        packageDescription,
         durationRequirementDays
       });
 

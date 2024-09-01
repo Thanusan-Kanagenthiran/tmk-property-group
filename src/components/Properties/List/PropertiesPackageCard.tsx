@@ -10,7 +10,6 @@ import { type ReactNode } from "react";
 
 interface PackageDTO {
   packageName: string;
-  packageDescription: string;
   durationRequirementDays: {
     daysOrWeeks: "days" | "weeks";
     count: number;
@@ -46,9 +45,6 @@ const PropertiesPackageCard: React.FC<PropertiesPackageCardProps> = ({
       <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
         <Typography gutterBottom variant="h5" component="div">
           {propertyPackage.packageName}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {propertyPackage.packageDescription}
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ fontWeight: "bold" }}>
           For

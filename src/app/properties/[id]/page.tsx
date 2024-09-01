@@ -26,8 +26,7 @@ import PropertiesPackagesList from "@/components/Properties/List/PropertiesPacka
 export const revalidate = 0;
 
 export interface PackageDTO {
-  packageName: string;
-  packageDescription: string;
+  packageName: "standard" | "deluxe" | "premium";
   durationRequirementDays: {
     daysOrWeeks: "days" | "weeks";
     count: number;
@@ -35,26 +34,6 @@ export interface PackageDTO {
   packagePricePerDay: number;
 }
 
-const propertyPackages: PackageDTO[] = [
-  {
-    packageName: "standard",
-    packageDescription: "The standard Lorem Ipsum passage, used since the 1500s",
-    durationRequirementDays: { daysOrWeeks: "days", count: 2 },
-    packagePricePerDay: 15000
-  },
-  {
-    packageName: "deluxe",
-    packageDescription: "The deluxe Lorem Ipsum passage, with more features",
-    durationRequirementDays: { daysOrWeeks: "weeks", count: 1 },
-    packagePricePerDay: 13500
-  },
-  {
-    packageName: "premium",
-    packageDescription: "The premium Lorem Ipsum passage, with the best features",
-    durationRequirementDays: { daysOrWeeks: "weeks", count: 2 },
-    packagePricePerDay: 10000
-  }
-];
 
 export default async function Page({ params }: { params: { id: string } }) {
   let propertyDetails: PropertyDocument | null = null;
@@ -65,7 +44,6 @@ export default async function Page({ params }: { params: { id: string } }) {
     propertyDetails = await propertiesService.GetSingleProperty(params.id);
 
     if (!propertyDetails) {
-      // Optionally, you can use Next.js's built-in error handling for not found
     }
   } catch (err) {
     console.error("Error fetching property details:", err);
@@ -81,8 +59,6 @@ export default async function Page({ params }: { params: { id: string } }) {
     // In case notFound() was not used
     return <div>Property not found</div>;
   }
-
-  console.log("Property Details:", propertyDetails.packages);
 
   const featureImage =
     Array.isArray(propertyDetails.images) && propertyDetails.images.length > 0
@@ -238,7 +214,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         propertyId={params.id}
         pricePerNight={propertyDetails.pricePerNight}
         hostId={propertyDetails.host.toString()}
-        propertyPackages={propertyPackages}
+        propertyPackages={propertyDetails.packages && propertyDetails.packages.length > 0 ? propertyDetails.packages as PackageDTO[] : null}
       />
     </Container>
   );
