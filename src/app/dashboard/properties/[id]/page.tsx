@@ -31,7 +31,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   try {
     propertyDetails = await propertiesService.GetSingleProperty(params.id);
   } catch (error) {
-    console.error("Error loading data:", error);
+   
     return <div>Error loading data</div>;
   }
 
@@ -64,134 +64,107 @@ export default async function Page({ params }: { params: { id: string } }) {
           </Stack>
           <Stack>
             <Typography variant="subtitle1" color="text.secondary">
-              Price per night starts from
+              Price starts from per night
             </Typography>
             <Typography variant="h5" color="secondary" textAlign={"right"}>
-              {propertyDetails.pricePerNight}
+              {propertyDetails.pricePerNight.toLocaleString("en-US", {
+                style: "currency",
+                currency: "LKR"
+              })}
             </Typography>
           </Stack>
         </Stack>
-        <Grid sx={{ my: 2 }}>
-          <Box
-            style={{
-              width: "100%",
-              height: "auto",
-              overflow: "hidden",
-              display: "flex",
-              justifyContent: "center"
-            }}>
-            <Image
-              loading="lazy"
-              src={featureImage}
-              alt=""
-              width={1000}
-              height={450}
+
+        <Grid container spacing={2} sx={{ my: 2 }}>
+          <Grid item xs={12} md={6}>
+            <Box
               style={{
                 width: "100%",
-                height: "100%"
-              }}
-            />
-          </Box>
-        </Grid>
-        <Grid container spacing={2}>
-          <Grid item container md={8} xs={12} spacing={2}>
-            <Grid item xs={12}>
-              <Card>
-                <CardContent
-                  sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                  <Typography variant="body2" px={2} color="text.secondary">
-                    {propertyDetails.description}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={6} sm={4}>
-              <Card
-                sx={{ maxWidth: 345, textAlign: "center", display: "flex", flexDirection: "column", height: "100%" }}>
-                <CardActionArea sx={{ flex: 1 }}>
-                  <Box height="100" pt={2}>
-                    <KingBedIcon />
-                  </Box>
-                  <CardContent
-                    sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {propertyDetails.noOfBeds}
-                    </Typography>
-                    <Typography variant="body2" px={2} color="text.secondary">
-                      Bed Rooms <br />
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Grid>
-            <Grid item xs={6} sm={4}>
-              <Card
-                sx={{ maxWidth: 345, textAlign: "center", display: "flex", flexDirection: "column", height: "100%" }}>
-                <CardActionArea sx={{ flex: 1 }}>
-                  <Box height="100" pt={2}>
-                    <BathtubIcon />
-                  </Box>
-                  <CardContent
-                    sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {propertyDetails.noOfBaths}
-                    </Typography>
-                    <Typography variant="body2" px={2} color="text.secondary">
-                      Bath Rooms
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Grid>
-            <Grid item xs={6} sm={4}>
-              <Card
-                sx={{ maxWidth: 345, textAlign: "center", display: "flex", flexDirection: "column", height: "100%" }}>
-                <CardActionArea sx={{ flex: 1 }}>
-                  <Box height="100" pt={2}>
-                    <PeopleIcon />
-                  </Box>
-                  <CardContent
-                    sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {propertyDetails.maxNoOfGuests}
-                    </Typography>
-                    <Typography variant="body2" px={2} color="text.secondary">
-                      Max Guests
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Grid>
-          </Grid>
-          <Grid item md={4} xs={12} spacing={2}>
-            <Grid
-              sx={{
-                p: 2,
-                borderRadius: 0,
-                bgcolor: "background.default",
-                display: "grid",
-                gap: 2,
-                height: "100%"
+                height: "auto",
+                overflow: "hidden",
+                display: "flex",
+                justifyContent: "center"
               }}>
-              <List sx={{ fontSize: "small" }}>
-                {propertyDetails.amenities &&
-                  propertyDetails.amenities.map((feature: string, index: number) => (
-                    <ListItem sx={{ mb: 2, border: "1px solid white " }} key={index}>
-                      <ListItemIcon>
-                        <StarBorderPurple500Icon color="secondary" />
-                      </ListItemIcon>
-                      <ListItemText primary={feature} />
-                    </ListItem>
-                  ))}
-              </List>
+              <Image
+                loading="lazy"
+                src={featureImage}
+                alt=""
+                width={1000}
+                height={450}
+                style={{
+                  width: "100%",
+                  height: "100%"
+                }}
+              />
+            </Box>
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <Card>
+              <CardContent>
+                <Typography variant="body2" color="text.secondary">
+                  {propertyDetails.description}
+                </Typography>
+              </CardContent>
+            </Card>
+
+            <Grid container spacing={2} sx={{ mt: 2 }}>
+            <Grid item xs={6} sm={4}>
+          <Card sx={{ textAlign: "center" }}>
+            <CardContent>
+              <KingBedIcon />
+              <Typography variant="h6">{propertyDetails.noOfBeds}</Typography>
+              <Typography variant="body2" color="text.secondary">Bed Rooms</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={6} sm={4}>
+          <Card sx={{ textAlign: "center" }}>
+            <CardContent>
+              <BathtubIcon />
+              <Typography variant="h6">{propertyDetails.noOfBaths}</Typography>
+              <Typography variant="body2" color="text.secondary">Bath Rooms</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={6} sm={4}>
+          <Card sx={{ textAlign: "center" }}>
+            <CardContent>
+              <PeopleIcon />
+              <Typography variant="h6">{propertyDetails.maxNoOfGuests}</Typography>
+              <Typography variant="body2" color="text.secondary">Max Guests</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+            </Grid>
+            <Grid item xs={12} >
+              <Box sx={{ p: 2 }}>
+                <Typography variant="h6" gutterBottom>
+                  Amenities
+                </Typography>
+                <List sx={{ fontSize: "small" }}>
+                  {propertyDetails.amenities &&
+                    propertyDetails.amenities.map((feature: string, index: number) => (
+                      <ListItem sx={{ mb: 2 }} key={index}>
+                        <ListItemIcon>
+                          <StarBorderPurple500Icon color="secondary" />
+                        </ListItemIcon>
+                        <ListItemText primary={feature} />
+                      </ListItem>
+                    ))}
+                </List>
+              </Box>
             </Grid>
           </Grid>
         </Grid>
       </Box>
 
-      <PropertiesImagesUpload propertyId={params.id} />
-
-      <PackageList propertyId={params.id} />
+      <Box sx={{ mt: 4 }}>
+        <PropertiesImagesUpload propertyId={params.id} />
+        <PackageList propertyId={params.id} />
+      </Box>
     </>
   );
 }

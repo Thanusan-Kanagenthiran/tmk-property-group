@@ -16,7 +16,7 @@ import {
   DialogTitle,
   Button
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 
 interface PropertiesImageListProps {
@@ -42,7 +42,6 @@ const PropertiesImageList: React.FC<PropertiesImageListProps> = ({ images, prope
         await axios.delete(`/api/property/${propertyId}/images`, {
           data: { public_id: deletePublicId, propertyId }
         });
-        // Trigger a refresh or update state to remove the image from the UI
         setOpenSnackbar(true);
       } catch (error) {
         setError("Error deleting image.");
@@ -61,15 +60,11 @@ const PropertiesImageList: React.FC<PropertiesImageListProps> = ({ images, prope
     setOpenDialog(false);
   };
 
-  if (images.length === 0) {
-    return <Typography>No images available.</Typography>;
-  }
-
   return (
-    <Container>
+    <Box>
       <Grid container spacing={2} mt={2}>
         {images.map((image, index) => (
-          <Grid item xs={12} sm={6} md={4} key={image.public_id}>
+          <Grid item xs={6} sm={4} md={3} key={image.public_id}>
             <Card sx={{ height: "100%", position: "relative" }}>
               <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
                 <Image
@@ -92,7 +87,7 @@ const PropertiesImageList: React.FC<PropertiesImageListProps> = ({ images, prope
                       backgroundColor: "rgba(255, 255, 255, 0.9)"
                     }
                   }}>
-                  <CloseIcon />
+                  <DeleteIcon color="error" />
                 </IconButton>
               </Box>
             </Card>
@@ -129,7 +124,7 @@ const PropertiesImageList: React.FC<PropertiesImageListProps> = ({ images, prope
           {error}
         </Alert>
       </Snackbar>
-    </Container>
+    </Box>
   );
 };
 

@@ -118,13 +118,16 @@ export default function PackageList({ propertyId }: PackageListProps) {
   };
 
   return (
-    <Container>
+    <>
+      <Typography ml={2} mt={4} pb={2} variant="body1" color="text.primary" textAlign="left">
+        Property Packages
+      </Typography>
       {loading ? (
-        <Box display="flex" justifyContent="center" my={2}>
+        <Box display="flex" justifyContent="center" mb={2}>
           <AppSpinner size={15} />
         </Box>
       ) : (
-        <Grid container spacing={2} mt={2}>
+        <Grid container spacing={2} mb={2}>
           {defaultPackages.map((defaultPkg) => {
             const existingPackage = packages.find((pkg) => pkg.packageName === defaultPkg.packageName);
 
@@ -204,6 +207,6 @@ export default function PackageList({ propertyId }: PackageListProps) {
           <PackageForm onSave={handleAddOrUpdate} initialData={selectedPackage} />
         </DialogContent>
       </Dialog>
-    </Container>
+    </>
   );
 }

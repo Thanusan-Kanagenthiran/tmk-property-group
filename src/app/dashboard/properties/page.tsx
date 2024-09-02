@@ -9,7 +9,7 @@ export default async function Page() {
     properties = await propertiesService.GetProperties();
     console.log(propertiesTypes);
   } catch (error) {
-    return <div>Error loading data</div>;
+   
   }
   console.log(properties);
   return (

@@ -81,17 +81,16 @@ export default function PropertiesImagesUpload({ propertyId }: { propertyId: str
   };
 
   return (
-    <AddFormContainer>
-      <PropertiesImageList images={images} propertyId={propertyId} />
+    <Box>
       <Typography ml={2} py={2} variant="body1" color="text.primary" textAlign="left">
-        Upload the property images
+        Property Images
       </Typography>
       <Paper>
         <Box maxWidth="lg" p={2}>
           <form onSubmit={onUploadHandler}>
             <Grid container spacing={3} justifyContent={"space-between"} alignItems={"baseline"}>
               <Grid item xs>
-                <ImageUploadField onImageChange={onImageChange} />
+                <ImageUploadField onImageChange={onImageChange} /> 
               </Grid>
               <Grid item xs={6}>
                 {imageUrl && <Image width={480} height={270} src={imageUrl} alt="uploaded image" />}
@@ -112,6 +111,7 @@ export default function PropertiesImagesUpload({ propertyId }: { propertyId: str
           </Snackbar>
         </Box>
       </Paper>
-    </AddFormContainer>
+      <PropertiesImageList images={images} propertyId={propertyId} />
+    </Box>
   );
 }

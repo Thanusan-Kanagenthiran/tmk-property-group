@@ -10,6 +10,7 @@ import CheckInCheckOutPicker from "./BookingDatePicker";
 import { Dayjs } from "dayjs";
 import PropertiesPackageCard from "./PropertiesPackageCard";
 import { PackageDTO } from "@/app/properties/[id]/page";
+import axiosClient from "@/services";
 
 const commonIconStyles = { height: "50px", width: "50px" };
 
@@ -51,30 +52,37 @@ const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
     setCheckOut(checkOut);
   };
 
-  const handleSubmit = () => {
-    let totalPrice = 0;
+  const handleSubmit = async () => {
+    try {
+      let totalPrice = 0;
 
-    if (selectedPackage && propertyPackages) {
-      const selectedPackageDetails = propertyPackages.find((pkg) => pkg.packageName === selectedPackage);
-      if (selectedPackageDetails) {
-        totalPrice = selectedPackageDetails.packagePricePerDay * daysCount;
+      if (selectedPackage && propertyPackages) {
+        const selectedPackageDetails = propertyPackages.find((pkg) => pkg.packageName === selectedPackage);
+        if (selectedPackageDetails) {
+          totalPrice = selectedPackageDetails.packagePricePerDay * daysCount;
+        }
+      } else {
+        totalPrice = pricePerNight * daysCount;
       }
-    } else {
-      totalPrice = pricePerNight * daysCount;
+
+      const data = {
+        propertyId,
+        hostId,
+        isPackage: selectedPackage,
+        daysCount,
+        guests,
+        checkIn: checkIn ? checkIn.format("YYYY-MM-DD") : null,
+        checkOut: checkOut ? checkOut.format("YYYY-MM-DD") : null,
+        amount: totalPrice
+      };
+
+      const response = await axiosClient.post(`/property/${propertyId}/bookings`, data);
+      
+      return response.data;
+    } catch (error) {
+      console.error("Error in handleSubmit:", error);
+      throw error;
     }
-
-    const data = {
-      propertyId: propertyId,
-      hostId: hostId,
-      isPackage: selectedPackage,
-      daysCount,
-      guests,
-      checkIn: checkIn ? checkIn.format("YYYY-MM-DD") : null,
-      checkOut: checkOut ? checkOut.format("YYYY-MM-DD") : null,
-      totalPrice
-    };
-
-    console.log("Form submitted with data:", data);
   };
 
   return (
@@ -101,7 +109,6 @@ const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
       </Grid>
       {propertyPackages && propertyPackages.length > 0 && (
         <>
-          {" "}
           <Typography mt={4} variant="body1" color="text.primary" textAlign="left">
             Select your preferred package or go with the basic price per day
           </Typography>

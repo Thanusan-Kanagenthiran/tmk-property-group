@@ -43,7 +43,13 @@ export const GET = async (request: NextRequest) => {
 
 export const POST = async (request: NextRequest) => {
   try {
+    const isHost = await authUtils.isPropertyOwner(request);
+    if (!isHost) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
     const userId = await authUtils.getUserId(request);
+
     await dbConnect();
     const body = await request.json();
     const newProperty = new Property({

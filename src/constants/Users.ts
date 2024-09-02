@@ -1,5 +1,5 @@
 export enum UserRole {
-	USER = "USER",
-	ADMIN = "ADMIN",
-	PROPERTY_OWNER = "PROPERTY_OWNER",
+  USER = "user",
+  ADMIN = "admin",
+  PROPERTY_OWNER = "host"
 }

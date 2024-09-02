@@ -35,5 +35,9 @@ const getUserId = async (req: NextRequest) => {
   const token = await getAuthToken(req);
   return token?.sub;
 };
+const getUserRole = async (req: NextRequest) => {
+  const token = await getAuthToken(req);
+  return token?.role;
+};
 
-export const authUtils = { isAdmin, isPropertyOwner, isUser, getUserId };
+export const authUtils = { isAdmin, isPropertyOwner, isUser, getUserId, getAuthToken, getUserRole };
