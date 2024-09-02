@@ -56,9 +56,10 @@ export const POST = async (request: NextRequest) => {
       ...body,
       host: userId
     });
-    await newProperty.save();
+    const savedProperty = await newProperty.save();
 
-    return NextResponse.json(newProperty, { status: 201 });
+    // Return the property ID in a JSON response
+    return NextResponse.json({ id: savedProperty._id.toString() }, { status: 201 });
   } catch (error) {
     console.error("POST Handler Error:", error);
     return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });

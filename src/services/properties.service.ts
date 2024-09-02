@@ -20,9 +20,11 @@ async function GetProperties(): Promise<any> {
     const response = await axiosClient.get(endpoint);
     return response.data;
   } catch (error) {
-    throw error;
+    console.error("Error fetching properties:", error);
+    throw new Error("Failed to fetch properties.");
   }
 }
+
 async function AddProperty(propertyData: PropertyPostData): Promise<any> {
   try {
     const response = await axiosClient.post(endpoint, propertyData);

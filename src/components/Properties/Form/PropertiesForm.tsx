@@ -1,5 +1,7 @@
 "use client";
+
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Container, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import PropertiesTypeList from "./PropertiesTypeList";
 import PropertyInfoForm from "./PropertyInfoForm";
@@ -22,28 +24,27 @@ interface RoomAndMeasurementsFormValues {
 }
 
 export default function PropertiesForm() {
+  const router = useRouter(); // Use the router for redirection
   const [selectedPropertyType, setSelectedPropertyType] = useState<string | null>(null);
   const [isPropertyInfoFormResponse, setIsPropertyInfoFormResponse] = useState<boolean>(false);
   const [isRoomAndMeasurementsFormResponse, setIsRoomAndMeasurementsFormResponse] = useState<boolean>(false);
   const [isKeyFeaturesAmenitiesFormResponse, setIsKeyFeaturesAmenitiesFormResponse] = useState<boolean>(false);
   const [pricePerNight, setPricePerNight] = useState<number | null>(null);
   const [keyFeaturesAmenitiesFormValues, setKeyFeaturesAmenitiesFormValues] = useState<string[]>([]);
-
   const [infoFormValues, setInfoFormValues] = useState<InfoFormValues>({
     title: "",
     description: "",
     region: "",
     address: ""
   });
-
   const [roomAndMeasurementsFormValues, setRoomAndMeasurementsFormValues] = useState<RoomAndMeasurementsFormValues>({
     maxNoOfGuests: 0,
     noOfBeds: 0,
     noOfBaths: 0
   });
-
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [confirmData, setConfirmData] = useState<PropertyPostData | null>(null);
+  const [uploadedPropertyId, setUploadedPropertyId] = useState<string | null>(null);
 
   const handleTypeSelect = (selectedProperty: string) => {
     setSelectedPropertyType(selectedProperty);
@@ -87,11 +88,14 @@ export default function PropertiesForm() {
   const handleConfirmSubmit = async () => {
     if (confirmData) {
       try {
-        await propertiesService.AddProperty(confirmData);
-
-        console.log("Property saved successfully");
-        setOpenConfirmDialog(false);
-        resetForm();
+        const response = await propertiesService.AddProperty(confirmData);
+        if (response && response.id) {
+          setUploadedPropertyId(response.id); // Set the property ID from the response
+          setOpenConfirmDialog(false);
+          router.push(`/dashboard/properties/${response.id}`); // Redirect to the property details page
+        } else {
+          console.error("Response does not contain a valid property ID.");
+        }
       } catch (error) {
         console.error("Failed to save property:", error);
       }
@@ -113,7 +117,7 @@ export default function PropertiesForm() {
     setKeyFeaturesAmenitiesFormValues([]);
     setInfoFormValues({ title: "", description: "", region: "", address: "" });
     setRoomAndMeasurementsFormValues({ maxNoOfGuests: 0, noOfBeds: 0, noOfBaths: 0 });
-    setConfirmData(null);
+    // setConfirmData(null); // Reset the uploaded property ID
   };
 
   return (

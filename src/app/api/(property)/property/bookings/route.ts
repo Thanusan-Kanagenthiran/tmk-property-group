@@ -19,9 +19,9 @@ export const GET = async (request: NextRequest) => {
 
     let bookings;
     if (role === "host") {
-      bookings = await Booking.find({ tenantId: userId }).exec();
-    } else if (role === "user") {
       bookings = await Booking.find({ hostId: userId }).exec();
+    } else if (role === "user") {
+      bookings = await Booking.find({ tenantId: userId }).exec();
     } else {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
