@@ -44,13 +44,10 @@ export default async function Page({ params }: { params: { id: string } }) {
       ? propertyDetails.images[0].url
       : `https://placehold.co/1300x940?text=${encodeURIComponent(propertyDetails.title)}`;
 
-
   return (
     <>
       <Box>
-        <Stack
-          direction={{ xs: "column", sm: "row" }}
-          sx={{ justifyContent: "space-between", alignItems: "end", my: 2 }}>
+        <Stack direction={{ xs: "column", sm: "row" }} sx={{ justifyContent: "space-between", alignItems: "end" }}>
           <Stack>
             <Typography variant="h5" color="text.secondary" gutterBottom>
               {propertyDetails.title}
@@ -191,9 +188,9 @@ export default async function Page({ params }: { params: { id: string } }) {
           </Grid>
         </Grid>
       </Box>
-      
+
       <PropertiesImagesUpload propertyId={params.id} />
-      
+
       <PackageList propertyId={params.id} />
     </>
   );

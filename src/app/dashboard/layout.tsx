@@ -46,7 +46,7 @@ const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open"
 })(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
-    position: "relative",
+    position: "fixed", // Make the drawer fixed
     whiteSpace: "nowrap",
     width: drawerWidth,
     transition: theme.transitions.create("width", {
@@ -85,8 +85,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [pathname]);
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <AppBar position="absolute" open={open}>
+    <Box sx={{ display: "flex", height: "100vh" }}>
+      <AppBar position="fixed" open={open}>
         <Toolbar sx={{ pr: "24px" }}>
           <IconButton
             edge="start"
@@ -131,17 +131,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <Box
         component="main"
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "100vh",
-          height: "100%",
-          width: "100vw",
-          overflow: "auto"
+          flexGrow: 1,
+          overflowY: "auto", // Only the main content is scrollable
+          pt: 8, // Space for the AppBar
+          pl: open ? `${drawerWidth}px` : `56px`, // Space for the Drawer
+          transition: theme => theme.transitions.create("padding", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen
+          })
         }}>
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-          <Grid container spacing={3} sx={{ mt: 4 }}>
+          <Grid container spacing={3}>
             <Grid item xs={12}>
               {children}
             </Grid>

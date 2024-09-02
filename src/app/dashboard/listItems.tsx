@@ -20,24 +20,30 @@ export const mainListItems = (
         <ListItemText primary="Dashboard" />
       </ListItemButton>
     </Link>
-    <ListItemButton>
-      <ListItemIcon>
-        <HouseIcon />
-      </ListItemIcon>
-      <ListItemText primary="Properties" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Bookings" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Users" />
-    </ListItemButton>
+    <Link href="/dashboard/properties" passHref>
+      <ListItemButton>
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Properties" />
+      </ListItemButton>
+    </Link>
+    <Link href="/dashboard/bookings" passHref>
+      <ListItemButton>
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Bookings" />
+      </ListItemButton>
+    </Link>
+    <Link href="/dashboard/payments" passHref>
+      <ListItemButton>
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Payments" />
+      </ListItemButton>
+    </Link>
   </React.Fragment>
 );
 
