@@ -10,7 +10,6 @@ import {
   ListItemIcon,
   ListItemText,
   Button,
-  CardActionArea,
   CardContent
 } from "@mui/material";
 import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
@@ -22,6 +21,7 @@ import BathtubIcon from "@mui/icons-material/Bathtub";
 import PeopleIcon from "@mui/icons-material/People";
 import PropertiesImagesUpload from "@/components/Properties/Form/propertiesImagesUpload";
 import PackageList from "./PackageList";
+import { formatCurrency } from "@/lib/util/formatCurrency";
 
 export const revalidate = 0;
 
@@ -31,7 +31,6 @@ export default async function Page({ params }: { params: { id: string } }) {
   try {
     propertyDetails = await propertiesService.GetSingleProperty(params.id);
   } catch (error) {
-   
     return <div>Error loading data</div>;
   }
 
@@ -66,11 +65,8 @@ export default async function Page({ params }: { params: { id: string } }) {
             <Typography variant="subtitle1" color="text.secondary">
               Price starts from per night
             </Typography>
-            <Typography variant="h5" color="secondary" textAlign={"right"}>
-              {propertyDetails.pricePerNight.toLocaleString("en-US", {
-                style: "currency",
-                currency: "LKR"
-              })}
+            <Typography variant="h5" color="secondary" textAlign="right">
+             {formatCurrency(propertyDetails.pricePerNight)}
             </Typography>
           </Stack>
         </Stack>
@@ -109,37 +105,43 @@ export default async function Page({ params }: { params: { id: string } }) {
             </Card>
 
             <Grid container spacing={2} sx={{ mt: 2 }}>
-            <Grid item xs={6} sm={4}>
-          <Card sx={{ textAlign: "center" }}>
-            <CardContent>
-              <KingBedIcon />
-              <Typography variant="h6">{propertyDetails.noOfBeds}</Typography>
-              <Typography variant="body2" color="text.secondary">Bed Rooms</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+              <Grid item xs={6} sm={4}>
+                <Card sx={{ textAlign: "center" }}>
+                  <CardContent>
+                    <KingBedIcon />
+                    <Typography variant="h6">{propertyDetails.noOfBeds}</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Bed Rooms
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
 
-        <Grid item xs={6} sm={4}>
-          <Card sx={{ textAlign: "center" }}>
-            <CardContent>
-              <BathtubIcon />
-              <Typography variant="h6">{propertyDetails.noOfBaths}</Typography>
-              <Typography variant="body2" color="text.secondary">Bath Rooms</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+              <Grid item xs={6} sm={4}>
+                <Card sx={{ textAlign: "center" }}>
+                  <CardContent>
+                    <BathtubIcon />
+                    <Typography variant="h6">{propertyDetails.noOfBaths}</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Bath Rooms
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
 
-        <Grid item xs={6} sm={4}>
-          <Card sx={{ textAlign: "center" }}>
-            <CardContent>
-              <PeopleIcon />
-              <Typography variant="h6">{propertyDetails.maxNoOfGuests}</Typography>
-              <Typography variant="body2" color="text.secondary">Max Guests</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+              <Grid item xs={6} sm={4}>
+                <Card sx={{ textAlign: "center" }}>
+                  <CardContent>
+                    <PeopleIcon />
+                    <Typography variant="h6">{propertyDetails.maxNoOfGuests}</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Max Guests
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
             </Grid>
-            <Grid item xs={12} >
+            <Grid item xs={12}>
               <Box sx={{ p: 2 }}>
                 <Typography variant="h6" gutterBottom>
                   Amenities

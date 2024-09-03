@@ -10,6 +10,7 @@ import Stack from "@mui/material/Stack";
 import KingBedIcon from "@mui/icons-material/KingBed";
 import BathtubIcon from "@mui/icons-material/Bathtub";
 import PeopleIcon from "@mui/icons-material/People";
+import { formatCurrency } from "@/lib/util/formatCurrency";
 
 export interface PropertyDTO {
   id: string;
@@ -23,10 +24,17 @@ export interface PropertyDTO {
   region: string;
 }
 
-const PropertyCard: React.FC<{ property: PropertyDTO }> = ({ property }) => {
+interface PropertyCardProps {
+  property: PropertyDTO;
+  isDashboard?: boolean;
+}
+
+const PropertyCard: React.FC<PropertyCardProps> = ({ property, isDashboard = false }) => {
   const { id, title, description, image, noOfBaths, noOfBeds, maxNoOfGuests, pricePerNight, region } = property;
 
   const featureImage = image ? image : `https://placehold.co/300x140?text=${encodeURIComponent(title)}`;
+
+  const propertyUrl = isDashboard ? `/dashboard/properties/${id}` : `/properties/${id}`;
   return (
     <Card sx={{ maxWidth: 350, p: 2, m: "auto", height: "100%" }}>
       <CardMedia sx={{ height: 140, mx: 2, mt: 2 }} className="rounded" image={featureImage} />
@@ -78,10 +86,10 @@ const PropertyCard: React.FC<{ property: PropertyDTO }> = ({ property }) => {
           <Typography variant="body2" color="text.secondary">
             Price starts from
           </Typography>
-          <Typography variant="subtitle1">{`LKR ${pricePerNight}`}</Typography>
+          <Typography variant="subtitle1"> {formatCurrency(pricePerNight)}</Typography>
         </div>
-        <Button sx={{ fontSize: "11px" }} href={`http://localhost:3000/dashboard/properties/${id}`} variant="contained">
-          View Details
+        <Button sx={{ fontSize: "11px" }} href={propertyUrl} variant="contained">
+          {isDashboard ? "Manage Property" : "Book Now"}
         </Button>
       </CardActions>
     </Card>

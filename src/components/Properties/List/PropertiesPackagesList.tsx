@@ -25,19 +25,23 @@ interface PropertiesPackagesListProps {
   pricePerNight: number;
   hostId: string;
   propertyPackages: PackageDTO[] | null;
+  unAvailableDates?: string[];
 }
 
 const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
   propertyId,
   pricePerNight,
   hostId,
-  propertyPackages
+  propertyPackages,
+  unAvailableDates
 }) => {
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [daysCount, setDaysCount] = useState(0);
   const [guests, setGuests] = useState<number>(0);
   const [checkIn, setCheckIn] = useState<Dayjs | null>(null);
   const [checkOut, setCheckOut] = useState<Dayjs | null>(null);
+
+  console.log(unAvailableDates);
 
   const handleSelectPackage = (title: string) => {
     setSelectedPackage(title);
@@ -77,7 +81,7 @@ const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
       };
 
       const response = await axiosClient.post(`/property/${propertyId}/bookings`, data);
-      
+
       return response.data;
     } catch (error) {
       console.error("Error in handleSubmit:", error);
@@ -89,7 +93,7 @@ const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
     <AddFormContainer>
       <Grid justifyContent={"space-between"} container>
         <Grid item xs={12} md={8}>
-          <CheckInCheckOutPicker onDaysCountChange={handleDaysCountChange} onDateChange={handleDateChange} />
+          <CheckInCheckOutPicker  unAvailableDates={unAvailableDates} onDaysCountChange={handleDaysCountChange} onDateChange={handleDateChange} />
         </Grid>
         <Grid mt={1} item xs={12} md={4}>
           <Box display={"flex"} justifyContent={"end"} alignItems={"center"}>

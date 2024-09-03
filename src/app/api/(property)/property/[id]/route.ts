@@ -2,22 +2,20 @@
 import dbConnect from "@/lib/db/dbConnect";
 import Property from "@/lib/db/models/Properties/Property";
 import { NextResponse, type NextRequest } from "next/server";
-import { authUtils } from "@/lib/auth";
 
 export const GET = async (request: NextRequest, { params }: { params: { id: string } }) => {
   try {
     await dbConnect();
-    // const userId = await authUtils.getUserId(request);
 
-    // Uncomment and modify the following lines if you need to check user authorization
-    // if (property.host.toString() !== userId) {
-    //   return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-    // }
-    
+    // Fetch the property by ID, including its bookings
     const property = await Property.findOne({
       _id: params.id,
       isDeleted: false
     })
+      .populate({
+        path: "bookings",
+        select: "checkIn checkOut" // Only select the dates
+      })
       .lean()
       .exec();
 
@@ -25,20 +23,33 @@ export const GET = async (request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: "Property not found" }, { status: 404 });
     }
 
+    // Calculate unavailable dates from the bookings
+    const unavailableDates = new Set<string>();
 
-    // No need to call toObject() if using lean()
-    const { _id, ...rest } = property as any;
+    property.bookings?.forEach((booking: any) => {
+      let current = new Date(booking.checkIn);
+      const end = new Date(booking.checkOut);
 
+      while (current <= end) {
+        unavailableDates.add(current.toISOString().split('T')[0]); // Use only the date part
+        current.setDate(current.getDate() + 1);
+      }
+    });
+
+    // Construct the response data
     const data = {
-      id: _id, // `_id` should be a string
-      ...rest
+      id: property._id.toString(),
+      ...property,
+      unavailableDates: Array.from(unavailableDates) // Convert the Set to an array
     };
+
     return NextResponse.json(data);
   } catch (error) {
     console.error("An error occurred:", error); // Log the error for debugging
     return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
   }
 };
+
 
 export const PUT = async (request: NextRequest, { params }: { params: { id: string } }) => {
   try {

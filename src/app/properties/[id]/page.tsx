@@ -36,12 +36,12 @@ export interface PackageDTO {
 
 
 export default async function Page({ params }: { params: { id: string } }) {
-  let propertyDetails: PropertyDocument | null = null;
-  console.log("Property ID:", params.id);
+  let propertyDetails : any | null = null;
   let error: string | null = null;
-
+  
   try {
     propertyDetails = await propertiesService.GetSingleProperty(params.id);
+    console.log("Property ID:", propertyDetails);
 
     if (!propertyDetails) {
     }
@@ -211,6 +211,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         </Grid>
       </AddFormContainer>
       <PropertiesPackagesList
+        unAvailableDates={propertyDetails.unavailableDates}
         propertyId={params.id}
         pricePerNight={propertyDetails.pricePerNight}
         hostId={propertyDetails.host.toString()}

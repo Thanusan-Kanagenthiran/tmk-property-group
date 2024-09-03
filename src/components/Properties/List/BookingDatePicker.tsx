@@ -8,9 +8,14 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 interface CheckInCheckOutPickerProps {
   onDaysCountChange: (daysCount: number) => void;
   onDateChange: (checkIn: Dayjs | null, checkOut: Dayjs | null) => void;
+  unAvailableDates?: string[]; // Add unAvailableDates prop
 }
 
-const CheckInCheckOutPicker: React.FC<CheckInCheckOutPickerProps> = ({ onDaysCountChange, onDateChange }) => {
+const CheckInCheckOutPicker: React.FC<CheckInCheckOutPickerProps> = ({
+  onDaysCountChange,
+  onDateChange,
+  unAvailableDates = [] // Default to an empty array
+}) => {
   const [checkIn, setCheckIn] = React.useState<Dayjs | null>(null);
   const [checkOut, setCheckOut] = React.useState<Dayjs | null>(null);
 
@@ -23,15 +28,28 @@ const CheckInCheckOutPicker: React.FC<CheckInCheckOutPickerProps> = ({ onDaysCou
     onDateChange(checkIn, checkOut);
   }, [daysCount, checkIn, checkOut, onDaysCountChange, onDateChange]);
 
+  // Function to check if a date should be disabled
+  const isDateDisabled = (date: Dayjs) => {
+    return unAvailableDates.includes(date.format("YYYY-MM-DD"));
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={["DatePicker", "DatePicker"]}>
-        <DatePicker label="Check-in" value={checkIn} onChange={(newValue) => setCheckIn(newValue)} minDate={dayjs()} />
         <DatePicker
+          label="Check-in"
+          value={checkIn}
+          onChange={(newValue) => setCheckIn(newValue)}
+          minDate={dayjs()}
+          shouldDisableDate={isDateDisabled} // Disable unavailable dates
+        />
+        <DatePicker
+          disabled={checkIn ? false : true}
           label="Check-out"
           value={checkOut}
           onChange={(newValue) => setCheckOut(newValue)}
           minDate={minCheckOutDate}
+          shouldDisableDate={isDateDisabled} // Disable unavailable dates
         />
       </DemoContainer>
     </LocalizationProvider>
