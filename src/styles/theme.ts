@@ -21,7 +21,16 @@ let theme = createTheme({
   shape: {
     borderRadius: 6
   },
-  spacing: 8
+  spacing: 8,
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 500,
+      md: 750,
+      lg: 1200,
+      xl: 1536
+    }
+  }
 });
 
 export default theme = responsiveFontSizes(theme);

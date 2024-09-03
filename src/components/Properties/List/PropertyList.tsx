@@ -3,11 +3,9 @@ import PropertyCard, { PropertyDTO } from "./PropertyCard";
 
 export default function PropertyList({ properties }: { properties: PropertyDTO[] }) {
   return (
-    <Grid container spacing={{ xs: 2 }}>
+    <Grid container spacing={{ xs: 2 }} alignItems="stretch">
       {properties.map((property) => (
-        <Grid item xs={12} sm={6} md={4} key={property.id} display="flex" justifyContent="center">
-          <PropertyCard property={property} />
-        </Grid>
+        <PropertyCard key={property.id} property={property} />
       ))}
     </Grid>
   );

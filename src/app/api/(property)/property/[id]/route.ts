@@ -14,7 +14,7 @@ export const GET = async (request: NextRequest, { params }: { params: { id: stri
     })
       .populate({
         path: "bookings",
-        select: "checkIn checkOut" // Only select the dates
+        select: "checkIn checkOut" 
       })
       .lean()
       .exec();
@@ -23,7 +23,6 @@ export const GET = async (request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: "Property not found" }, { status: 404 });
     }
 
-    // Calculate unavailable dates from the bookings
     const unavailableDates = new Set<string>();
 
     property.bookings?.forEach((booking: any) => {
@@ -31,7 +30,7 @@ export const GET = async (request: NextRequest, { params }: { params: { id: stri
       const end = new Date(booking.checkOut);
 
       while (current <= end) {
-        unavailableDates.add(current.toISOString().split('T')[0]); // Use only the date part
+        unavailableDates.add(current.toISOString().split('T')[0]); 
         current.setDate(current.getDate() + 1);
       }
     });
@@ -40,12 +39,12 @@ export const GET = async (request: NextRequest, { params }: { params: { id: stri
     const data = {
       id: property._id.toString(),
       ...property,
-      unavailableDates: Array.from(unavailableDates) // Convert the Set to an array
+      unavailableDates: Array.from(unavailableDates) 
     };
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error("An error occurred:", error); // Log the error for debugging
+    console.error("An error occurred:", error); 
     return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
   }
 };
