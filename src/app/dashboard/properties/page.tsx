@@ -4,32 +4,28 @@ import PropertyCard from "@/components/Properties/List/PropertyCard";
 
 export default async function Page() {
   try {
-    const properties = await propertiesService.GetProperties();
+    const data = await propertiesService.GetProperties();
 
-    if (!Array.isArray(properties) || properties.length === 0) {
+    if (!Array.isArray(data.properties) || data.properties.length === 0) {
       throw new Error("No properties found");
     }
 
     return (
       <Container>
-      {/* Button section */}
-      <Grid container spacing={2} alignItems="center" justifyContent="end" mb={3}>
-        <Grid item>
-          <Button variant="contained" href="/dashboard/add">
-            Add Property
-          </Button>
-        </Grid>
-      </Grid>
-
-      {/* Property cards grid */}
-      <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
-        {properties.map((property) => (
-          <Grid item xs={12} sm={6} md={4} key={property.id}>
-            <PropertyCard property={property} isDashboard />
+        <Grid container spacing={2} alignItems="center" justifyContent="end" mb={3}>
+          <Grid item>
+            <Button variant="contained" href="/dashboard/add">
+              Add Property
+            </Button>
           </Grid>
-        ))}
-      </Grid>
-    </Container>
+        </Grid>
+
+        <Grid container spacing={2}>
+          {data.properties.map((property: any) => (
+            <PropertyCard key={property._id} property={property} isDashboard />
+          ))}
+        </Grid>
+      </Container>
     );
   } catch (error: any) {
     return (

@@ -76,6 +76,15 @@ async function GetSingleProperty(id: string): Promise<any> {
   }
 }
 
+async function getHostProperties(): Promise<any> {
+  try {
+    const response = await axiosClient.get("/property/host");
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const propertiesService = {
   AddProperty,
   UpdateProperty,

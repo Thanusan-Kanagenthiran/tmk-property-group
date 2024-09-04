@@ -3,23 +3,17 @@ import dbConnect from "@/lib/db/dbConnect";
 import Booking from "@/lib/db/models/Properties/Booking";
 import { NextResponse, type NextRequest } from "next/server";
 
-const transformBooking = (booking: any) => {
+const transformBooking = (booking: any, role: string) => {
   return {
     id: booking._id.toString(),
-    tenantId: booking.tenantId ? {
-      id: booking.tenantId._id.toString(),
-      email: booking.tenantId.email,
-      name: booking.tenantId.name,
-    } : null,
-    propertyId: booking.propertyId.toString(),
+    property: booking.propertyId.title,
+    region: booking.propertyId.region,
     amount: booking.amount,
     paymentStatus: booking.paymentStatus,
     status: booking.status,
-    checkIn: booking.checkIn,
-    checkOut: booking.checkOut,
-    hostId: booking.hostId.toString(),
-    createdAt: booking.createdAt,
-    updatedAt: booking.updatedAt,
+    checkIn: booking.checkIn.toISOString().split("T")[0],
+    checkOut: booking.checkOut.toISOString().split("T")[0],
+    ...(role === "host" ? { tenant: booking.tenantId.email } : {}),
   };
 };
 
@@ -27,36 +21,36 @@ export const GET = async (request: NextRequest) => {
   try {
     await dbConnect();
 
-    const authToken = await authUtils.getAuthToken(request);
-    if (!authToken) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-    }
-
     const userId = await authUtils.getUserId(request);
     const role = await authUtils.getUserRole(request);
 
-    console.log("role", role);
+    if (!userId || !role) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
 
     let bookings;
     if (role === "host") {
       bookings = await Booking.find({ hostId: userId })
-        .populate("tenantId", "email name") 
+        .populate("tenantId", "email name")
+        .populate("propertyId", "title region")
         .exec();
     } else if (role === "user") {
       bookings = await Booking.find({ tenantId: userId })
-        .populate("hostId", "email name") 
+        .populate("propertyId", "title region")
         .exec();
     } else {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      return NextResponse.json({ message: "Role not recognized" }, { status: 403 });
     }
 
-    if (bookings.length === 0) {
-      return NextResponse.json({ message: "No bookings found" });
+    if (!bookings || bookings.length === 0) {
+      return NextResponse.json({ bookings: [] }, { status: 200 });
     }
 
-    const transformedBookings = bookings.map(transformBooking);
+    const transformedBookings = bookings.map((booking) =>
+      transformBooking(booking, role)
+    );
 
-    return NextResponse.json(transformedBookings);
+    return NextResponse.json({ bookings: transformedBookings }, { status: 200 });
   } catch (error) {
     console.error("Error fetching bookings:", error);
     return NextResponse.json({ error: "Failed to fetch bookings" }, { status: 500 });

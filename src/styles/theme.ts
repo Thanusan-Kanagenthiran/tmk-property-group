@@ -13,7 +13,7 @@ let theme = createTheme({
     background: {
       default: "#0f172a",
       paper: "#020617"
-    }
+    },
   },
   components: {
    

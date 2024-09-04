@@ -37,19 +37,21 @@ const CheckInCheckOutPicker: React.FC<CheckInCheckOutPickerProps> = ({
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={["DatePicker", "DatePicker"]}>
         <DatePicker
+          slotProps={{ textField: { size: "small" } }}
           label="Check-in"
           value={checkIn}
           onChange={(newValue) => setCheckIn(newValue)}
           minDate={dayjs()}
-          shouldDisableDate={isDateDisabled} // Disable unavailable dates
+          shouldDisableDate={isDateDisabled}
         />
         <DatePicker
           disabled={checkIn ? false : true}
+          slotProps={{ textField: { size: "small" } }}
           label="Check-out"
           value={checkOut}
           onChange={(newValue) => setCheckOut(newValue)}
           minDate={minCheckOutDate}
-          shouldDisableDate={isDateDisabled} // Disable unavailable dates
+          shouldDisableDate={isDateDisabled}
         />
       </DemoContainer>
     </LocalizationProvider>

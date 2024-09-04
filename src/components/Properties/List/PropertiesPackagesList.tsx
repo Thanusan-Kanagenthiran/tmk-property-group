@@ -37,7 +37,7 @@ const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
 }) => {
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [daysCount, setDaysCount] = useState(0);
-  const [guests, setGuests] = useState<number>(0);
+  const [guests, setGuests] = useState<number | null>(null);
   const [checkIn, setCheckIn] = useState<Dayjs | null>(null);
   const [checkOut, setCheckOut] = useState<Dayjs | null>(null);
 
@@ -92,21 +92,27 @@ const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
   return (
     <AddFormContainer>
       <Grid justifyContent={"space-between"} container>
-        <Grid item xs={12} md={8}>
-          <CheckInCheckOutPicker  unAvailableDates={unAvailableDates} onDaysCountChange={handleDaysCountChange} onDateChange={handleDateChange} />
+        <Grid item xs={12} md={6}>
+          <CheckInCheckOutPicker
+            unAvailableDates={unAvailableDates}
+            onDaysCountChange={handleDaysCountChange}
+            onDateChange={handleDateChange}
+          />
         </Grid>
-        <Grid mt={1} item xs={12} md={4}>
+        <Grid mt={1} item xs={12} md={6}>
           <Box display={"flex"} justifyContent={"end"} alignItems={"center"}>
             <TextField
-              placeholder="Number of Guests"
-              type="number"
-              variant="outlined"
               name="guests"
               value={guests}
+              size="small"
+              type="number"
               onChange={(e) => setGuests(parseInt(e.target.value, 10))}
+              label="Number of Guests"
+              variant="outlined"
             />
-            <Button type="submit" sx={{ ml: 2, py: 1.75 }} variant="contained" size="large" onClick={handleSubmit}>
-              Save
+
+            <Button type="submit" variant="contained" sx={{ ml: 2 }} onClick={handleSubmit}>
+              Confirm Booking
             </Button>
           </Box>
         </Grid>
