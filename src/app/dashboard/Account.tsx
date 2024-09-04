@@ -12,7 +12,6 @@ import {
   Grid
 } from "@mui/material";
 import { accountServices } from "../../services/users.service";
-import Image from "next/image";
 import ProfileImageUpload from "@/components/Account/ProfileImageUpload";
 import EditPhoneNumber from "./EditAccount";
 import EditPassword from "./EditPassword";

@@ -17,6 +17,8 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { mainListItems, secondaryListItems } from "./listItems";
 import { usePathname } from "next/navigation";
+import ProfileOrAuthButtons from "@/components/Auth/ProfileOrAuthButtons";
+import Logo from "@/components/Common/Logo";
 
 const drawerWidth: number = 240;
 
@@ -46,7 +48,7 @@ const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open"
 })(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
-    position: "relative",
+    position: "fixed", // Make the drawer fixed
     whiteSpace: "nowrap",
     width: drawerWidth,
     transition: theme.transitions.create("width", {
@@ -74,19 +76,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     setOpen(!open);
   };
 
-  const [pageTitle, setPageTitle] = React.useState("Dashboard");
-
-  const pathname = usePathname();
-
-  React.useEffect(() => {
-    if (pathname === "/dashboard/account") {
-      setPageTitle("Account");
-    }
-  }, [pathname]);
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <AppBar position="absolute" open={open}>
+    <Box sx={{ display: "flex", height: "100vh" }}>
+      <AppBar position="fixed" open={open}>
         <Toolbar sx={{ pr: "24px" }}>
           <IconButton
             edge="start"
@@ -97,14 +90,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-            {pageTitle}
+            <Logo />
           </Typography>
 
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
+          <ProfileOrAuthButtons />
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -131,16 +120,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <Box
         component="main"
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          width: "100vw",
-          overflow: "auto"
+          flexGrow: 1,
+          overflowY: "auto", // Only the main content is scrollable
+          pt: 8, // Space for the AppBar
+          pl: open ? `${drawerWidth}px` : `56px`, // Space for the Drawer
+          transition: (theme) =>
+            theme.transitions.create("padding", {
+              easing: theme.transitions.easing.sharp,
+              duration: theme.transitions.duration.leavingScreen
+            })
         }}>
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-          <Grid container spacing={3} sx={{ mt: 4 }}>
+          <Grid container spacing={3}>
             <Grid item xs={12}>
               {children}
             </Grid>

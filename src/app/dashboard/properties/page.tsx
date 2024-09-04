@@ -1,21 +1,38 @@
-import { Button, Container } from "@mui/material";
+import { Button, Container, Grid } from "@mui/material";
 import { propertiesService } from "@/services/properties.service";
-import PropertyList from "@/components/Properties/List/PropertyList";
+import PropertyCard from "@/components/Properties/List/PropertyCard";
 
 export default async function Page() {
-  let propertiesTypes, properties;
   try {
-    propertiesTypes = await propertiesService.GetPropertyTypes();
-    properties = await propertiesService.GetProperties();
-    console.log(propertiesTypes);
-  } catch (error) {
-    return <div>Error loading data</div>;
+    const data = await propertiesService.GetProperties();
+
+    if (!Array.isArray(data.properties) || data.properties.length === 0) {
+      throw new Error("No properties found");
+    }
+
+    return (
+      <Container>
+        <Grid container spacing={2} alignItems="center" justifyContent="end" mb={3}>
+          <Grid item>
+            <Button variant="contained" href="/dashboard/add">
+              Add Property
+            </Button>
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={2}>
+          {data.properties.map((property: any) => (
+            <PropertyCard key={property._id} property={property} isDashboard />
+          ))}
+        </Grid>
+      </Container>
+    );
+  } catch (error: any) {
+    return (
+      <>
+        <Button href="/dashboard/add">Add Property</Button>
+        <div>{error.message || "Error loading data"}</div>
+      </>
+    );
   }
-  console.log(properties);
-  return (
-    <>
-      <Button href="/dashboard/add">Add Property</Button>
-      <PropertyList properties={properties} />
-    </>
-  );
 }

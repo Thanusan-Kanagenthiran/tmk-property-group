@@ -14,7 +14,7 @@ interface ImageUploadFieldProps {
 
 export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
   onImageChange,
-  buttonWidth = "210px",
+  buttonWidth = "300px",
   aspectRatio = 16 / 9
 }) => {
   const [image, setImage] = useState<string | undefined>(undefined);
@@ -77,7 +77,14 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
         variant="outlined"
         tabIndex={-1}
         sx={{ width: `${buttonWidth}`, display: "flex", justifyContent: "center" }}>
-        {imageCropped ? <CloudDoneIcon color="success" /> : <CloudUploadIcon color="action" />}
+        {imageCropped ? (
+          <CloudDoneIcon color="success" />
+        ) : (
+          <>
+            <CloudUploadIcon color="action" />
+            <span style={{ marginLeft: "15px" }}>Upload an image</span>
+          </>
+        )}
         <TextField
           style={{ display: "none" }}
           size="small"

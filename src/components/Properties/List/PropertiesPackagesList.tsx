@@ -10,7 +10,7 @@ import CheckInCheckOutPicker from "./BookingDatePicker";
 import { Dayjs } from "dayjs";
 import PropertiesPackageCard from "./PropertiesPackageCard";
 import { PackageDTO } from "@/app/properties/[id]/page";
-import { useSession } from "next-auth/react";
+import axiosClient from "@/services";
 
 const commonIconStyles = { height: "50px", width: "50px" };
 
@@ -24,23 +24,24 @@ interface PropertiesPackagesListProps {
   propertyId: string;
   pricePerNight: number;
   hostId: string;
-  propertyPackages: PackageDTO[];
+  propertyPackages: PackageDTO[] | null;
+  unAvailableDates?: string[];
 }
 
 const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
   propertyId,
   pricePerNight,
   hostId,
-  propertyPackages
+  propertyPackages,
+  unAvailableDates
 }) => {
-  const { data: session } = useSession();
-  const userRole = session?.user?.role;
-  console.log(userRole);
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [daysCount, setDaysCount] = useState(0);
-  const [guests, setGuests] = useState<number>(0);
+  const [guests, setGuests] = useState<number | null>(null);
   const [checkIn, setCheckIn] = useState<Dayjs | null>(null);
   const [checkOut, setCheckOut] = useState<Dayjs | null>(null);
+
+  console.log(unAvailableDates);
 
   const handleSelectPackage = (title: string) => {
     setSelectedPackage(title);
@@ -55,88 +56,96 @@ const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
     setCheckOut(checkOut);
   };
 
-  const handleSubmit = () => {
-    let totalPrice = 0;
+  const handleSubmit = async () => {
+    try {
+      let totalPrice = 0;
 
-    if (selectedPackage) {
-      const selectedPackageDetails = propertyPackages.find((pkg) => pkg.packageName === selectedPackage);
-      if (selectedPackageDetails) {
-        totalPrice = selectedPackageDetails.packagePricePerDay * daysCount;
+      if (selectedPackage && propertyPackages) {
+        const selectedPackageDetails = propertyPackages.find((pkg) => pkg.packageName === selectedPackage);
+        if (selectedPackageDetails) {
+          totalPrice = selectedPackageDetails.packagePricePerDay * daysCount;
+        }
+      } else {
+        totalPrice = pricePerNight * daysCount;
       }
-    } else {
-      totalPrice = pricePerNight * daysCount;
+
+      const data = {
+        propertyId,
+        hostId,
+        isPackage: selectedPackage,
+        daysCount,
+        guests,
+        checkIn: checkIn ? checkIn.format("YYYY-MM-DD") : null,
+        checkOut: checkOut ? checkOut.format("YYYY-MM-DD") : null,
+        amount: totalPrice
+      };
+
+      const response = await axiosClient.post(`/property/${propertyId}/bookings`, data);
+
+      return response.data;
+    } catch (error) {
+      console.error("Error in handleSubmit:", error);
+      throw error;
     }
-
-    const data = {
-      propertyId: propertyId,
-      hostId: hostId,
-      isPackage: selectedPackage,
-      daysCount,
-      guests,
-      checkIn: checkIn ? checkIn.format("YYYY-MM-DD") : null,
-      checkOut: checkOut ? checkOut.format("YYYY-MM-DD") : null,
-      totalPrice
-    };
-
-    // Replace with your actual endpoint and submission logic
-    console.log("Form submitted with data:", data);
-    // axios.post('/your-endpoint', data)
-    //   .then(response => {
-    //     console.log('Success:', response.data);
-    //   })
-    //   .catch(error => {
-    //     console.error('Error:', error);
-    //   });
   };
 
   return (
     <AddFormContainer>
       <Grid justifyContent={"space-between"} container>
-        <Grid item xs={12} md={8}>
-          <CheckInCheckOutPicker onDaysCountChange={handleDaysCountChange} onDateChange={handleDateChange} />
+        <Grid item xs={12} md={6}>
+          <CheckInCheckOutPicker
+            unAvailableDates={unAvailableDates}
+            onDaysCountChange={handleDaysCountChange}
+            onDateChange={handleDateChange}
+          />
         </Grid>
-        <Grid mt={1} item xs={12} md={4}>
+        <Grid mt={1} item xs={12} md={6}>
           <Box display={"flex"} justifyContent={"end"} alignItems={"center"}>
             <TextField
-              placeholder="Number of Guests"
-              type="number"
-              variant="outlined"
               name="guests"
               value={guests}
+              size="small"
+              type="number"
               onChange={(e) => setGuests(parseInt(e.target.value, 10))}
+              label="Number of Guests"
+              variant="outlined"
             />
-            <Button type="submit" sx={{ ml: 2, py: 1.75 }} variant="contained" size="large" onClick={handleSubmit}>
-              Save
+
+            <Button type="submit" variant="contained" sx={{ ml: 2 }} onClick={handleSubmit}>
+              Confirm Booking
             </Button>
           </Box>
         </Grid>
       </Grid>
-      <Typography mt={4} variant="body1" color="text.primary" textAlign="left">
-        Select your preferred package or go with the basic price per day
-      </Typography>
+      {propertyPackages && propertyPackages.length > 0 && (
+        <>
+          <Typography mt={4} variant="body1" color="text.primary" textAlign="left">
+            Select your preferred package or go with the basic price per day
+          </Typography>
+          <Grid container spacing={2} py={2}>
+            {propertyPackages.map((packageType) => {
+              const icon = Icons[packageType.packageName];
 
-      <Grid container spacing={2} py={2}>
-        {propertyPackages.map((packageType) => {
-          const icon = Icons[packageType.packageName];
+              const eligibleDaysCount =
+                packageType.durationRequirementDays.daysOrWeeks === "weeks"
+                  ? packageType.durationRequirementDays.count * 7
+                  : packageType.durationRequirementDays.count;
 
-          const eligibleDaysCount =
-            packageType.durationRequirementDays.daysOrWeeks === "weeks"
-              ? packageType.durationRequirementDays.count * 7
-              : packageType.durationRequirementDays.count;
-
-          return (
-            <Grid item xs={12} sm={6} md={4} key={packageType.packageName}>
-              <PropertiesPackageCard
-                isDisabled={daysCount < eligibleDaysCount}
-                propertyPackage={packageType}
-                action={() => handleSelectPackage(packageType.packageName)}
-                icon={icon}
-                selectedPackage={selectedPackage}
-              />
-            </Grid>
-          );
-        })}
-      </Grid>
+              return (
+                <Grid item xs={12} sm={6} md={4} key={packageType.packageName}>
+                  <PropertiesPackageCard
+                    isDisabled={daysCount < eligibleDaysCount}
+                    propertyPackage={packageType}
+                    action={() => handleSelectPackage(packageType.packageName)}
+                    icon={icon}
+                    selectedPackage={selectedPackage}
+                  />
+                </Grid>
+              );
+            })}
+          </Grid>
+        </>
+      )}
     </AddFormContainer>
   );
 };

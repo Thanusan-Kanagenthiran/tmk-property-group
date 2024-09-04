@@ -1,5 +1,4 @@
-"use client";
-import { Tooltip, Typography, Menu, MenuItem } from "@mui/material";
+import { Tooltip, Typography, Menu, MenuItem, ListItemIcon, ListItemText } from "@mui/material";
 import { useState, MouseEvent, FC, ReactNode } from "react";
 
 interface AppDropDownProps {
@@ -9,6 +8,7 @@ interface AppDropDownProps {
   menuItems?: {
     label: string;
     onClick: () => void;
+    icon?: ReactNode;
   }[];
 }
 
@@ -47,15 +47,14 @@ const AppDropDown: FC<AppDropDownProps> = ({ menu, tooltipTitle, menuContent, me
           <MenuItem
             key={index}
             sx={{
-              mb: 0.5,
-              py: { xs: 0, md: 0.5 },
-              fontSize: { xs: "0.75rem", sm: "0.875rem" }
+              fontSize: "10px"
             }}
             onClick={() => {
               item.onClick();
               handleClose();
             }}>
-            {item.label}
+            {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
+            <ListItemText primary={item.label} />
           </MenuItem>
         ))}
         {menuContent}

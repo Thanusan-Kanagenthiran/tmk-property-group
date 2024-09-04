@@ -2,7 +2,7 @@ import React from "react";
 import { Typography, Grid, FormControl, TextField, Box, Button, MenuItem, Select } from "@mui/material";
 import AddFormContainer from "@/components/Common/Layout/AddFormContainer";
 
-const cities = [
+export const cities = [
   { name: "Colombo", province: "Western" },
   { name: "Kandy", province: "Central" },
   { name: "Galle", province: "Southern" },

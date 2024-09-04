@@ -8,7 +8,7 @@ const getAuthToken = async (req: NextRequest) => {
   try {
     const token = await getToken({ req, secret });
     if (!token?.sub) {
-     return null;
+      return null;
     }
     return token;
   } catch (error) {
@@ -33,7 +33,13 @@ const isUser = async (req: NextRequest) => {
 
 const getUserId = async (req: NextRequest) => {
   const token = await getAuthToken(req);
+  console.log(token?.sub);
   return token?.sub;
 };
+const getUserRole = async (req: NextRequest) => {
+  const token = await getAuthToken(req);
+  console.log(token);
+  return token?.role;
+};
 
-export const authUtils = { isAdmin, isPropertyOwner, isUser, getUserId };
+export const authUtils = { isAdmin, isPropertyOwner, isUser, getUserId, getAuthToken, getUserRole };
