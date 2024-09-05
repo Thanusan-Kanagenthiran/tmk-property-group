@@ -40,6 +40,11 @@ const BookingSchema = new Schema<BookingDocument>(
   { timestamps: true, versionKey: false }
 );
 
-const Booking: Model<BookingDocument> = mongoose.models.Booking || model<BookingDocument>("Booking", BookingSchema);
+
+const Booking: Model<BookingDocument> =
+  mongoose.models.Booking || model<BookingDocument>("Booking", BookingSchema);
 
 export default Booking;
+
+
+
