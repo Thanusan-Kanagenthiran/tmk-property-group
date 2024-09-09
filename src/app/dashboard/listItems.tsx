@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -26,8 +27,10 @@ const ListItem: React.FC<ListItemProps> = ({ href, icon: Icon, text }) => {
     <Link href={href} passHref>
       <ListItemButton
         sx={{
-          backgroundColor: isActive ? theme.palette.action.selected : 'transparent',
-          '&:hover': {
+          backgroundColor: isActive
+            ? theme.palette.action.selected
+            : "transparent",
+          "&:hover": {
             backgroundColor: theme.palette.action.hover,
           },
         }}
@@ -35,23 +38,53 @@ const ListItem: React.FC<ListItemProps> = ({ href, icon: Icon, text }) => {
         <ListItemIcon>
           <Icon color={isActive ? "secondary" : "primary"} />
         </ListItemIcon>
-        <ListItemText primary={text} />
+        <ListItemText
+          sx={{
+            color: isActive
+              ? theme.palette.text.primary
+              : theme.palette.secondary.main,
+          }}
+          primary={text}
+        />
       </ListItemButton>
     </Link>
   );
 };
 
-export const mainListItems = (
+export const MainListItems: React.FC = () => {
+  const { data: session } = useSession();
+  const userRole = session?.user?.role;
+
+  return (
+    <React.Fragment>
+      <ListItem href="/dashboard" icon={DashboardIcon} text="Dashboard" />
+      {userRole === "host" && (
+        <>
+          <ListItem
+            href="/dashboard/properties"
+            icon={HouseIcon}
+            text="Properties"
+          />
+          <ListItem
+            href="/dashboard/bookings"
+            icon={AssignmentIcon}
+            text="Bookings"
+          />
+        </>
+      )}
+      <ListItem href="/dashboard/payments" icon={PaymentIcon} text="Payments" />
+    </React.Fragment>
+  );
+};
+
+export const SecondaryListItems: React.FC = () => (
   <React.Fragment>
-    <ListItem href="/dashboard" icon={DashboardIcon} text="Dashboard" />
-    <ListItem href="/dashboard/properties" icon={HouseIcon} text="Properties" />
-    <ListItem href="/dashboard/bookings" icon={AssignmentIcon} text="Bookings" />
-    <ListItem href="/dashboard/payments" icon={PaymentIcon} text="Payments" />
+    <ListItem
+      href="/dashboard/account"
+      icon={ManageAccountsIcon}
+      text="Account"
+    />
   </React.Fragment>
 );
 
-export const secondaryListItems = (
-  <React.Fragment>
-    <ListItem href="/dashboard/account" icon={ManageAccountsIcon} text="Account" />
-  </React.Fragment>
-);
+

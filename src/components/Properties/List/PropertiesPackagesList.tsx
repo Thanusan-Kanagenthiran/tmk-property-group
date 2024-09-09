@@ -9,7 +9,7 @@ import AddFormContainer from "../../Common/Layout/AddFormContainer";
 import CheckInCheckOutPicker from "./BookingDatePicker";
 import { Dayjs } from "dayjs";
 import PropertiesPackageCard from "./PropertiesPackageCard";
-import { PackageDTO } from "@/app/properties/[id]/page";
+import { PackageDTO } from "@/app/home/[id]/page";
 import axiosClient from "@/services";
 
 const commonIconStyles = { height: "50px", width: "50px" };
@@ -17,7 +17,7 @@ const commonIconStyles = { height: "50px", width: "50px" };
 const Icons: Record<string, React.ReactNode> = {
   standard: <StarBorderIcon sx={commonIconStyles} />,
   deluxe: <StarBorderPurple500Icon sx={commonIconStyles} />,
-  premium: <AutoAwesomeIcon sx={commonIconStyles} />
+  premium: <AutoAwesomeIcon sx={commonIconStyles} />,
 };
 
 interface PropertiesPackagesListProps {
@@ -33,7 +33,7 @@ const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
   pricePerNight,
   hostId,
   propertyPackages,
-  unAvailableDates
+  unAvailableDates,
 }) => {
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [daysCount, setDaysCount] = useState(0);
@@ -61,7 +61,9 @@ const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
       let totalPrice = 0;
 
       if (selectedPackage && propertyPackages) {
-        const selectedPackageDetails = propertyPackages.find((pkg) => pkg.packageName === selectedPackage);
+        const selectedPackageDetails = propertyPackages.find(
+          (pkg) => pkg.packageName === selectedPackage
+        );
         if (selectedPackageDetails) {
           totalPrice = selectedPackageDetails.packagePricePerDay * daysCount;
         }
@@ -77,10 +79,13 @@ const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
         guests,
         checkIn: checkIn ? checkIn.format("YYYY-MM-DD") : null,
         checkOut: checkOut ? checkOut.format("YYYY-MM-DD") : null,
-        amount: totalPrice
+        amount: totalPrice,
       };
 
-      const response = await axiosClient.post(`/property/${propertyId}/bookings`, data);
+      const response = await axiosClient.post(
+        `/property/${propertyId}/bookings`,
+        data
+      );
 
       return response.data;
     } catch (error) {
@@ -111,7 +116,12 @@ const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
               variant="outlined"
             />
 
-            <Button type="submit" variant="contained" sx={{ ml: 2 }} onClick={handleSubmit}>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{ ml: 2 }}
+              onClick={handleSubmit}
+            >
               Confirm Booking
             </Button>
           </Box>
@@ -119,7 +129,12 @@ const PropertiesPackagesList: React.FC<PropertiesPackagesListProps> = ({
       </Grid>
       {propertyPackages && propertyPackages.length > 0 && (
         <>
-          <Typography mt={4} variant="body1" color="text.primary" textAlign="left">
+          <Typography
+            mt={4}
+            variant="body1"
+            color="text.primary"
+            textAlign="left"
+          >
             Select your preferred package or go with the basic price per day
           </Typography>
           <Grid container spacing={2} py={2}>

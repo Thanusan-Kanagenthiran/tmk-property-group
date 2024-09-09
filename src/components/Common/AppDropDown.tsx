@@ -1,4 +1,11 @@
-import { Tooltip, Typography, Menu, MenuItem, ListItemIcon, ListItemText } from "@mui/material";
+import {
+  Tooltip,
+  Typography,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 import { useState, MouseEvent, FC, ReactNode } from "react";
 
 interface AppDropDownProps {
@@ -12,7 +19,12 @@ interface AppDropDownProps {
   }[];
 }
 
-const AppDropDown: FC<AppDropDownProps> = ({ menu, tooltipTitle, menuContent, menuItems }) => {
+const AppDropDown: FC<AppDropDownProps> = ({
+  menu,
+  tooltipTitle,
+  menuContent,
+  menuItems,
+}) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -33,7 +45,8 @@ const AppDropDown: FC<AppDropDownProps> = ({ menu, tooltipTitle, menuContent, me
           aria-controls={open ? "dropdown-menu" : undefined}
           aria-haspopup="true"
           aria-expanded={open ? "true" : undefined}
-          onClick={handleClick}>
+          onClick={handleClick}
+        >
           {menu}
         </Typography>
       </Tooltip>
@@ -42,19 +55,22 @@ const AppDropDown: FC<AppDropDownProps> = ({ menu, tooltipTitle, menuContent, me
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        MenuListProps={{ "aria-labelledby": "dropdown-button" }}>
+        MenuListProps={{ "aria-labelledby": "dropdown-button" }}
+      >
         {menuItems?.map((item, index) => (
           <MenuItem
             key={index}
-            sx={{
-              fontSize: "10px"
-            }}
             onClick={() => {
               item.onClick();
               handleClose();
-            }}>
+            }}
+          >
             {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
-            <ListItemText primary={item.label} />
+            <ListItemText
+              primary={
+                <Typography sx={{ fontSize: 13 }}>{item.label}</Typography>
+              }
+            />
           </MenuItem>
         ))}
         {menuContent}

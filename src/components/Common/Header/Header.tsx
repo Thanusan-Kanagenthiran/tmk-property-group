@@ -11,7 +11,7 @@ import Drawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useRouter, usePathname } from "next/navigation";
 import { Paths } from "@/constants/Paths";
-import ProfileOrAuthButtons from "@/components/Auth/ProfileOrAuthButtons";
+import AvatarMenuOrAuthButtons from "@/components/Auth/AvatarMenuOrAuthButtons";
 import Logo from "../Logo";
 import { Divider } from "@mui/material";
 
@@ -25,12 +25,19 @@ function AppHeader() {
   };
 
   const menuItems = (
-    <Box sx={{ display: "flex", py: 2, flexDirection: { xs: "column", md: "row" } }}>
+    <Box
+      sx={{
+        display: "flex",
+        py: 2,
+        flexDirection: { xs: "column", md: "row" },
+      }}
+    >
       <MenuItem
         onClick={() => {
           router.push("/properties");
         }}
-        sx={{ py: "6px", px: "12px" }}>
+        sx={{ py: "6px", px: "12px" }}
+      >
         <Typography variant="body2" color="text.primary">
           Features
         </Typography>
@@ -50,14 +57,25 @@ function AppHeader() {
           backdropFilter: "blur(24px)",
           maxHeight: 40,
           borderColor: "divider",
-          maxWidth: "lg"
-        }}>
-        <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center", ml: "-18px", px: 0 }}>
+          maxWidth: "lg",
+        }}
+      >
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: "flex",
+            alignItems: "center",
+            ml: "-18px",
+            px: 0,
+          }}
+        >
           <Logo />
         </Box>
         <Box sx={{ display: { xs: "none", md: "block" } }}>{menuItems}</Box>
         <Box sx={{ display: { xs: "none", md: "block" } }}>
-          {pathname !== Paths.SIGN_IN && pathname !== Paths.SIGN_UP && <ProfileOrAuthButtons />}
+          {pathname !== Paths.SIGN_IN && pathname !== Paths.SIGN_UP && (
+            <AvatarMenuOrAuthButtons />
+          )}
         </Box>
 
         <Box sx={{ display: { sm: "", md: "none" } }}>
@@ -66,27 +84,39 @@ function AppHeader() {
             color="primary"
             aria-label="menu"
             onClick={toggleDrawer(true)}
-            sx={{ minWidth: "30px", p: "4px" }}>
+            sx={{ minWidth: "30px", p: "4px" }}
+          >
             <MenuIcon />
           </Button>
         </Box>
       </Toolbar>
-      <Drawer sx={{ display: { sm: "", md: "none" } }} anchor="right" open={open} onClose={toggleDrawer(false)}>
+      <Drawer
+        sx={{ display: { sm: "", md: "none" } }}
+        anchor="right"
+        open={open}
+        onClose={toggleDrawer(false)}
+      >
         <Box
           sx={{
             minWidth: "50dvw",
             p: 2,
             backgroundColor: "background.paper",
-            flexGrow: 1
-          }}>
+            flexGrow: 1,
+          }}
+        >
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
               alignItems: "end",
-              flexGrow: 1
-            }}>
-            <Box>{pathname !== Paths.SIGN_IN && pathname !== Paths.SIGN_UP && <ProfileOrAuthButtons />}</Box>
+              flexGrow: 1,
+            }}
+          >
+            <Box>
+              {pathname !== Paths.SIGN_IN && pathname !== Paths.SIGN_UP && (
+                <AvatarMenuOrAuthButtons />
+              )}
+            </Box>
           </Box>
           <Divider sx={{ my: 2 }} />
           {menuItems}
