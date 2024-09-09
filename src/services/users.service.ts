@@ -11,6 +11,15 @@ async function GetAccountDetails(): Promise<any> {
   }
 }
 
+async function GetUserRole(): Promise<any> {
+  try {
+    const response = await axiosClient.get(endpoint);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function EditAccountDetails(): Promise<any> {
   try {
     const response = await axiosClient.put(endpoint);

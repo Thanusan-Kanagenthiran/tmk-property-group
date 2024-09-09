@@ -1,18 +1,16 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { Box } from "@mui/material";
-
-const inter = Inter({ subsets: ["latin"] });
+import { GifBox } from "@mui/icons-material";
 
 export const metadata: Metadata = {
   title: "TMK Property Group",
-  description: "TMK Property Group is a property management system"
+  description: "TMK Property Group is a property management system",
 };
 
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <Box sx={{ pt: { xs: 10 } }}>{children}</Box>;
+  return <Box>{children}</Box>;
 }

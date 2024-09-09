@@ -18,7 +18,6 @@ import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
 import AddFormContainer from "@/components/Common/Layout/AddFormContainer";
 import Image from "next/image";
 import { propertiesService } from "@/services/properties.service";
-import { PropertyDocument } from "@/lib/db/models/Properties/Property";
 import KingBedIcon from "@mui/icons-material/KingBed";
 import BathtubIcon from "@mui/icons-material/Bathtub";
 import PeopleIcon from "@mui/icons-material/People";

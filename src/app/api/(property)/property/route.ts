@@ -2,6 +2,7 @@ import { authUtils } from "@/lib/auth";
 import dbConnect from "@/lib/db/dbConnect";
 import Property from "@/lib/db/models/Properties/Property";
 import PropertyType from "@/lib/db/models/Properties/PropertyType";
+import Booking from "@/lib/db/models/Properties/Booking";
 import { NextResponse, type NextRequest } from "next/server";
 
 const getUnavailableDates = (bookings: any[]): Set<string> => {
@@ -30,13 +31,12 @@ const filterPropertiesByDate = (properties: any[], checkIn: Date, checkOut: Date
   });
 };
 
-const formatPropertyData = (property: any, isHost: boolean, isAdmin: boolean) => {
-  const { _id, images, propertyType, bookings, title, description, noOfBeds, noOfBaths, maxNoOfGuests, pricePerNight, host } =
-    property;
+const formatPropertyData = (property: any, isHost: boolean, isAdmin: boolean, isAuthenticated: boolean) => {
+  const { _id, images, propertyType, bookings, title, description, noOfBeds, noOfBaths, maxNoOfGuests, pricePerNight, host } = property;
 
   const unavailableDates = getUnavailableDates(bookings);
 
-  return {
+  const commonData = {
     id: _id,
     type: {
       id: propertyType._id,
@@ -49,24 +49,42 @@ const formatPropertyData = (property: any, isHost: boolean, isAdmin: boolean) =>
     noOfBeds,
     noOfBaths,
     maxNoOfGuests,
-    pricePerNight,
+    pricePerNight
+  };
+
+  const extraData = {
     ...(isHost && bookings.length > 0 ? { bookings } : {}),
     ...(isAdmin && host ? { host } : {})
   };
+
+  if (!isAuthenticated) {
+    return commonData;
+  }
+
+  return { ...commonData, ...extraData };
 };
+
 
 export const GET = async (request: NextRequest) => {
   try {
     await dbConnect();
 
+    const bookings = await Booking.find()
     const { searchParams } = new URL(request.url);
     const propertyTypeName = searchParams.get("propertyType");
     const checkInDate = searchParams.get("checkIn");
     const checkOutDate = searchParams.get("checkOut");
     const region = searchParams.get("region");
 
-    const isHost = await authUtils.isPropertyOwner(request);
-    const isAdmin = await authUtils.isAdmin(request);
+    let isHost = false, isAdmin = false, isAuthenticated = false;
+    try {
+      isHost = await authUtils.isPropertyOwner(request);
+      isAdmin = await authUtils.isAdmin(request);
+      isAuthenticated = true;
+    } catch (error) {
+      console.warn("User is not authenticated or an error occurred during authentication:", error);
+      isAuthenticated = false;
+    }
 
     const filter: any = { isDeleted: false };
 
@@ -89,6 +107,8 @@ export const GET = async (request: NextRequest) => {
 
     let checkIn: Date | null = checkInDate ? new Date(checkInDate) : null;
     let checkOut: Date | null = checkOutDate ? new Date(checkOutDate) : null;
+    if (checkIn && isNaN(checkIn.getTime())) checkIn = null;
+    if (checkOut && isNaN(checkOut.getTime())) checkOut = null;
 
     if (checkIn && checkOut) {
       const allProperties = await Property.find(filter)
@@ -104,10 +124,8 @@ export const GET = async (request: NextRequest) => {
       const properties = filterPropertiesByDate(allProperties, checkIn, checkOut);
       const filteredPropertiesCount = properties.length;
 
-      const data = await Promise.all(
-        properties.map(async (property: any) => {
-          return formatPropertyData(property, isHost, isAdmin);
-        })
+      const data = properties.map((property: any) =>
+        formatPropertyData(property, isHost, isAdmin, isAuthenticated)
       );
 
       return NextResponse.json(
@@ -115,8 +133,7 @@ export const GET = async (request: NextRequest) => {
           totalPropertiesCount: allProperties.length,
           filteredPropertiesCount,
           properties: data
-        },
-        { status: 200 }
+        }
       );
     } else {
       const totalPropertiesCount = await Property.countDocuments({ ...filter }).exec();
@@ -132,9 +149,9 @@ export const GET = async (request: NextRequest) => {
 
       const filteredPropertiesCount = properties.length;
 
-      const data = properties.map((property: any) => {
-        return formatPropertyData(property, isHost, isAdmin);
-      });
+      const data = properties.map((property: any) =>
+        formatPropertyData(property, isHost, isAdmin, isAuthenticated)
+      );
 
       return NextResponse.json(
         {
@@ -150,6 +167,7 @@ export const GET = async (request: NextRequest) => {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 };
+
 
 export const POST = async (request: NextRequest) => {
   try {
@@ -168,7 +186,6 @@ export const POST = async (request: NextRequest) => {
     });
     const savedProperty = await newProperty.save();
 
-    // Return the property ID in a JSON response
     return NextResponse.json({ id: savedProperty._id.toString() }, { status: 201 });
   } catch (error) {
     console.error("POST Handler Error:", error);
