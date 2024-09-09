@@ -2,6 +2,7 @@ import { authUtils } from "@/lib/auth";
 import dbConnect from "@/lib/db/dbConnect";
 import Property from "@/lib/db/models/Properties/Property";
 import PropertyType from "@/lib/db/models/Properties/PropertyType";
+import Booking from "@/lib/db/models/Properties/Booking";
 import { NextResponse, type NextRequest } from "next/server";
 
 const getUnavailableDates = (bookings: any[]): Set<string> => {
@@ -68,6 +69,7 @@ export const GET = async (request: NextRequest) => {
   try {
     await dbConnect();
 
+    const bookings = await Booking.find()
     const { searchParams } = new URL(request.url);
     const propertyTypeName = searchParams.get("propertyType");
     const checkInDate = searchParams.get("checkIn");
